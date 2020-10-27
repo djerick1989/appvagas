@@ -20,7 +20,7 @@ const SplashScreen = props => {
           value === null ? 'SlideScreen' : 'DrawerNavigationRoutes'
         )
       );
-    }, 5000);
+    }, 2000);
   }, []);
 
   return (

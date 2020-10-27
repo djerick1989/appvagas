@@ -10,6 +10,7 @@ import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
 import StartScreen from './Screen/StartScreen';
 import LoginScreen from './Screen/LoginScreen';
+import RecoverPassScreen from './Screen/RecoverPassScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 // import DrawerNavigationRoutes from './Screen/DrawerNavigatorRoutes';
 
@@ -30,6 +31,12 @@ const Auth = createStackNavigator({
   // },
   RegisterScreen: {
     screen: RegisterScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  RecoverPassScreen: {
+    screen: RecoverPassScreen,
     navigationOptions: {
       headerShown: false,
     },
