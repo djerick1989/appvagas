@@ -110,7 +110,7 @@ const RecoverPassScreen = props => {
     );
   }
 
-export default RegisterScreen;
+export default RecoverPassScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

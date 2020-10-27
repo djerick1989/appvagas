@@ -44,7 +44,7 @@ export default class StartScreen extends Component {
                   <TouchableOpacity
                   style={styles.buttonStyle}
                   activeOpacity={0.5}
-                  onPress={() =>this.props.navigation.navigate('RegisterScreen')}
+                  onPress={() =>this.props.navigation.navigate('RecoverPassScreen')}
                   >
                   <Text style={styles.buttonTextStyle}>Cadastrar</Text>
                   </TouchableOpacity>
