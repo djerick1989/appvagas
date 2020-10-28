@@ -19,7 +19,7 @@ export default class SlideScreen extends Component {
       images: [
         require('../Image/1.png'),
         require('../Image/2.png'),
-        require('../Image/2.png'),
+        require('../Image/3.png'),
       ],
       ActiveSlide: SLIDER_1_FIRST_ITEM,
     };
