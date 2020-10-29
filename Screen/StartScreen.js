@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image,TouchableOpacity, } from "react-native";
+import { StyleSheet, Text, View, Image,TouchableOpacity, Dimensions} from "react-native";
  
-
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 export default class StartScreen extends Component {
   constructor(props) {
     super(props);
@@ -32,14 +32,13 @@ export default class StartScreen extends Component {
                     source={require('../Image/6.png')}
                     style={{
                         width: '100%',
-                        height: 450,
+                        height:viewportHeight*0.55,
                         resizeMode: 'contain',
-                        margin: 20,
                         top:0,
                         
                       }}/>
                 </View>
-                <View style={{alignItems:'center'}}>
+                <View style={{alignItems:'center',}}>
                     
                   <TouchableOpacity
                   style={styles.buttonStyle}
@@ -70,12 +69,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   SectionStyle: {
-    
-    flexDirection: 'row',
-    width:"80%",
-    height: 450,
+    flex:4,
     marginTop: 0,
-    margin: 10,
   },
   buttonStyle: {
     backgroundColor: '#6948F4',
@@ -83,7 +78,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     borderColor: '#6948F4',
     height: 40,
-    width:200,
+    width:viewportWidth*0.45,
     alignItems: 'center',
     borderRadius: 30,
     marginLeft: 35,
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
     color: '#6948F4',
     borderColor: '#6948F4',
     height: 40,
-    width:200,
+    width:viewportWidth*0.45,
     alignItems: 'center',
     borderRadius: 30,
     marginLeft: 35,
@@ -107,6 +102,7 @@ const styles = StyleSheet.create({
   },
   buttonTextStyle: {
     color: '#FFFFFF',
+    
     paddingVertical: 8,
     fontSize: 18,
   },

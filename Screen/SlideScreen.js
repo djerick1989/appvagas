@@ -8,7 +8,7 @@ function wp (percentage) {
   return Math.round(value);
 }
 
-const slideWidth = wp(75);
+const slideWidth = wp(100);
 const itemHorizontalMargin = wp(2);
 const sliderWidth = viewportWidth;
 const itemWidth = slideWidth + itemHorizontalMargin * 2;
@@ -29,8 +29,8 @@ export default class SlideScreen extends Component {
      return   <View style={{alignItems:"center"}}>
                 <Image
                   source={item}
-                  style={{width:"100%",height:380,
-                    resizeMode: 'cover',}}
+                  style={{width:"100%",height:viewportHeight*0.55,
+                    resizeMode: 'contain',}}
                 />
               </View>;
   }
@@ -47,7 +47,7 @@ export default class SlideScreen extends Component {
     } else {
         btntxt = buttonText1
     }
-    const regText = <View style={{flexDirection: 'row',marginBottom:50}}>
+    const regText = <View style={{flexDirection: 'row',marginBottom:20}}>
                       <Text style={{color:"#000000"}}>Já tem cadastro? </Text>
                       <TouchableOpacity
                       onPress={() =>this.props.navigation.navigate('StartScreen')}
@@ -82,7 +82,7 @@ export default class SlideScreen extends Component {
                 firstItem={SLIDER_1_FIRST_ITEM}
                 inactiveSlideScale={0}
                 inactiveSlideOpacity={0}
-                inactiveSlideShift={20}
+                inactiveSlideShift={0}
                 containerCustomStyle={styles.slider}
                 contentContainerCustomStyle={styles.sliderContentContainer}
                 loop={false}
@@ -129,9 +129,9 @@ const styles = StyleSheet.create({
   },
   SectionStyle: {
     flex:4,
-    height: 450,
+    // height: 450,
     marginTop: 0,
-    margin: 10,
+    // margin: 10,
   },
   buttonStyle: {
     backgroundColor: '#6948F4',
@@ -139,13 +139,13 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     borderColor: '#6948F4',
     height: 40,
-    width:200,
+    width:viewportWidth*0.45,
     alignItems: 'center',
     borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
   },
   buttonTextStyle: {
     color: '#FFFFFF',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
 
   slider: {
-    marginTop: 15,
+    // marginTop: 15,
     // overflow: 'visible' // for custom animations
 },
 sliderContentContainer: {
