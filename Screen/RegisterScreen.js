@@ -328,6 +328,7 @@ renderAnswerBox(key,item){
                         style={styles.InputBoxStyle}>
                         <TextInput
                             style={styles.inputStyle}
+                            keyboardType='phone-pad'
                             onChangeText={text => this.setState({CPF:text.replace(/[^0-9]/g, '')})}
                             onSubmitEditing={() => this.handleSubmitButton()}
                             placeholder="CPF"

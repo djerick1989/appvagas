@@ -2,32 +2,22 @@ import React, { Component,useState }from "react";
 import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView,} from "react-native";
 import Loader from '../Components/Loader';
 
-const LoginScreen = props => {
+const ConfirmCodeScreen = props => {
   let [userPhon, setUserPhon] = useState('');
-  let [password, setPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
 //   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const handleSubmitButton = () => {
     setErrortext('');
-    if (!userPhon||userPhon.length!=11) {
-    setErrortext('Phon Nuber length must be 11 digits');
+    if (!userPhon) {
+    //   alert('Please fill Name');
       return;
-    }else{
-        setErrortext('');
-    }
-    if (!password) {
-    setErrortext('Please enter your Password!');
-        return;
-    }else{
-        setErrortext('');
     }
     //Show Loader
     setLoading(true);
     var dataToSend = {
-        username: userPhon,
-        password: password,
+      user_number: userPhon,
     };
     var formBody = [];
     for (var key in dataToSend) {
@@ -37,10 +27,11 @@ const LoginScreen = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
+    fetch('https://aboutreact.herokuapp.com/register.php', {
       method: 'POST',
       body: formBody,
       headers: {
+        //Header Defination
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       },
     })
@@ -50,8 +41,9 @@ const LoginScreen = props => {
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.token) {
-          console.log(responseJson.token.api_key)
+        if (responseJson.status == 1) {
+          setIsRegistraionSuccess(true);
+          console.log('Registration Successful. Please Login to proceed');
         } else {
           setErrortext('Registration Unsuccessful');
         }
@@ -75,6 +67,7 @@ const LoginScreen = props => {
                     resizeMode: 'contain',
                     margin: 20,
                     top:10,
+                    
                     }}
                 />
             </View>
@@ -82,7 +75,7 @@ const LoginScreen = props => {
             <KeyboardAvoidingView enabled style={{flex:4,}}>
 
                 <Text style={styles.LabelStyle}>
-                    Login
+                    Recuperar Senha
                 </Text>
                 <View style={styles.SectionStyle}>
                     <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
@@ -90,57 +83,35 @@ const LoginScreen = props => {
                     style={styles.inputStyle}
                     keyboardType='phone-pad'
                     onChangeText={userPhon => setUserPhon(userPhon.replace(/[^0-9]/g, ''))}
-                    onSubmitEditing={() =>
-                        handleSubmitButton()
-                      }
+                    // underlineColorAndroid="#FFFFFF"
                     placeholder="(11) 98877 5566"
-                    placeholderTextColor="#aaaaaa"
+                    placeholderTextColor="#6948F4"
                     autoCapitalize="sentences"
                     returnKeyType="next"
                     blurOnSubmit={false}
-                    />
-                </View>
-                <View style={styles.SectionStyle}>
-                    <Text style={styles.InputLabelStyle}>Senha</Text>
-                    <TextInput
-                    style={styles.inputStyle}
-                    onChangeText={password => setPassword(password)}
-                    placeholder="******"
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onSubmitEditing={() =>
-                        handleSubmitButton()
-                      }
                     />
                 </View>
                 {errortext != '' ? (
                     <Text style={styles.errorTextStyle}> {errortext} </Text>
                 ) : null}
+                <TouchableOpacity
+                    style={styles.buttonStyle}
+                    activeOpacity={0.5}
+                    onPress={handleSubmitButton}>
+                    <Text style={styles.buttonTextStyle}>Recuperar</Text>
+                </TouchableOpacity>
                 
             </KeyboardAvoidingView>
-            <View style={{flex:1,justifyContent: 'flex-end',alignItems:'center'}}>
-                <View style={{flexDirection: 'row',marginBottom:30, alignItems:'center',}}>
-                    <Text style={{color:'#000000'}}>Esqueceu sua senha? </Text>
-                    <TouchableOpacity
-                    onPress={() =>props.navigation.navigate('ForgetPassScreen')}
-                    activeOpacity={0.5}
-                    >
-                    <Text style={{color:'#6948F4', fontWeight:'bold'}}>Recuperar</Text>
-                    </TouchableOpacity>
-                </View>
-                <Text 
-                    style={styles.BackStyle}
-                    onPress={() => props.navigation.navigate('StartScreen')}
-                    >Voltar
-                </Text>
-            </View>
+            <Text 
+                style={styles.BackStyle}
+                onPress={() => props.navigation.navigate('StartScreen')}
+                >Voltar</Text>
+
         </View>
     );
   }
 
-export default LoginScreen;
+export default ConfirmCodeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -202,6 +173,8 @@ const styles = StyleSheet.create({
   },
 
   BackStyle: {
+      zIndex:0,
+      position:"absolute",
       color: '#6948F4',
       fontWeight: "bold",
       fontSize: 16,

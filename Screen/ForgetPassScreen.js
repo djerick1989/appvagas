@@ -2,7 +2,7 @@ import React, { Component,useState }from "react";
 import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView,} from "react-native";
 import Loader from '../Components/Loader';
 
-const RecoverPassScreen = props => {
+const ForgetPassScreen = props => {
   let [userPhon, setUserPhon] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
@@ -10,9 +10,11 @@ const RecoverPassScreen = props => {
 
   const handleSubmitButton = () => {
     setErrortext('');
-    if (!userPhon) {
-    //   alert('Please fill Name');
-      return;
+    if (!userPhon||userPhon.length!=11) {
+      setErrortext('Phon Nuber length must be 11 digits');
+        return;
+    }else{
+        setErrortext('');
     }
     //Show Loader
     setLoading(true);
@@ -42,7 +44,7 @@ const RecoverPassScreen = props => {
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
+          // setIsRegistraionSuccess(true);
           console.log('Registration Successful. Please Login to proceed');
         } else {
           setErrortext('Registration Unsuccessful');
@@ -81,10 +83,11 @@ const RecoverPassScreen = props => {
                     <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
                     <TextInput
                     style={styles.inputStyle}
-                    onChangeText={userPhon => setUserPhon(userPhon)}
+                    keyboardType='phone-pad'
+                    onChangeText={userPhon => setUserPhon(userPhon.replace(/[^0-9]/g, ''))}
                     // underlineColorAndroid="#FFFFFF"
                     placeholder="(11) 98877 5566"
-                    placeholderTextColor="#6948F4"
+                    placeholderTextColor="#aaaaaa"
                     autoCapitalize="sentences"
                     returnKeyType="next"
                     blurOnSubmit={false}
@@ -110,7 +113,7 @@ const RecoverPassScreen = props => {
     );
   }
 
-export default RecoverPassScreen;
+export default ForgetPassScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
   InputLabelStyle: {
     fontWeight:'bold',
     fontSize:16,
-    paddingBottom: 10,
+    paddingBottom: 5,
   },
   buttonStyle: {
     backgroundColor: '#6948F4',
