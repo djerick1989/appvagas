@@ -2,14 +2,18 @@
   package="com.vagas">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
+      
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyAmm0bnLOy0jttq3jayYSEmky0D7TT0IZA"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

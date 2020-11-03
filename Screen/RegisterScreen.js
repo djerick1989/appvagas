@@ -7,7 +7,11 @@ import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
 import DropdownItems from '../Components/DropdownItems'
 import DropDownPicker from 'react-native-dropdown-picker';
-import MapPicker from "react-native-map-picker";
+import MapView, {Marker,Callout  } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import LocationIQ from 'react-native-locationiq';
+import DatePicker from 'react-native-datepicker'
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class RegiterScreen extends Component {
   
@@ -24,8 +28,12 @@ constructor(props) {
     CPF:'',
     Email:'',
     EmailYN:'',
+    ExpYN:'',
     Address:'',
     subarea:'',
+    Y_exp:'',
+    R_exp:'',
+    unemployeed:false,
     RenderTextState:'0',
     RegisterSuccess:'0',
     modalVisible: false,
@@ -54,8 +62,45 @@ constructor(props) {
     isVisible11: false,
     item12: null,
     isVisible12: false,
+    x:null,
+    region:null,
+    mapRegion: null,
+    confirm_location:false,
+    user_info:null,
   };
+  
 }
+
+componentDidMount() {
+  
+  Geolocation.getCurrentPosition(
+    (position) => {
+        console.log(position);
+        let region = { latitude: position.coords.latitude,
+                      longitude: position.coords.longitude,
+                      latitudeDelta:  0.00922*0.8,
+                      longitudeDelta: 0.00421*0.5
+                    }
+        this.onRegionChange(region, region.latitude, region.longitude);
+    },
+    (error) => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
+}
+
+onRegionChange(region,lat,lon) { 
+  this.setState({
+    mapRegion: region,
+
+    x: {latitude: lat,
+      longitude: lon}
+  });
+  
+}
+
 changeVisibility(state) {
   this.setState({
       isVisible1: false,isVisible2:false,isVisible3:false,isVisible4:false,isVisible5:false,isVisible6:false,
@@ -70,6 +115,15 @@ changValue(state){
     item7: null,item8: null,item9: null,item10: null,item11: null,item12: null,
     ...state
 });
+}
+
+ConfirmLocation(state){
+  this.setState({
+    modalVisible_l:!this.state.modalVisible_l,
+    confirm_location:true,
+    ...state
+},function(){this.handleSubmitButton()});
+
 }
 renderImage(key){
   if(key==1){
@@ -154,9 +208,41 @@ renderAnswerBox(key,item){
         .then(response => response.json())
         .then(responseJson => {
           console.log(responseJson);
-          this.setState({showIndicator:false});
+          
           if(responseJson.first_name){
-            this.setState({RenderTextState:10});
+            
+            fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: this.state.PhonNumber,
+                password: this.state.Password
+              })
+              
+            })
+              .then(response => response.json())
+              .then(responseJson => {
+                this.setState({RenderTextState:10});
+                //Hide Loader
+                this.setState({showIndicator:false});
+                
+                // If server response message same as Data Matched
+                if (responseJson.token) {
+                  this.setState({user_info:responseJson});
+                  console.log(responseJson);
+                } else {
+                  
+                }
+              })
+              .catch(error => {
+                //Hide Loader
+                this.setState({showIndicator:false});
+                console.error(error);
+              });
+            
           }
           else {
             Alert.alert(responseJson.username[0]);
@@ -171,12 +257,12 @@ renderAnswerBox(key,item){
     if(this.state.CPF){
       if(this.state.RenderTextState==11){
         this.setState({showIndicator:true});
-        fetch('https://mobapivagas.jobconvo.com/v1/user/cpf/1/update/', {
+        fetch('https://mobapivagas.jobconvo.com/v1/user/cpf/'+this.state.user_info.id+'/update/', {
           method: 'PATCH',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            "Authorization":"Token 73f4f21cccd760fc5147fc821f94a54c954c31e0",
+            "Authorization":"Token "+this.state.user_info.token.api_key,
           },
           body: JSON.stringify({
             cpf: this.state.CPF,
@@ -190,7 +276,11 @@ renderAnswerBox(key,item){
               this.setState({RenderTextState:12});
             }
             else {
+              if(responseJson.message)
               Alert.alert(responseJson.message);
+              else
+              Alert.alert('Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n'+
+              'Favor entrar em contato com nosso suporte em: \n'+'suporte@jobconvo.com');
               return;
             }
           })
@@ -205,12 +295,12 @@ renderAnswerBox(key,item){
     if(this.state.Email){
       if(this.state.RenderTextState==14){
         this.setState({showIndicator:true});
-        fetch('https://mobapivagas.jobconvo.com/v1/user/1/update/', {
+        fetch('https://mobapivagas.jobconvo.com/v1/user/'+this.state.user_info.id+'/update/', {
           method: 'PATCH',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            "Authorization":"Token 73f4f21cccd760fc5147fc821f94a54c954c31e0",
+            "Authorization":"Token "+this.state.user_info.token.api_key,
           },
           body: JSON.stringify({
             email: this.state.Email,
@@ -236,37 +326,82 @@ renderAnswerBox(key,item){
       return;
     }
 
-    // if(this.state.Address){
-    //   if(this.state.RenderTextState==17){
-    //     fetch('https://mobapivagas.jobconvo.com/v1/user/1/update/', {
-    //       method: 'PATCH',
-    //       headers: {
-    //         Accept: 'application/json',
-    //         'Content-Type': 'application/json',
-    //         "Authorization":"Token 73f4f21cccd760fc5147fc821f94a54c954c31e0",
-    //       },
-    //       body: JSON.stringify({
-    //         email: this.state.Email,
-    //       })
-    //     })
-    //       .then(response => response.json())
-    //       .then(responseJson => {
-    //         console.log(responseJson);
-    //         if(responseJson.email){
-    //           this.setState({RenderTextState:18});
-    //         }
-    //         else {
-    //           Alert.alert(responseJson.message);
-    //           return;
-    //         }
-    //       })
-    //       .catch(error => {
-    //         console.error(error);
-    //       });
-    //   }
-    // }else {
-    //   return;
-    // }
+    if(this.state.confirm_location){
+        if(this.state.RenderTextState==17){
+          this.setState({showIndicator:true});
+          LocationIQ.init("5417ddeaa4502b");
+          LocationIQ.reverse(this.state.x.latitude, this.state.x.longitude)
+          .then(json => {
+              // var address = json.address;
+              console.log(this.state.x);
+              console.log(json.address);
+              fetch('https://mobapivagas.jobconvo.com/v1/user/profile/'+this.state.user_info.id+'/update/', {
+                method: 'PATCH',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  "Authorization":"Token "+this.state.user_info.token.api_key,
+                },
+                body: JSON.stringify({
+                  country_code: json.address.country_code,
+                  country: json.address.country,
+                  state: json.address.state,
+                  city: json.address.county,
+                  zipcode: json.address.postcode,
+                  addressnumber: json.address.house_number,
+                  address: json.address.road
+                })
+              })
+                .then(response => response.json())
+                .then(responseJson => {
+                  console.log(responseJson);
+                  this.setState({showIndicator:false});
+                  if(responseJson.user){
+                    this.setState({RenderTextState:18});
+                  }
+                  else {
+                    Alert.alert(responseJson.message);
+                    return;
+                  }
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+          })
+          .catch(error => console.warn(error));
+          
+         
+        }
+      }else {
+        return;
+      }
+    if(this.state.RenderTextState==32){
+      this.setState({showIndicator:true});
+      fetch('https://mobapivagas.jobconvo.com/v1/user/resume/exp/'+this.state.user_info.id+'/update/', {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          "Authorization":"Token "+this.state.user_info.token.api_key,
+        },
+        body: JSON.stringify({
+          years_of_experience: this.state.Y_exp,
+          range_of_experience: this.state.R_exp,
+          unemployed:this.state.unemployed,
+          career_objective: this.state.subarea,
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          this.setState({showIndicator:false});
+          console.log(responseJson);
+          this.setState({RenderTextState:33})
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+
   }
   render(){
     
@@ -374,31 +509,12 @@ renderAnswerBox(key,item){
             <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            // onPress={() =>this.setState({modalVisible_l:!this.state.modalVisible_l})}
-            onPress={()=> this.setState({RenderTextState:18})}
+            onPress={() =>this.setState({modalVisible_l:!this.state.modalVisible_l})}
+            // onPress={()=> this.setState({RenderTextState:18})}
             >
             <Text style={styles.buttonTextStyle}>CADASTRAR ENDEREÇO</Text>
             </TouchableOpacity>
           </View> 
-      // const input_6=<KeyboardAvoidingView enabled >
-      //               <FadeInView 
-      //                   duration={750} 
-      //                   style={styles.MultiLineInputBoxStyle}>
-      //                   <TextInput
-      //                       style={styles.inputStyle}
-      //                       onChangeText={text => this.setState({Address:text})}
-      //                       onEndEditing={() => this.handleSubmitButton()}
-      //                       onSubmitEditing={() => this.handleSubmitButton()}
-      //                       placeholder="Address"
-      //                       placeholderTextColor="#aaaaaa"
-      //                       autoCapitalize="sentences"
-      //                       returnKeyType="next"
-      //                       blurOnSubmit={false}
-      //                       multiline
-      //                       numberOfLines={4}
-      //                       />
-      //               </FadeInView>
-      //               </KeyboardAvoidingView>   
       const button_1= <View style={styles.chatboxStyle}>
                         <TouchableOpacity
                         style={styles.buttonStyle}
@@ -407,9 +523,72 @@ renderAnswerBox(key,item){
                         >
                         <Text style={styles.buttonTextStyle}>ESCOLHER AREA</Text>
                         </TouchableOpacity>
-                      </View>            
-    return (
-        <ScrollView 
+                      </View> 
+    const YN2 =  <View style={styles.InputBoxStyle}>
+                  <FadeInView 
+                      duration={750} 
+                      style={styles.InputBoxStyle}>
+                    <Text 
+                      style={styles.ChatTextStyle}
+                      onPress={()=> this.setState({RenderTextState:25,ExpYN:'Y'})}
+                      // this.setState({EmailYN:'Y'})
+                      >SIM</Text>
+                    <Text 
+                    style={styles.ChatTextStyle}
+                    onPress={()=> this.setState({RenderTextState:25,ExpYN:'N'})}
+                    >NÃO</Text>
+                  </FadeInView>
+                  </View>  
+    const input_6=<KeyboardAvoidingView enabled >
+                  <FadeInView 
+                      duration={750} 
+                      style={styles.InputBoxStyle}>
+                      <TextInput
+                          style={styles.inputStyle}
+                          keyboardType='phone-pad'
+                          onChangeText={num => this.setState({Y_exp:num})}
+                          onSubmitEditing={() => this.setState({RenderTextState:27})}
+                          placeholder="Years of experience"
+                          placeholderTextColor="#aaaaaa"
+                          autoCapitalize="sentences"
+                          returnKeyType="next"
+                          blurOnSubmit={false}
+                          />
+                  </FadeInView>
+                  </KeyboardAvoidingView>  
+    const input_7=<KeyboardAvoidingView enabled >
+                  <FadeInView 
+                      duration={750} 
+                      style={styles.InputBoxStyle}>
+                      <TextInput
+                          style={styles.inputStyle}
+                          onChangeText={num => this.setState({R_exp:num})}
+                          onSubmitEditing={() => this.setState({RenderTextState:29})}
+                          placeholder="Years of experience"
+                          placeholderTextColor="#aaaaaa"
+                          autoCapitalize="sentences"
+                          returnKeyType="next"
+                          blurOnSubmit={false}
+                          />
+                  </FadeInView>
+                  </KeyboardAvoidingView> 
+      const YN3 =  <View style={styles.InputBoxStyle}>
+                   <FadeInView 
+                       duration={750} 
+                       style={styles.InputBoxStyle}>
+                     <Text 
+                       style={styles.ChatTextStyle}
+                       onPress={()=> this.setState({RenderTextState:32,unemployeed:false},function(){this.handleSubmitButton()})}
+                       // this.setState({EmailYN:'Y'})
+                       >TRABALHANDO</Text>
+                     <Text 
+                     style={styles.ChatTextStyle}
+                     onPress={()=> this.setState({RenderTextState:32,unemployeed:true},function(){this.handleSubmitButton()})}
+                     >DESEMPREGADO</Text>
+                   </FadeInView>
+                   </View>  
+
+    return ( this.state.x !== null && <ScrollView 
             style={styles.container} 
             ref={ref => {this.scrollView = ref}}
             onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
@@ -438,13 +617,28 @@ renderAnswerBox(key,item){
                 {this.state.RenderTextState > 17 && this.renderChatBox('19','Agora me diga em que área você quer trabalhar?')}
                 {this.state.RenderTextState > 18 && button_1}
                 {this.state.RenderTextState > 19 && this.renderAnswerBox('21',this.state.subarea)}
+                {this.state.RenderTextState > 20 && this.renderChatBox('22','Ótima escolha!')}
+                {this.state.RenderTextState > 21 && this.renderChatBox('23','Se quiser adicionar outras áreas de interesse, é super fácil. Basta ir em sua página de perfil.')}
+                {this.state.RenderTextState > 22 && this.renderChatBox('24','Você têm experiência em '+this.state.subarea+'?')}
+                {this.state.RenderTextState == 24 && YN2} 
+                {this.state.RenderTextState > 24 && this.state.ExpYN=='Y'&& this.renderChatBox('26','QUANTOS ANOS DE EXPERIÊNCIA?')}
+                {this.state.RenderTextState > 25 && this.state.ExpYN=='Y'&& input_6}
+                {this.state.RenderTextState > 26 && this.state.ExpYN=='Y'&& this.renderChatBox('28','Me fale sobre seus trabalhos, atual e anteriores.')}
+                {this.state.RenderTextState > 26 && this.state.ExpYN=='Y'&& input_7}
+                {this.state.RenderTextState > 24 && this.state.ExpYN=='N'&&this.renderAnswerBox('28','Eu não tenho experiência')}
+                {this.state.RenderTextState > 27 && this.state.ExpYN=='N'&&this.renderChatBox('29','Tranquilo, temos vagas sem experência também')}
+                {this.state.RenderTextState > 28 && this.renderChatBox('30','Estamos quase acabando. Vou te mostrar vagas já já.')}
+                {this.state.RenderTextState > 29 && this.renderChatBox('31','Você está trabalhando neste momento ou está desempregado?')}
+                {this.state.RenderTextState == 31 && YN3} 
+                {this.state.RenderTextState > 32 && this.renderChatBox('34','Entendi.')}
+                {this.state.RenderTextState > 33 && this.renderChatBox('35','Me fale sobre sua formação acadêmica. Onde você estudou e qual o seu nível de instrução?')}
+
 
             </View>
           </TouchableWithoutFeedback>
           <Modal animationType = {"slide"} transparent = {false}
                visible = {this.state.modalVisible}
                onRequestClose = {() => { console.log("Modal has been closed.") } }>
-               
                <View style = {styles.modal}>
                  <View style={{ flex: 5, justifyContent: 'flex-start' }}>
                   <DropDownPicker
@@ -719,16 +913,42 @@ renderAnswerBox(key,item){
                visible = {this.state.modalVisible_l}
                onRequestClose = {() => { console.log("Modal has been closed.") } }>
                
-               <View style = {styles.modal}>
-                 <View style={{ flex: 5, justifyContent: 'flex-start' }}>
-                  <MapPicker
-                    initialCoordinate={{
-                      latitude: 37.78825,
-                      longitude: -122.4324,
-                    }}
-                    onLocationSelect={({latitude, longitude})=>console.log(longitude)}
-                  />
-                 </View>
+               <View style = {{flex: 1}}>
+                 <View style={{ flex: 3, justifyContent: 'flex-start',}}>
+
+                    <MapView style={styles.map}
+                       region={this.state.mapRegion}
+                        
+                        >
+                      <Marker draggable
+                        coordinate={this.state.x}
+                        onDragEnd={(e) => this.setState({ x: e.nativeEvent.coordinate })}
+                      />
+                    </MapView>
+
+
+                  </View>
+                  <View style={{ flex: 1, justifyContent: 'flex-start',alignItems:'center', padding:20}}>
+                    <Text style={styles.mapLabel}>Permitir acesso à localização</Text>
+                    <Text style={styles.mapText}>Isso nos ajudar a te mostrar vagas perto de onde você está ou regiões que voc6e escolher</Text>
+                  </View>
+                  <View style={{  flexDirection:'row', justifyContent: 'flex-start',alignSelf:'center', paddingBottom:50}}>
+                    <TouchableOpacity
+                      style={{borderRadius:10, padding:10, backgroundColor:'white', borderColor: '#6948F4',borderWidth: 1, margin:10}}
+                      activeOpacity={0.5}
+                      onPress={() =>this.setState({modalVisible_l:!this.state.modalVisible_l})}
+                      >
+                      <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{borderRadius:10, padding:10, backgroundColor:'#6948F4', borderColor: '#ffffff',borderWidth: 1,margin:10}}
+                      activeOpacity={0.5}
+                      onPress={() =>{this.ConfirmLocation()
+                                    }}
+                      >
+                      <Text style={styles.blueButtonTextStyle}>Permitir</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
             </Modal>
         </ScrollView>
@@ -736,19 +956,29 @@ renderAnswerBox(key,item){
   }
 }
 
-// export default RegisterScreen;
 const styles = StyleSheet.create({
+  mapLabel:{
+    color:'#6948F4',
+    fontWeight: 'bold',
+    fontSize:22,
+  },
+  mapText:{
+    padding:20,
+    color:'black',
+    fontSize:18,
+    alignItems: 'center'
+  },
+  map: {
+    
+    height:400 ,
+    borderRadius:20,
+
+  },
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
   },
-  // SectionStyle: {
-  //   height: 70,
-  //   marginTop: 20,
-  //   marginLeft: 35,
-  //   marginRight: 35,
-  //   margin: 10,
-  // },
+
   chatboxStyle: {
     width:"70%",
     alignSelf:'flex-start'
@@ -806,6 +1036,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     paddingVertical: 8,
     fontSize: 14,
+  },
+  WhiteButtonTextStyle: {
+    color: '#6948F4',
+    fontWeight:'bold',
+    padding: 5,
+    fontSize: 16,
+  },
+
+  blueButtonTextStyle: {
+    color: '#ffffff',
+    fontWeight:'bold',
+    padding: 5,
+    fontSize: 16,
   },
   dLabelStyle:{
     fontWeight:'bold',
