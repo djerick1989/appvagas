@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000040',
   },
   activityIndicatorWrapper: {
-    
     position:'absolute',
     left: 0,
     right: 0,

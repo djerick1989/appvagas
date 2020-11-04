@@ -10,6 +10,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, {Marker,Callout  } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import LocationIQ from 'react-native-locationiq';
+import {TextInputMask} from 'react-native-masked-text'
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -174,6 +175,8 @@ renderAnswerBox(key,item){
       this.setState({LastName:this.state.UserName.substring(firstSpace+1,length)}, function() { });
     }
     if(this.state.PhonNumber){
+      console.log(this.state.PhonNumber);
+     console.log(this.state.PhonNumber.length);
       if(this.state.PhonNumber.length!=11 )
       return;
       if(this.state.RenderTextState<8)
@@ -426,18 +429,28 @@ renderAnswerBox(key,item){
                       <FadeInView 
                           duration={750} 
                           style={styles.InputBoxStyle}>
-                          <TextInput
-                              ref='mobileNo'
-                              style={styles.inputStyle}
-                              keyboardType='phone-pad'
-                              onChangeText={number => this.setState({PhonNumber:number.replace(/[^0-9]/g, '')})}
+
+                            <TextInputMask
+                            style={styles.inputStyle}
+                              type={'cel-phone'}
+                              options={{
+                                maskType: 'BRL',
+                                withDDD: true,
+                                dddMask: '(99) '
+                              }}
+                              value={this.state.PhonNumber}
+                              onChangeText={text => {
+                                this.setState({
+                                  PhonNumber: text.replace(/[^0-9]/g, '')
+                                })
+                              }}
                               onSubmitEditing={() => this.handleSubmitButton()}
                               placeholder="(11) 98877 5566"
                               placeholderTextColor="#aaaaaa"
-                              autoCapitalize="sentences"
-                              returnKeyType="next"
                               blurOnSubmit={false}
-                              />
+                              // add the ref to a local var
+                              ref={(ref) => this.phoneField = ref}
+                            />
                       </FadeInView>
                       </KeyboardAvoidingView>
       const input_3=<KeyboardAvoidingView enabled >
@@ -632,8 +645,6 @@ renderAnswerBox(key,item){
                 {this.state.RenderTextState == 31 && YN3} 
                 {this.state.RenderTextState > 32 && this.renderChatBox('34','Entendi.')}
                 {this.state.RenderTextState > 33 && this.renderChatBox('35','Me fale sobre sua formação acadêmica. Onde você estudou e qual o seu nível de instrução?')}
-
-
             </View>
           </TouchableWithoutFeedback>
           <Modal animationType = {"slide"} transparent = {false}

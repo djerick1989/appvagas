@@ -1,13 +1,15 @@
 import React, { Component,useState }from "react";
-import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView,} from "react-native";
+import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView, TouchableWithoutFeedback,} from "react-native";
 import Loader from '../Components/Loader';
+import {TextInputMask} from 'react-native-masked-text'
+import KeyboardListener from 'react-native-keyboard-listener';
 
 const LoginScreen = props => {
   let [userPhon, setUserPhon] = useState('');
   let [password, setPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
-//   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+  let [keyboardOpen, setkeyboard] = useState(false);
 
   const handleSubmitButton = () => {
     setErrortext('');
@@ -53,7 +55,7 @@ const LoginScreen = props => {
         if (responseJson.token) {
           console.log(responseJson.token.api_key)
         } else {
-          setErrortext('Registration Unsuccessful');
+          setErrortext('Login Failed');
         }
       })
       .catch(error => {
@@ -63,8 +65,10 @@ const LoginScreen = props => {
       });
   };
 
+
     return (
         <View style={styles.container}>
+            
             <Loader loading={loading} />
             <View style={{ alignItems: 'center',flex:1 }}>
                 <Image
@@ -80,31 +84,33 @@ const LoginScreen = props => {
             </View>
             
             <KeyboardAvoidingView enabled style={{flex:4,}}>
-
                 <Text style={styles.LabelStyle}>
                     Login
                 </Text>
                 <View style={styles.SectionStyle}>
                     <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
-                    <TextInput
-                    style={styles.inputStyle}
-                    keyboardType='phone-pad'
-                    onChangeText={userPhon => setUserPhon(userPhon.replace(/[^0-9]/g, ''))}
-                    onSubmitEditing={() =>
-                        handleSubmitButton()
-                      }
-                    placeholder="(11) 98877 5566"
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
+                    <TextInputMask
+                        style={styles.inputStyle}
+                        type={'cel-phone'}
+                        options={{
+                        maskType: 'BRL',
+                        withDDD: true,
+                        dddMask: '(99) '
+                        }}
+                        value={userPhon}
+                        onChangeText={userPhon => setUserPhon(userPhon.replace(/[^0-9]/g, ''))}
+                        onSubmitEditing={() => handleSubmitButton()}
+                        placeholder="(11) 98877 5566"
+                        placeholderTextColor="#aaaaaa"
+                        returnKeyType="next"
+                        blurOnSubmit={false}
                     />
                 </View>
                 <View style={styles.SectionStyle}>
                     <Text style={styles.InputLabelStyle}>Senha</Text>
                     <TextInput
                     style={styles.inputStyle}
-                    onChangeText={password => setPassword(password)}
+                    onChangeText={password => setPassword(password) }
                     placeholder="******"
                     placeholderTextColor="#aaaaaa"
                     autoCapitalize="sentences"
@@ -118,9 +124,9 @@ const LoginScreen = props => {
                 {errortext != '' ? (
                     <Text style={styles.errorTextStyle}> {errortext} </Text>
                 ) : null}
-                
             </KeyboardAvoidingView>
-            <View style={{flex:1,justifyContent: 'flex-end',alignItems:'center'}}>
+            {keyboardOpen==false?
+              <View style={{flex:1,justifyContent: 'flex-end',alignItems:'center',display:'none'}}>
                 <View style={{flexDirection: 'row',marginBottom:30, alignItems:'center',}}>
                     <Text style={{color:'#000000'}}>Esqueceu sua senha? </Text>
                     <TouchableOpacity
@@ -135,7 +141,14 @@ const LoginScreen = props => {
                     onPress={() => props.navigation.navigate('StartScreen')}
                     >Voltar
                 </Text>
-            </View>
+                </View>:''}
+                <View>
+                    <KeyboardListener
+                        onWillShow={() => { setkeyboard(true); }}
+                        onWillHide={() => { setkeyboard(false); }}
+                    />
+                </View>
+            
         </View>
     );
   }
