@@ -1,5 +1,5 @@
-import React, { Component,useState }from "react";
-import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView, TouchableWithoutFeedback,} from "react-native";
+import React, { Component,useState, useEffect }from "react";
+import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard} from "react-native";
 import Loader from '../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text'
 import KeyboardListener from 'react-native-keyboard-listener';
@@ -10,7 +10,34 @@ const LoginScreen = props => {
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
   let [keyboardOpen, setkeyboard] = useState(false);
+  let [isKeyboardVisible, setKeyboardVisible] = useState('');
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        _keyboardDidShow();
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        _keyboardDidHide();
+      }
+    );
+    
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+ 
+  const _keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  }
+  const  _keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  }
   const handleSubmitButton = () => {
     setErrortext('');
     if (!userPhon||userPhon.length!=11) {
@@ -125,8 +152,8 @@ const LoginScreen = props => {
                     <Text style={styles.errorTextStyle}> {errortext} </Text>
                 ) : null}
             </KeyboardAvoidingView>
-            {keyboardOpen==false?
-              <View style={{flex:1,justifyContent: 'flex-end',alignItems:'center',display:'none'}}>
+            {isKeyboardVisible==false &&
+              <View style={{flex:1,justifyContent: 'flex-end',alignItems:'center',}}>
                 <View style={{flexDirection: 'row',marginBottom:30, alignItems:'center',}}>
                     <Text style={{color:'#000000'}}>Esqueceu sua senha? </Text>
                     <TouchableOpacity
@@ -141,13 +168,7 @@ const LoginScreen = props => {
                     onPress={() => props.navigation.navigate('StartScreen')}
                     >Voltar
                 </Text>
-                </View>:''}
-                <View>
-                    <KeyboardListener
-                        onWillShow={() => { setkeyboard(true); }}
-                        onWillHide={() => { setkeyboard(false); }}
-                    />
-                </View>
+                </View>}
             
         </View>
     );

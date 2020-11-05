@@ -13,6 +13,7 @@ import LocationIQ from 'react-native-locationiq';
 import {TextInputMask} from 'react-native-masked-text'
 import DatePicker from 'react-native-datepicker'
 import AsyncStorage from '@react-native-community/async-storage';
+import {WebView} from 'react-native-webview';
 
 export default class RegiterScreen extends Component {
   
@@ -20,12 +21,12 @@ constructor(props) {
   super(props);
   this.state = {
     showIndicator: false,
-    phon_flag: '0',
     UserName:'',
     FirstName:'',
     LastName:'',
     PhonNumber:'',
     Password:'',
+    isregistered:false,
     CPF:'',
     Email:'',
     EmailYN:'',
@@ -68,8 +69,9 @@ constructor(props) {
     mapRegion: null,
     confirm_location:false,
     user_info:null,
+    
   };
-  
+
 }
 
 componentDidMount() {
@@ -150,7 +152,7 @@ renderChatBox(key,item){
 }
 
 renderAnswerBox(key,item){
-  return    <View style={styles.anserboxStyle}>
+  return    <View style={styles.answerboxStyle}>
               <FadeInView 
                     duration={750} 
                     style={styles.ChatContainerStyle}
@@ -159,6 +161,20 @@ renderAnswerBox(key,item){
               </FadeInView>
             </View>;
 }
+
+email_validate () {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (reg.test(this.state.Email) === false) {
+      console.log("Email is Not Correct");
+      Alert.alert('Valid Email')
+      return false;
+    }
+    else {
+      console.log("Email is Correct");
+      this.handleSubmitButton();
+      
+    }
+  }
 
   handleSubmitButton(){
     if (this.state.UserName!='') {
@@ -224,14 +240,13 @@ renderAnswerBox(key,item){
                 username: this.state.PhonNumber,
                 password: this.state.Password
               })
-              
             })
               .then(response => response.json())
               .then(responseJson => {
                 this.setState({RenderTextState:10});
                 //Hide Loader
                 this.setState({showIndicator:false});
-                
+                this.setState({isregistered:true})
                 // If server response message same as Data Matched
                 if (responseJson.token) {
                   this.setState({user_info:responseJson});
@@ -248,6 +263,7 @@ renderAnswerBox(key,item){
             
           }
           else {
+            this.setState({showIndicator:false});
             Alert.alert(responseJson.username[0]);
             return;
           }
@@ -289,6 +305,7 @@ renderAnswerBox(key,item){
           })
           .catch(error => {
             console.error(error);
+            Alert.alert('server error');
           });
       }
     }else {
@@ -326,6 +343,7 @@ renderAnswerBox(key,item){
           });
       }
     }else {
+      Alert.alert('Valid Email!')
       return;
     }
 
@@ -407,6 +425,90 @@ renderAnswerBox(key,item){
 
   }
   render(){
+     const mapbox = this.state.x !== null && `<script src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+    
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+    <style>
+            .marker {
+                display: block;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                width: 50px;
+                height: 50px;
+    
+            }
+    
+            .coordinates {
+                background: rgba(0, 0, 0, 0.7);
+                color: #fff;
+                position: absolute;
+                bottom: 40px;
+                left: 10px;
+                padding: 5px 10px;
+                margin: 0;
+                font-size: 14px;
+                line-height: 18px;
+                border-radius: 3px;
+                display: none;
+            }
+        </style>
+    <div id="map"></div>
+    <pre id="coordinates" class="coordinates"></pre>
+    <script>
+            //Add your LocationIQ Maps Access Token here (not the API token!)
+            locationiqKey = '5417ddeaa4502b';
+            
+            var coordinates = document.getElementById('coordinates');
+            
+            //Define the map and configure the map's theme
+            var map = new mapboxgl.Map({
+                container: 'map',
+                center: ['${this.state.x.latitude}', '${this.state.x.longitude}'],
+                // center: ['current_latitude', 'current_longitude'],
+                // center: ['-122.42', '37.779'],
+                style: 'https://tiles.locationiq.com/v2/streets/vector.json?key='+locationiqKey,
+                zoom: 15,
+                
+            });
+                
+            // First create DOM element for the marker
+            var el = document.createElement('div');
+            el.className = 'marker';
+            el.id = 'marker';
+            // Set marker properties using JS
+            el.style.backgroundImage = url('');
+    
+            var marker = new mapboxgl.Marker(el, {
+                draggable: true
+            }).setLngLat([-122.444733, 37.767443])
+            .addTo(map);
+    
+            // After the mouse is released the following function is executed which updates the displayed lat and long
+            function onDragEnd() {
+                var lngLat = marker.getLngLat();
+                coordinates.style.display = 'block';
+                coordinates.innerHTML =
+                    'Latitude: ' + lngLat.lat + '<br />Longitude: ' + lngLat.lng;
+            }
+    
+            marker.on('dragend', onDragEnd);
+        </script>
+    </body>`;
     
       const input_1 = <KeyboardAvoidingView enabled >
                         <FadeInView 
@@ -417,11 +519,12 @@ renderAnswerBox(key,item){
                               onChangeText={text => this.setState({UserName:text})}
                               onSubmitEditing={() => this.handleSubmitButton()}
                               // underlineColorAndroid="#FFFFFF"
-                              placeholder="User Name"
+                              placeholder="NOME E SOBRENOME"
                               placeholderTextColor="#aaaaaa"
                               autoCapitalize="sentences"
                               returnKeyType="next"
                               blurOnSubmit={false}
+                              editable={this.state.RenderTextState>10?false:true}
                               />
                       </FadeInView>
                       </KeyboardAvoidingView>
@@ -448,6 +551,7 @@ renderAnswerBox(key,item){
                               placeholder="(11) 98877 5566"
                               placeholderTextColor="#aaaaaa"
                               blurOnSubmit={false}
+                              editable={this.state.RenderTextState>10?false:true}
                               // add the ref to a local var
                               ref={(ref) => this.phoneField = ref}
                             />
@@ -458,6 +562,7 @@ renderAnswerBox(key,item){
                         duration={750} 
                         
                         style={styles.InputBoxStyle}>
+                          
                         <TextInput
                             style={styles.inputStyle}
                             onChangeText={text => this.setState({Password:text})}
@@ -467,6 +572,7 @@ renderAnswerBox(key,item){
                             autoCapitalize="sentences"
                             returnKeyType="next"
                             blurOnSubmit={false}
+                            editable={this.state.RenderTextState>10?false:true}
                             />
                     </FadeInView>
                     </KeyboardAvoidingView>
@@ -474,30 +580,32 @@ renderAnswerBox(key,item){
                     <FadeInView 
                         duration={750} 
                         style={styles.InputBoxStyle}>
-                        <TextInput
+                          <TextInputMask
                             style={styles.inputStyle}
-                            keyboardType='phone-pad'
-                            onChangeText={text => this.setState({CPF:text.replace(/[^0-9]/g, '')})}
+                            type={'cpf'}
+                            value={this.state.CPF}
+                            onChangeText={text => {
+                              this.setState({
+                                CPF: text.replace(/[^0-9]/g, '')
+                              })
+                            }}
                             onSubmitEditing={() => this.handleSubmitButton()}
-                            placeholder="CPF"
                             placeholderTextColor="#aaaaaa"
-                            autoCapitalize="sentences"
                             returnKeyType="next"
-                            blurOnSubmit={false}
+                            editable={this.state.RenderTextState>13?false:true}
                             />
                     </FadeInView>
                     </KeyboardAvoidingView>   
       const YN =  <View style={styles.InputBoxStyle}>
                   <FadeInView 
                       duration={750} 
-                      style={styles.InputBoxStyle}>
+                      style={styles.InputBoxStyle,{flexDirection:"row"}}>
                     <Text 
-                      style={styles.ChatTextStyle}
+                      style={styles.YbuttonStyle}
                       onPress={()=> this.setState({RenderTextState:14,EmailYN:'Y'})}
-                      // this.setState({EmailYN:'Y'})
                       >SIM</Text>
                     <Text 
-                    style={styles.ChatTextStyle}
+                    style={styles.NbuttonStyle}
                     onPress={()=> this.setState({RenderTextState:14,EmailYN:'N'})}
                     >NÃO</Text>
                   </FadeInView>
@@ -508,9 +616,9 @@ renderAnswerBox(key,item){
                         style={styles.InputBoxStyle}>
                         <TextInput
                             style={styles.inputStyle}
-                            onChangeText={text => this.setState({Email:text})}
-                            onSubmitEditing={() => this.handleSubmitButton()}
-                            placeholder="Email"
+                            onChangeText={text => this.setState({ Email: text })}
+                            onSubmitEditing={() => this.email_validate()}
+                            placeholder="INSERIR EMAIL"
                             placeholderTextColor="#aaaaaa"
                             autoCapitalize="sentences"
                             returnKeyType="next"
@@ -600,6 +708,8 @@ renderAnswerBox(key,item){
                      >DESEMPREGADO</Text>
                    </FadeInView>
                    </View>  
+
+      
 
     return ( this.state.x !== null && <ScrollView 
             style={styles.container} 
@@ -927,15 +1037,11 @@ renderAnswerBox(key,item){
                <View style = {{flex: 1}}>
                  <View style={{ flex: 3, justifyContent: 'flex-start',}}>
 
-                    <MapView style={styles.map}
-                       region={this.state.mapRegion}
-                        
-                        >
-                      <Marker draggable
-                        coordinate={this.state.x}
-                        onDragEnd={(e) => this.setState({ x: e.nativeEvent.coordinate })}
-                      />
-                    </MapView>
+                    <WebView
+                    javaScriptEnabled={true}
+                      // originWhitelist={['*']}
+                      source={{html:mapbox}}  
+                    />
 
 
                   </View>
@@ -980,10 +1086,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   map: {
-    
     height:400 ,
     borderRadius:20,
-
   },
   container: {
     flex: 1,
@@ -994,9 +1098,36 @@ const styles = StyleSheet.create({
     width:"70%",
     alignSelf:'flex-start'
   },
-  anserboxStyle:{
+  answerboxStyle:{
     width:"70%",
     alignSelf:'flex-end'
+  },
+
+  YbuttonStyle: {
+    backgroundColor:'#6948F4',
+    color:'white', 
+    fontWeight:'bold',
+    fontSize:14,
+    borderWidth:0,
+    textAlignVertical:'center',
+    paddingHorizontal:10,
+    paddingVertical:8,
+    borderRadius:10,
+    marginHorizontal:10,
+    
+  },
+  NbuttonStyle: {
+    backgroundColor:'white',
+    borderColor:'#6948F4',
+    color:'#6948F4', 
+    fontWeight:'bold',
+    fontSize:14,
+    borderWidth:2,
+    textAlignVertical:'center',
+    paddingHorizontal:10,
+    paddingVertical:8,
+    borderRadius:10,
+    marginHorizontal:10,
   },
   ChatContainerStyle: {
     backgroundColor:'#e2dcfc',
