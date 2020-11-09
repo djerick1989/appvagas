@@ -36,7 +36,7 @@ constructor(props) {
     Y_exp:'',
     R_exp:'',
     unemployeed:false,
-    RenderTextState:'0',
+    RenderTextState:'17',
     RegisterSuccess:'0',
     modalVisible: false,
     modalVisible_l:false,
@@ -177,175 +177,175 @@ email_validate () {
   }
 
   handleSubmitButton(){
-    if (this.state.UserName!='') {
-      if(this.state.RenderTextState<5)
-        this.setState({RenderTextState:5});
-    }else {
-      console.log(this.state.RenderTextState);
-      return;
-    }
-    if(this.state.UserName.indexOf(' ')>0){
-      const firstSpace = this.state.UserName.indexOf(' ');
-      const length = this.state.UserName.length;
-      this.setState({ FirstName:this.state.UserName.substring(0,firstSpace)}, function() { });
-      this.setState({LastName:this.state.UserName.substring(firstSpace+1,length)}, function() { });
-    }
-    if(this.state.PhonNumber){
-      console.log(this.state.PhonNumber);
-     console.log(this.state.PhonNumber.length);
-      if(this.state.PhonNumber.length!=11 )
-      return;
-      if(this.state.RenderTextState<8)
-        this.setState({RenderTextState:8});
-    }else {
-      return;
-    }
+    // if (this.state.UserName!='') {
+    //   if(this.state.RenderTextState<5)
+    //     this.setState({RenderTextState:5});
+    // }else {
+    //   console.log(this.state.RenderTextState);
+    //   return;
+    // }
+    // if(this.state.UserName.indexOf(' ')>0){
+    //   const firstSpace = this.state.UserName.indexOf(' ');
+    //   const length = this.state.UserName.length;
+    //   this.setState({ FirstName:this.state.UserName.substring(0,firstSpace)}, function() { });
+    //   this.setState({LastName:this.state.UserName.substring(firstSpace+1,length)}, function() { });
+    // }
+    // if(this.state.PhonNumber){
+    //   console.log(this.state.PhonNumber);
+    //  console.log(this.state.PhonNumber.length);
+    //   if(this.state.PhonNumber.length!=11 )
+    //   return;
+    //   if(this.state.RenderTextState<8)
+    //     this.setState({RenderTextState:8});
+    // }else {
+    //   return;
+    // }
 
-    if(this.state.Password){
-      // if(this.state.RenderTextState<10)
-      //   this.setState({RenderTextState:10});
-    }else {
-      return;
-    }
+    // if(this.state.Password){
+    //   // if(this.state.RenderTextState<10)
+    //   //   this.setState({RenderTextState:10});
+    // }else {
+    //   return;
+    // }
     
 
-    if(this.state.RegisterSuccess=='0' && this.state.RenderTextState==9){
-      this.setState({showIndicator:true});
-      fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: this.state.PhonNumber,
-          first_name: this.state.FirstName,
-          last_name: this.state.LastName,
-          password: this.state.Password
-        })
-      })
-        .then(response => response.json())
-        .then(responseJson => {
-          console.log(responseJson);
+    // if(this.state.RegisterSuccess=='0' && this.state.RenderTextState==9){
+    //   this.setState({showIndicator:true});
+    //   fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
+    //     method: 'POST',
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({
+    //       username: this.state.PhonNumber,
+    //       first_name: this.state.FirstName,
+    //       last_name: this.state.LastName,
+    //       password: this.state.Password
+    //     })
+    //   })
+    //     .then(response => response.json())
+    //     .then(responseJson => {
+    //       console.log(responseJson);
           
-          if(responseJson.first_name){
+    //       if(responseJson.first_name){
             
-            fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                username: this.state.PhonNumber,
-                password: this.state.Password
-              })
-            })
-              .then(response => response.json())
-              .then(responseJson => {
-                this.setState({RenderTextState:10});
-                //Hide Loader
-                this.setState({showIndicator:false});
-                this.setState({isregistered:true})
-                // If server response message same as Data Matched
-                if (responseJson.token) {
-                  this.setState({user_info:responseJson});
-                  console.log(responseJson);
-                } else {
+    //         fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
+    //           method: 'POST',
+    //           headers: {
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //           },
+    //           body: JSON.stringify({
+    //             username: this.state.PhonNumber,
+    //             password: this.state.Password
+    //           })
+    //         })
+    //           .then(response => response.json())
+    //           .then(responseJson => {
+    //             this.setState({RenderTextState:10});
+    //             //Hide Loader
+    //             this.setState({showIndicator:false});
+    //             this.setState({isregistered:true})
+    //             // If server response message same as Data Matched
+    //             if (responseJson.token) {
+    //               this.setState({user_info:responseJson});
+    //               console.log(responseJson);
+    //             } else {
                   
-                }
-              })
-              .catch(error => {
-                //Hide Loader
-                this.setState({showIndicator:false});
-                console.error(error);
-              });
+    //             }
+    //           })
+    //           .catch(error => {
+    //             //Hide Loader
+    //             this.setState({showIndicator:false});
+    //             console.error(error);
+    //           });
             
-          }
-          else {
-            this.setState({showIndicator:false});
-            Alert.alert(responseJson.username[0]);
-            return;
-          }
-            console.log('Registration Successful. Please Login to proceed');
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-    if(this.state.CPF){
-      if(this.state.RenderTextState==11){
-        this.setState({showIndicator:true});
-        fetch('https://mobapivagas.jobconvo.com/v1/user/cpf/'+this.state.user_info.id+'/update/', {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            "Authorization":"Token "+this.state.user_info.token.api_key,
-          },
-          body: JSON.stringify({
-            cpf: this.state.CPF,
-          })
-        })
-          .then(response => response.json())
-          .then(responseJson => {
-            console.log(responseJson);
-            this.setState({showIndicator:false});
-            if(responseJson.user){
-              this.setState({RenderTextState:12});
-            }
-            else {
-              if(responseJson.message)
-              Alert.alert(responseJson.message);
-              else
-              Alert.alert('Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n'+
-              'Favor entrar em contato com nosso suporte em: \n'+'suporte@jobconvo.com');
-              return;
-            }
-          })
-          .catch(error => {
-            console.error(error);
-            Alert.alert('server error');
-          });
-      }
-    }else {
-      return;
-    }
-    if(this.state.EmailYN=='Y')
-    if(this.state.Email){
-      if(this.state.RenderTextState==14){
-        this.setState({showIndicator:true});
-        fetch('https://mobapivagas.jobconvo.com/v1/user/'+this.state.user_info.id+'/update/', {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            "Authorization":"Token "+this.state.user_info.token.api_key,
-          },
-          body: JSON.stringify({
-            email: this.state.Email,
-          })
-        })
-          .then(response => response.json())
-          .then(responseJson => {
-            console.log(responseJson);
-            this.setState({showIndicator:false});
-            if(responseJson.email){
-              this.setState({RenderTextState:16});
-            }
-            else {
-              Alert.alert(responseJson.message);
-              return;
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-    }else {
-      Alert.alert('Valid Email!')
-      return;
-    }
+    //       }
+    //       else {
+    //         this.setState({showIndicator:false});
+    //         Alert.alert(responseJson.username[0]);
+    //         return;
+    //       }
+    //         console.log('Registration Successful. Please Login to proceed');
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // }
+    // if(this.state.CPF){
+    //   if(this.state.RenderTextState==11){
+    //     this.setState({showIndicator:true});
+    //     fetch('https://mobapivagas.jobconvo.com/v1/user/cpf/'+this.state.user_info.id+'/update/', {
+    //       method: 'PATCH',
+    //       headers: {
+    //         Accept: 'application/json',
+    //         'Content-Type': 'application/json',
+    //         "Authorization":"Token "+this.state.user_info.token.api_key,
+    //       },
+    //       body: JSON.stringify({
+    //         cpf: this.state.CPF,
+    //       })
+    //     })
+    //       .then(response => response.json())
+    //       .then(responseJson => {
+    //         console.log(responseJson);
+    //         this.setState({showIndicator:false});
+    //         if(responseJson.user){
+    //           this.setState({RenderTextState:12});
+    //         }
+    //         else {
+    //           if(responseJson.message)
+    //           Alert.alert(responseJson.message);
+    //           else
+    //           Alert.alert('Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n'+
+    //           'Favor entrar em contato com nosso suporte em: \n'+'suporte@jobconvo.com');
+    //           return;
+    //         }
+    //       })
+    //       .catch(error => {
+    //         console.error(error);
+    //         Alert.alert('server error');
+    //       });
+    //   }
+    // }else {
+    //   return;
+    // }
+    // if(this.state.EmailYN=='Y')
+    // if(this.state.Email){
+    //   if(this.state.RenderTextState==14){
+    //     this.setState({showIndicator:true});
+    //     fetch('https://mobapivagas.jobconvo.com/v1/user/'+this.state.user_info.id+'/update/', {
+    //       method: 'PATCH',
+    //       headers: {
+    //         Accept: 'application/json',
+    //         'Content-Type': 'application/json',
+    //         "Authorization":"Token "+this.state.user_info.token.api_key,
+    //       },
+    //       body: JSON.stringify({
+    //         email: this.state.Email,
+    //       })
+    //     })
+    //       .then(response => response.json())
+    //       .then(responseJson => {
+    //         console.log(responseJson);
+    //         this.setState({showIndicator:false});
+    //         if(responseJson.email){
+    //           this.setState({RenderTextState:16});
+    //         }
+    //         else {
+    //           Alert.alert(responseJson.message);
+    //           return;
+    //         }
+    //       })
+    //       .catch(error => {
+    //         console.error(error);
+    //       });
+    //   }
+    // }else {
+    //   Alert.alert('Valid Email!')
+    //   return;
+    // }
 
     if(this.state.confirm_location){
         if(this.state.RenderTextState==17){
@@ -478,9 +478,9 @@ email_validate () {
             //Define the map and configure the map's theme
             var map = new mapboxgl.Map({
                 container: 'map',
-                center: ['${this.state.x.latitude}', '${this.state.x.longitude}'],
+                // center: ['${this.state.x.latitude}', '${this.state.x.longitude}'],
                 // center: ['current_latitude', 'current_longitude'],
-                // center: ['-122.42', '37.779'],
+                center: ['-122.42', '37.779'],
                 style: 'https://tiles.locationiq.com/v2/streets/vector.json?key='+locationiqKey,
                 zoom: 15,
                 
@@ -491,7 +491,7 @@ email_validate () {
             el.className = 'marker';
             el.id = 'marker';
             // Set marker properties using JS
-            el.style.backgroundImage = url('');
+            el.style.backgroundImage = url(${'../Image/marker.png'});
     
             var marker = new mapboxgl.Marker(el, {
                 draggable: true
@@ -718,7 +718,7 @@ email_validate () {
               <Loader loading={this.state.showIndicator} />
           <TouchableWithoutFeedback >
             <View style={{padding:20}}>
-                {this.state.RenderTextState >-1 && this.renderChatBox('1','Olá, muito bem vindo!')}
+                {/* {this.state.RenderTextState >-1 && this.renderChatBox('1','Olá, muito bem vindo!')}
                 {this.state.RenderTextState > 0 && this.renderChatBox('2','Sou o Pesquisa Vagas e estou aqui para ajuda-lo a conseguir um novo trabalho. Vamos lá?')}
                 {this.state.RenderTextState > 1 && this.renderChatBox('3','Muito bem, que tal começar se apresentando?')}
                 {this.state.RenderTextState > 2 && this.renderChatBox('4','Como você se chama?')}
@@ -735,7 +735,7 @@ email_validate () {
                 {this.state.RenderTextState > 13 && this.state.EmailYN=='Y'&&input_5}
                 {this.state.RenderTextState > 13 && this.state.EmailYN=='N'&&this.renderAnswerBox('15','Eu não tenho email')}
                 {this.state.RenderTextState > 14 && this.state.EmailYN=='N'&&this.renderChatBox('16','Tudo bem, vamos continuar.')}
-                {this.state.RenderTextState > 15 && this.renderChatBox('17','Legal. Seu cadastro foi realizado com sucesso!')}
+                {this.state.RenderTextState > 15 && this.renderChatBox('17','Legal. Seu cadastro foi realizado com sucesso!')} */}
                 {this.state.RenderTextState > 16 && button_map}
                 {this.state.RenderTextState > 17 && this.renderChatBox('19','Agora me diga em que área você quer trabalhar?')}
                 {this.state.RenderTextState > 18 && button_1}

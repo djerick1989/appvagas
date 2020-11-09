@@ -1,17 +1,24 @@
-import React, { Component,useState, useEffect }from "react";
-import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard} from "react-native";
+import React, { Component,useState, useEffect ,useContext}from "react";
+
+import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView, TouchableWithoutFeedback,Keyboard } from "react-native";
 import Loader from '../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text'
 import KeyboardListener from 'react-native-keyboard-listener';
+import AsyncStorage from '@react-native-community/async-storage'
+import { AuthContext } from '../Components/AuthContext';
+
+
 
 const LoginScreen = props => {
   let [userPhon, setUserPhon] = useState('');
   let [password, setPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
-  let [keyboardOpen, setkeyboard] = useState(false);
+  let [usertoken, setToken] = useState(false);
   let [isKeyboardVisible, setKeyboardVisible] = useState('');
 
+  const { signIn } = useContext(AuthContext);
+  
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -32,6 +39,19 @@ const LoginScreen = props => {
     };
   }, []);
  
+  // const saveData = async () => {
+  //   try {
+  //     AsyncStorage.setItem("token", usertoken).then(
+  //       () => AsyncStorage.getItem("operator")
+  //             .then((result)=>console.log(result))
+  //    )
+  //     await AsyncStorage.setItem('token', usertoken)
+  //     alert('Data successfully saved')
+  //   } catch (e) {
+  //     alert('Failed to save the data to the storage')
+  //   }
+  // }
+
   const _keyboardDidShow = () => {
     setKeyboardVisible(true);
   }
@@ -81,6 +101,12 @@ const LoginScreen = props => {
         // If server response message same as Data Matched
         if (responseJson.token) {
           console.log(responseJson.token.api_key)
+          setToken(responseJson.token.api_key)
+          AsyncStorage.setItem("userToken", responseJson.token.api_key).then( () => AsyncStorage.getItem("userToken")
+          .then((result)=>console.log(result)))
+
+          signIn(responseJson.token.api_key )
+          // props.navigation.navigate('AppTabsScreen');
         } else {
           setErrortext('Login Failed');
         }
