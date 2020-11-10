@@ -50,7 +50,8 @@ export default class RegiterScreen extends Component {
       Y_exp: '',
       R_exp: '',
       unemployeed: false,
-      RenderTextState: '4',
+      // RenderTextState: '4',
+      RenderTextState: '17',
       RegisterSuccess: '0',
       modalVisible: false,
       modalVisible_l: false,
@@ -131,6 +132,7 @@ export default class RegiterScreen extends Component {
       ...state,
     });
   }
+
   changValue(state) {
     this.setState({
       subarea: null,
@@ -162,6 +164,7 @@ export default class RegiterScreen extends Component {
       },
     );
   }
+
   renderImage(key) {
     if (key != 1) {
       return null;
@@ -204,7 +207,7 @@ export default class RegiterScreen extends Component {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (reg.test(this.state.Email) === false) {
       console.log('Email is Not Correct');
-      Alert.alert('Valid Email');
+      Alert.alert('Inválido Email');
       return false;
     } else {
       console.log('Email is Correct');
@@ -314,6 +317,7 @@ export default class RegiterScreen extends Component {
           console.error(error);
         });
     }
+
     if (this.state.CPF) {
       if (this.state.RenderTextState == 11) {
         this.setState({showIndicator: true});
@@ -657,16 +661,18 @@ export default class RegiterScreen extends Component {
         <FadeInView
           duration={750}
           style={(styles.InputBoxStyle, {flexDirection: 'row'})}>
-          <Text
-            style={styles.YbuttonStyle}
+          <TouchableOpacity
+            style={styles.YbuttonStyleTwo}
+            activeOpacity={0.5}
             onPress={() => this.setState({RenderTextState: 14, EmailYN: 'Y'})}>
-            SIM
-          </Text>
-          <Text
-            style={styles.NbuttonStyle}
+            <Text style={styles.blueButtonTextStyle}>SIM</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NbuttonStyleTwo}
+            activeOpacity={0.5}
             onPress={() => this.setState({RenderTextState: 14, EmailYN: 'N'})}>
-            NÃO
-          </Text>
+            <Text style={styles.WhiteButtonTextStyle}>NÃO</Text>
+          </TouchableOpacity>
         </FadeInView>
       </View>
     );
@@ -1396,6 +1402,32 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
 
+  YbuttonStyleTwo: {
+    backgroundColor: '#6948F4',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+    borderWidth: 0,
+    textAlignVertical: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+  NbuttonStyleTwo: {
+    backgroundColor: 'white',
+    borderColor: '#6948F4',
+    color: '#6948F4',
+    fontWeight: 'bold',
+    fontSize: 14,
+    borderWidth: 2,
+    textAlignVertical: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+
   YbuttonStyle: {
     backgroundColor: '#6948F4',
     color: 'white',
@@ -1405,7 +1437,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     paddingHorizontal: 10,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: 15,
     marginHorizontal: 10,
   },
   NbuttonStyle: {

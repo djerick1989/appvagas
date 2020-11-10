@@ -13,6 +13,7 @@ import LoginScreen from './Screen/LoginScreen';
 import ForgetPassScreen from './Screen/ForgetPassScreen';
 import ChangePassScreen from './Screen/ChangePassScreen';
 import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
+import ConditionsScreen from './Screen/ConditionsScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -123,6 +124,11 @@ const AuthStackScreen = () => (
       options={{headerShown: false}}
     />
     <AuthStack.Screen
+      name="ConditionsScreen"
+      component={ConditionsScreen}
+      options={{headerShown: false}}
+    />
+    <AuthStack.Screen
       name="RegisterScreen"
       component={RegisterScreen}
       options={{headerShown: false}}
@@ -169,7 +175,7 @@ export default () => {
       flex: 1,
     },
   });
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
