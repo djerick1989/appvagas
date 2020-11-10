@@ -13,6 +13,7 @@ import {
   Modal,
   TouchableHighlight,
   Alert,
+  SafeAreaView,
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
@@ -38,58 +39,52 @@ export default class RegiterScreen extends Component {
       isValidPhone: false,
       isValidPassword: false,
       isValidCpf: false,
+      isValidEmail: false,
+      isValidCep: false,
+      isValidAddress: false,
+      isValidNeiboughood: false,
+      isValidCity: false,
+      isValidState: false,
+      isValidCountry: false,
       showLoading: false,
+      // TODO just testing
+      modalVisible: true,
+      allowNotification: props.route.params.allowNotification,
+      hasEmail: null,
       UserName: '',
       FirstName: '',
       LastName: '',
       PhonNumber: '',
       Password: '',
+      Cep: '',
+      Address: '',
+      Neiboughood: '',
+      City: '',
+      State: '',
+      Country: '',
       isregistered: false,
       CPF: '',
       Email: '',
-      textInChat: [],
-      EmailYN: '',
-      ExpYN: '',
-      Address: '',
-      subarea: '',
-      Y_exp: '',
-      R_exp: '',
-      unemployeed: false,
-      // RenderTextState: '4',
-      RenderTextState: '17',
-      RegisterSuccess: '0',
-      modalVisible: false,
-      modalVisible_l: false,
-      item1: null,
-      isVisible1: false,
-      item2: null,
-      isVisible2: false,
-      item3: null,
-      isVisible3: false,
-      item4: null,
-      isVisible4: false,
-      item5: null,
-      isVisible5: false,
-      item6: null,
-      isVisible6: false,
-      item7: null,
-      isVisible7: false,
-      item8: null,
-      isVisible8: false,
-      item9: null,
-      isVisible9: false,
-      item10: null,
-      isVisible10: false,
-      item11: null,
-      isVisible11: false,
-      item12: null,
-      isVisible12: false,
-      x: null,
-      region: null,
-      mapRegion: null,
-      confirm_location: false,
       user_info: null,
     };
+  }
+
+  changeVisibility(state) {
+    this.setState({
+      isVisible1: false,
+      isVisible2: false,
+      isVisible3: false,
+      isVisible4: false,
+      isVisible5: false,
+      isVisible6: false,
+      isVisible7: false,
+      isVisible8: false,
+      isVisible9: false,
+      isVisible10: false,
+      isVisible11: false,
+      isVisible12: false,
+      ...state,
+    });
   }
 
   componentDidMount() {}
@@ -120,21 +115,12 @@ export default class RegiterScreen extends Component {
     );
   }
 
-  email_validate() {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (reg.test(this.state.Email) === false) {
-      console.log('Email is Not Correct');
-      Alert.alert('Inválido Email');
-      return false;
-    } else {
-      console.log('Email is Correct');
-      this.handleSubmitButton();
-    }
-  }
-
   handleSubmitText = (keyToSearch) => {
     switch (keyToSearch) {
       case 'userName':
+        //bypass
+        this.setState({isCorrectUser: true});
+
         if (this.state.UserName.indexOf(' ') > 0) {
           const userName = this.state.UserName;
           const firstSpace = userName.indexOf(' ');
@@ -146,11 +132,16 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'phone':
+        //bypass
+        this.setState({isValidPhone: true});
         if (this.state.PhonNumber.length === 11) {
           this.setState({isValidPhone: true});
         }
         break;
       case 'password':
+        //bypass
+        this.setState({isValidPassword: true});
+
         if (this.state.Password.length >= 4) {
           this.setState({showLoading: true});
           fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
@@ -218,11 +209,13 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'cpf':
+        //bypass
+        this.setState({isValidCpf: true});
         if (!this.state.CPF) {
           return;
         }
 
-        this.setState({showLogin: true});
+        this.setState({showLoading: true});
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
             this.state.user_info.id +
@@ -242,9 +235,9 @@ export default class RegiterScreen extends Component {
           .then((response) => response.json())
           .then((responseJson) => {
             console.log(responseJson);
-            this.setState({showLogin: false});
+            this.setState({showLoading: false});
             if (responseJson.user) {
-              this.setState({RenderTextState: 12});
+              this.setState({isValidCpf: true});
             } else {
               if (responseJson.message) {
                 Alert.alert(responseJson.message);
@@ -262,7 +255,79 @@ export default class RegiterScreen extends Component {
             console.error(error);
             Alert.alert('server error');
           });
-        this.setState({isValidCpf: true});
+        break;
+
+      case 'email':
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(this.state.Email) === false) {
+          Alert.alert('Inválido Email');
+          return;
+        } else {
+          this.setState({isValidEmail: true});
+        }
+        break;
+      case 'Cep':
+        this.setState({isValidCep: true});
+        break;
+      case 'Address':
+        this.setState({isValidAddress: true});
+        break;
+      case 'Neiboughood':
+        this.setState({isValidNeiboughood: true});
+        break;
+      case 'City':
+        this.setState({isValidCity: true});
+        break;
+      case 'State':
+        this.setState({isValidState: true});
+        break;
+      case 'Country':
+        //bypass
+        this.setState({isValidCountry: true});
+        return;
+
+        this.setState({showLoading: true});
+        fetch('https://mobapivagas.jobconvo.com/v1/user/profile/1/update/', {
+          method: 'PATCH',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Token ' + this.state.user_info.token.api_key,
+          },
+          body: JSON.stringify({
+            cpf: this.state.CPF,
+            user: this.state.user_info.id,
+            photo: '',
+            email2: null,
+            born_sex: null,
+            birthday: null,
+            country_code: 'Brasil',
+            area_code: '11',
+            phone1: this.state.PhonNumber,
+            phone2: null,
+            address: this.state.Address,
+            adddressnumber: null,
+            complement: null,
+            neighbourhood: this.state.Neiboughood,
+            state: this.state.State,
+            city: this.state.City,
+            country: this.state.Country,
+            zipcode: this.state.Zipcode,
+            latitude: null,
+            longitude: null,
+            social_status: null,
+            user_language: 'pt-br',
+            last_access: null,
+          }),
+        })
+          .then((response) => response.json())
+          .then(() => {
+            this.setState({showLoading: false, isValidCountry: true});
+          })
+          .catch((error) => {
+            console.error(error);
+            Alert.alert('server error');
+          });
         break;
       default:
         break;
@@ -298,6 +363,19 @@ export default class RegiterScreen extends Component {
     );
   };
 
+  buttonInChat = (time = 750, onPress, text) => {
+    return (
+      <FadeInView duration={time} style={styles.chatboxStyle}>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          activeOpacity={0.5}
+          onPress={onPress}>
+          <Text style={styles.buttonTextStyle}>{text}</Text>
+        </TouchableOpacity>
+      </FadeInView>
+    );
+  };
+
   inputWithInputMask = (
     time = 750,
     type,
@@ -326,6 +404,29 @@ export default class RegiterScreen extends Component {
           />
         </FadeInView>
       </KeyboardAvoidingView>
+    );
+  };
+
+  buttonsIn = (caseTrue, caseFalse) => {
+    return (
+      <View style={styles.InputBoxStyle}>
+        <FadeInView
+          duration={750}
+          style={(styles.InputBoxStyle, {flexDirection: 'row'})}>
+          <TouchableOpacity
+            style={styles.YbuttonStyleTwo}
+            activeOpacity={0.5}
+            onPress={caseTrue}>
+            <Text style={styles.blueButtonTextStyle}>SIM</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.NbuttonStyleTwo}
+            activeOpacity={0.5}
+            onPress={caseFalse}>
+            <Text style={styles.WhiteButtonTextStyle}>NÃO</Text>
+          </TouchableOpacity>
+        </FadeInView>
+      </View>
     );
   };
 
@@ -417,14 +518,505 @@ export default class RegiterScreen extends Component {
                     });
                   },
                   () => this.handleSubmitText('cpf'),
-                  '(11) 98877 5566',
+                  '',
                   this.state.isValidCpf,
+                )
+              : null}
+
+            {this.state.isValidCpf
+              ? this.renderChatBox('Você tem email?')
+              : null}
+            {this.state.isValidCpf && this.state.hasEmail == null
+              ? this.buttonsIn(
+                  () => this.setState({hasEmail: true}),
+                  () => this.setState({hasEmail: false}),
+                )
+              : null}
+
+            {this.state.hasEmail
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({Email: val}),
+                  () => this.handleSubmitText('email'),
+                  'INSERIR EMAIL',
+                  this.state.isValidEmail,
+                )
+              : null}
+
+            {this.state.hasEmail == false
+              ? this.renderChatBox(
+                  'Eu não tenho email',
+                  1000,
+                  false,
+                  styles.answerboxStyle,
+                )
+              : null}
+
+            {this.state.hasEmail == false
+              ? this.renderChatBox('Tudo bem, vamos continuar.', 2000)
+              : null}
+
+            {this.state.hasEmail == false || this.state.isValidEmail
+              ? this.renderChatBox(
+                  'Legal. Seu cadastro foi realizado com sucesso!',
+                  2600,
+                )
+              : null}
+            {this.state.hasEmail == false || this.state.isValidEmail
+              ? this.renderChatBox(
+                  'Agora informe seu endereço para mostrarmos as vagas mais perto de você.',
+                  3200,
+                )
+              : null}
+            {this.state.hasEmail == false || this.state.isValidEmail
+              ? this.buttonInChat(
+                  4200,
+                  () => this.setState({hasClickAdress: true}),
+                  'CADASTRAR ENDEREÇO',
+                )
+              : null}
+
+            {this.state.hasClickAdress
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({Cep: val}),
+                  () => this.handleSubmitText('Cep'),
+                  'CEP',
+                  this.state.isValidCep,
+                )
+              : null}
+
+            {this.state.isValidCep
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({Address: val}),
+                  () => this.handleSubmitText('Address'),
+                  'Endereço',
+                  this.state.isValidAddress,
+                )
+              : null}
+
+            {this.state.isValidAddress
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({Neiboughood: val}),
+                  () => this.handleSubmitText('Neiboughood'),
+                  'Bairro',
+                  this.state.isValidNeiboughood,
+                )
+              : null}
+
+            {this.state.isValidNeiboughood
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({City: val}),
+                  () => this.handleSubmitText('City'),
+                  'Cidade',
+                  this.state.isValidCity,
+                )
+              : null}
+
+            {this.state.isValidCity
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({State: val}),
+                  () => this.handleSubmitText('State'),
+                  'Estado',
+                  this.state.isValidState,
+                )
+              : null}
+
+            {this.state.isValidState
+              ? this.inputWithKeyBoard(
+                  1000,
+                  (val) => this.setState({Country: val}),
+                  () => this.handleSubmitText('Country'),
+                  'País',
+                  this.state.isValidCountry,
+                )
+              : null}
+
+            {this.state.isValidCountry
+              ? this.renderChatBox(
+                  'Agora me diga em que área você quer trabalhar?',
+                  1200,
+                )
+              : null}
+
+            {this.state.isValidCountry
+              ? this.buttonInChat(
+                  2000,
+                  () => this.setState({modalVisible: !this.state.modalVisible}),
+                  'ESCOLHER AREA',
                 )
               : null}
 
             {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
           </View>
         </TouchableWithoutFeedback>
+        <Modal
+          animationType={'slide'}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+          }}>
+          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+            <View style={styles.modal}>
+              <View style={{flex: 5, justifyContent: 'flex-start'}}>
+                <DropDownPicker
+                  items={DropdownItems.items1}
+                  defaultValue={this.state.item1}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible1}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible1: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible1: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item1: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[0].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+              </View>
+              <View>
+                <DropDownPicker
+                  items={DropdownItems.items2}
+                  defaultValue={this.state.item2}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible2}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible2: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible2: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item2: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[1].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+              </View>
+              <DropDownPicker
+                items={DropdownItems.items3}
+                defaultValue={this.state.item3}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible3}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible3: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible3: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item3: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[2].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items4}
+                defaultValue={this.state.item4}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible4}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible4: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible4: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item4: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[3].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items5}
+                defaultValue={this.state.item5}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible5}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible5: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible5: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item5: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[4].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items6}
+                defaultValue={this.state.item6}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible6}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible6: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible6: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item6: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[5].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items7}
+                defaultValue={this.state.item7}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible7}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible7: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible7: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item7: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[6].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items8}
+                defaultValue={this.state.item8}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible8}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible8: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible8: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item8: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[7].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items9}
+                defaultValue={this.state.item9}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible9}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible9: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible9: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item9: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[8].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items10}
+                defaultValue={this.state.item10}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible10}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible10: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible10: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item10: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[9].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items11}
+                defaultValue={this.state.item11}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible11}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible11: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible11: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item11: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[10].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items12}
+                defaultValue={this.state.item12}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible12}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible12: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible12: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item12: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[11].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                alignItems: 'stretch',
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#6948F4',
+                  alignItems: 'center',
+                  padding: 20,
+                }}>
+                <TouchableHighlight
+                  onPress={() => {
+                    this.setState({
+                      modalVisible: !this.state.modalVisible,
+                      RenderTextState: 20,
+                    });
+                  }}>
+                  <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+          </SafeAreaView>
+        </Modal>
       </ScrollView>
     );
   }
