@@ -34,6 +34,7 @@ export default class RegiterScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isCorrectUser: false,
       showLoading: false,
       UserName: '',
       FirstName: '',
@@ -152,6 +153,7 @@ export default class RegiterScreen extends Component {
     changeState,
     submitEditing,
     placeholder,
+    editable,
     placeholderTextColor = '#aaaaaa',
     autoCapitalize = 'sentences',
     returnKeyType = 'next',
@@ -168,6 +170,7 @@ export default class RegiterScreen extends Component {
             autoCapitalize={autoCapitalize}
             returnKeyType={returnKeyType}
             blurOnSubmit={false}
+            editable={!editable}
           />
         </FadeInView>
       </KeyboardAvoidingView>
@@ -229,7 +232,7 @@ export default class RegiterScreen extends Component {
               (val) => this.setState({UserName: val}),
               () => this.handleSubmitText('userName'),
               'NOME E SOBRENOME',
-              // Falta que pueda dejar de editarlo al continuar
+              this.state.isCorrectUser,
             )}
 
             {this.state.isCorrectUser
