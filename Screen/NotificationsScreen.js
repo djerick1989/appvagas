@@ -11,38 +11,10 @@ import {
 import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
-export default class MapScreen extends Component {
+export default class NotificationsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-  }
-
-  async checkMapPermission() {
-    if (Platform.OS === 'ios') {
-      let locWhenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-      if(locWhenUse == RESULTS.GRANTED){
-        console.log('the user has actived location when in use');
-        this.props.navigation.navigate('NotificationsScreen');
-      }
-      let locAlways = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
-      if(locAlways == RESULTS.GRANTED){
-        console.log('the user has actived location Always');
-        this.props.navigation.navigate('NotificationsScreen');
-      }
-      await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
-      await request(PERMISSIONS.IOS.LocationWhenInUse);
-
-      this.props.navigation.navigate('NotificationsScreen');
-
-    } else {
-      let locFine = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      if(locFine == RESULTS.GRANTED){
-        console.log('the user has actived fine location when in use');
-        this.props.navigation.navigate('NotificationsScreen');
-      }
-      await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      this.props.navigation.navigate('NotificationsScreen');
-    } 
   }
 
   render() {
@@ -50,7 +22,7 @@ export default class MapScreen extends Component {
       <View style={styles.container}>
         <View style={styles.SectionStyle}>
           <Image
-            source={require('../Image/map.png')}
+            source={require('../Image/Messages-pana.png')}
             style={{
               width: '100%',
               height: viewportHeight * 0.55,
@@ -66,10 +38,9 @@ export default class MapScreen extends Component {
             alignItems: 'center',
             padding: 20,
           }}>
-          <Text style={styles.mapLabel}>Permitir acesso à localização</Text>
+          <Text style={styles.mapLabel}>Ative as notificações</Text>
           <Text style={styles.mapText}>
-            Isso nos ajudar a te mostrar vagas perto de onde você está ou
-            regiões que voc6e escolher
+            Assim você saberá quando algum recrutador lhe enviar mensagens
           </Text>
         </View>
         <View
@@ -89,7 +60,9 @@ export default class MapScreen extends Component {
               margin: 10,
             }}
             activeOpacity={0.5}
-            onPress={() => this.props.navigation.navigate('NotificationsScreen')}>
+            onPress={() => this.props.navigation.navigate('RegisterScreen', {
+              allowNotification: false
+            })}>
             <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -103,7 +76,9 @@ export default class MapScreen extends Component {
             }}
             activeOpacity={0.5}
             onPress={() => {
-              this.checkMapPermission();
+              this.props.navigation.navigate('RegisterScreen', {
+                allowNotification: true
+              });
             }}>
             <Text style={styles.blueButtonTextStyle}>Permitir</Text>
           </TouchableOpacity>

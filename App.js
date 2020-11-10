@@ -16,6 +16,7 @@ import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
 import ConditionsScreen from './Screen/ConditionsScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
+import NotificationsScreen from './Screen/NotificationsScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -137,6 +138,11 @@ const AuthStackScreen = () => (
     <AuthStack.Screen
       name="MapScreen"
       component={MapScreen}
+      options={{headerShown: false}}
+    />
+    <AuthStack.Screen
+      name="NotificationsScreen"
+      component={NotificationsScreen}
       options={{headerShown: false}}
     />
   </AuthStack.Navigator>

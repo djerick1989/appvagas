@@ -11,6 +11,7 @@ import ConfirmCodeScreen from '../Screen/ConfirmCodeScreen';
 import ConditionsScreen from './Screen/ConditionsScreen';
 import RegisterScreen from '../Screen/RegisterScreen';
 import MapScreen from '../Screen/MapScreen';
+import NotificationsScreen from '../Screen/NotificationsScreen';
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
@@ -24,6 +25,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="ConfirmCodeScreen" component={ConfirmCodeScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="RegisterScreen" component={RegisterScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="MapScreen" component={MapScreen} options={{headerShown: false,}}/>
+    <AuthStack.Screen name="NotificationsScreen" component={NotificationsScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="ConditionsScreen" component={ConditionsScreen} options={{headerShown: false,}}/>
   </AuthStack.Navigator>
 );
