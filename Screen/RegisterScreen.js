@@ -43,7 +43,7 @@ export default class RegiterScreen extends Component {
       isregistered: false,
       CPF: '',
       Email: '',
-      textInChat: '',
+      textInChat: [],
       EmailYN: '',
       ExpYN: '',
       Address: '',
@@ -88,42 +88,28 @@ export default class RegiterScreen extends Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({textInChat: this.renderChatBox('Olá, muito bem vindo!', true)});
-  }
+  componentDidMount() {}
 
-  renderImage(key) {
-    if (key != 1) {
-      return null;
-    }
+  renderChatBox(
+    item,
+    timer = 750,
+    withImage = false,
+    styleIn = styles.chatboxStyle,
+  ) {
     return (
-      <Image
-        style={{width: 25, height: 25, resizeMode: 'contain', marginTop: 10}}
-        source={require('../Image/smile.png')}></Image>
-    );
-  }
-
-  renderChatBox(item, withImage = false) {
-    return (
-      <View style={styles.chatboxStyle}>
-        <FadeInView
-          duration={750}
-          style={styles.ChatContainerStyle}>
+      <View style={styleIn}>
+        <FadeInView duration={timer} style={styles.ChatContainerStyle}>
           <Text style={styles.ChatTextStyle}>{item}</Text>
-          {withImage ? this.renderImage(1) : ''}
-        </FadeInView>
-      </View>
-    );
-  }
-
-  renderAnswerBox(key, item) {
-    return (
-      <View style={styles.answerboxStyle}>
-        <FadeInView
-          duration={750}
-          style={styles.ChatContainerStyle}
-          onFadeComplete={() => this.setState({RenderTextState: key})}>
-          <Text style={styles.ChatTextStyle}>{item}</Text>
+          {withImage ? (
+            <Image
+              style={{
+                width: 25,
+                height: 25,
+                resizeMode: 'contain',
+                marginTop: 10,
+              }}
+              source={require('../Image/smile.png')}></Image>
+          ) : null}
         </FadeInView>
       </View>
     );
@@ -141,300 +127,120 @@ export default class RegiterScreen extends Component {
     }
   }
 
-  handleSubmitButton() {
-    if (this.state.UserName == '') {
-      return;
-    }
-
-    if (this.state.RenderTextState < 5) {
-      this.setState({RenderTextState: 5});
-    }
-
-    if (this.state.UserName.indexOf(' ') > 0) {
-      const firstSpace = this.state.UserName.indexOf(' ');
-      const length = this.state.UserName.length;
-      this.setState(
-        {FirstName: this.state.UserName.substring(0, firstSpace)},
-        function () {},
-      );
-      this.setState(
-        {LastName: this.state.UserName.substring(firstSpace + 1, length)},
-        function () {},
-      );
-    }
-
-    if (!this.state.PhonNumber) {
-      return;
-    }
-
-    console.log(
-      'PhonNumber: ' +
-        this.state.PhonNumber +
-        ' lenght:' +
-        this.state.PhonNumber.length,
-    );
-
-    if (this.state.PhonNumber.length != 11) return;
-
-    if (this.state.RenderTextState < 8) this.setState({RenderTextState: 8});
-
-    if (!this.state.Password) {
-      return;
-    }
-
-    if (this.state.Password.length < 4) {
-      return;
-    }
-
-    if (this.state.RegisterSuccess == '0' && this.state.RenderTextState == 9) {
-      this.setState({showLoading: true});
-      fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: this.state.PhonNumber,
-          first_name: this.state.FirstName,
-          last_name: this.state.LastName,
-          password: this.state.Password,
-        }),
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.first_name) {
-            fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                username: this.state.PhonNumber,
-                password: this.state.Password,
-              }),
-            })
-              .then((response) => response.json())
-              .then((responseJson) => {
-                this.setState({RenderTextState: 10});
-                //Hide Loader
-                this.setState({showLoading: false});
-                this.setState({isregistered: true});
-                // If server response message same as Data Matched
-                if (responseJson.token) {
-                  this.setState({user_info: responseJson});
-                  console.log(responseJson);
-                }
-              })
-              .catch((error) => {
-                //Hide Loader
-                this.setState({showLoading: false});
-                console.error(error);
-              });
-          } else {
-            this.setState({showLoading: false});
-            Alert.alert(responseJson.username[0]);
-            return;
-          }
-          console.log('Registration Successful. Please Login to proceed');
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-
-    if (this.state.CPF) {
-      if (this.state.RenderTextState == 11) {
-        this.setState({showLoading: true});
-        fetch(
-          'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
-            this.state.user_info.id +
-            '/update/',
-          {
-            method: 'PATCH',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: 'Token ' + this.state.user_info.token.api_key,
-            },
-            body: JSON.stringify({
-              cpf: this.state.CPF,
-            }),
-          },
-        )
-          .then((response) => response.json())
-          .then((responseJson) => {
-            console.log(responseJson);
-            this.setState({showLoading: false});
-            if (responseJson.user) {
-              this.setState({RenderTextState: 12});
-            } else {
-              if (responseJson.message) Alert.alert(responseJson.message);
-              else
-                Alert.alert(
-                  'Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n' +
-                    'Favor entrar em contato com nosso suporte em: \n' +
-                    'suporte@jobconvo.com',
-                );
-              return;
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            Alert.alert('server error');
+  handleSubmitText = (keyToSearch) => {
+    switch (keyToSearch) {
+      case 'userName':
+        if (this.state.UserName.indexOf(' ') > 0) {
+          const userName = this.state.UserName;
+          const firstSpace = userName.indexOf(' ');
+          this.setState({
+            FirstName: userName.substring(0, firstSpace),
+            LastName: userName.substring(firstSpace + 1, userName.length),
           });
-      }
-    } else {
-      return;
-    }
-    if (this.state.EmailYN == 'Y')
-      if (this.state.Email) {
-        if (this.state.RenderTextState == 14) {
-          this.setState({showLoading: true});
-          fetch(
-            'https://mobapivagas.jobconvo.com/v1/user/' +
-              this.state.user_info.id +
-              '/update/',
-            {
-              method: 'PATCH',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Token ' + this.state.user_info.token.api_key,
-              },
-              body: JSON.stringify({
-                email: this.state.Email,
-              }),
-            },
-          )
-            .then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-              this.setState({showLoading: false});
-              if (responseJson.email) {
-                this.setState({RenderTextState: 16});
-              } else {
-                Alert.alert(responseJson.message);
-                return;
-              }
-            })
-            .catch((error) => {
-              console.error(error);
-            });
         }
-      } else {
-        Alert.alert('Valid Email!');
-        return;
-      }
+        this.setState({isCorrectUser: true});
 
-    if (this.state.confirm_location) {
-      if (this.state.RenderTextState == 17) {
-        this.setState({showLoading: true});
-        LocationIQ.init('5417ddeaa4502b');
-        LocationIQ.reverse(this.state.x.latitude, this.state.x.longitude)
-          .then((json) => {
-            // var address = json.address;
-            console.log(this.state.x);
-            console.log(json.address);
-            fetch(
-              'https://mobapivagas.jobconvo.com/v1/user/profile/' +
-                this.state.user_info.id +
-                '/update/',
-              {
-                method: 'PATCH',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                  Authorization: 'Token ' + this.state.user_info.token.api_key,
-                },
-                body: JSON.stringify({
-                  country_code: json.address.country_code,
-                  country: json.address.country,
-                  state: json.address.state,
-                  city: json.address.county,
-                  zipcode: json.address.postcode,
-                  addressnumber: json.address.house_number,
-                  address: json.address.road,
-                }),
-              },
-            )
-              .then((response) => response.json())
-              .then((responseJson) => {
-                console.log(responseJson);
-                this.setState({showLoading: false});
-                if (responseJson.user) {
-                  this.setState({RenderTextState: 18});
-                } else {
-                  Alert.alert(responseJson.message);
-                  return;
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          })
-          .catch((error) => console.warn(error));
-      }
-    } else {
-      return;
+        break;
+      default:
+        break;
     }
-    if (this.state.RenderTextState == 32) {
-      this.setState({showLoading: true});
-      fetch(
-        'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-          this.state.user_info.id +
-          '/update/',
-        {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Token ' + this.state.user_info.token.api_key,
-          },
-          body: JSON.stringify({
-            years_of_experience: this.state.Y_exp,
-            range_of_experience: this.state.R_exp,
-            unemployed: this.state.unemployed,
-            career_objective: this.state.subarea,
-          }),
-        },
-      )
-        .then((response) => response.json())
-        .then((responseJson) => {
-          this.setState({showLoading: false});
-          console.log(responseJson);
-          this.setState({RenderTextState: 33});
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }
-  render() {
-    var MyText = function(t) {
-      return(
-        <Text>
-          {t}
-        </Text>
-      )           
-    }
+  };
+
+  inputWithKeyBoard = (
+    timer = 750,
+    changeState,
+    submitEditing,
+    placeholder,
+    placeholderTextColor = '#aaaaaa',
+    autoCapitalize = 'sentences',
+    returnKeyType = 'next',
+  ) => {
     return (
-        <ScrollView
-          style={styles.container}
-          ref={(ref) => {
-            this.scrollView = ref;
-          }}
-          onContentSizeChange={() =>
-            this.scrollView.scrollToEnd({animated: true})
-          }>
-          <Loader loading={this.state.showLoading} />
-          <TouchableWithoutFeedback>
-            <View style={{padding: 20}}>
-              {MyText(this.state.textInChat)}
-            </View>
-          </TouchableWithoutFeedback>
-        </ScrollView>
+      <KeyboardAvoidingView enabled>
+        <FadeInView duration={timer} style={styles.InputBoxStyle}>
+          <TextInput
+            style={styles.inputStyle}
+            onChangeText={changeState}
+            onSubmitEditing={submitEditing}
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            autoCapitalize={autoCapitalize}
+            returnKeyType={returnKeyType}
+            blurOnSubmit={false}
+          />
+        </FadeInView>
+      </KeyboardAvoidingView>
+    );
+  };
+
+  render() {
+
+    const input_phoneNumber = (
+      <KeyboardAvoidingView enabled>
+        <FadeInView duration={750} style={styles.InputBoxStyle}>
+          <TextInputMask
+            style={styles.inputStyle}
+            type={'cel-phone'}
+            options={{
+              maskType: 'BRL',
+              withDDD: true,
+              dddMask: '(99) ',
+            }}
+            value={this.state.PhonNumber}
+            onChangeText={(text) => {
+              this.setState({
+                PhonNumber: text.replace(/[^0-9]/g, ''),
+              });
+            }}
+            onSubmitEditing={() => this.handleSubmitButton()}
+            placeholder="(11) 98877 5566"
+            placeholderTextColor="#aaaaaa"
+            blurOnSubmit={false}
+            editable={this.state.RenderTextState > 7 ? false : true}
+            ref={(ref) => (this.phoneField = ref)}
+          />
+        </FadeInView>
+      </KeyboardAvoidingView>
+    );
+    return (
+      <ScrollView
+        style={styles.container}
+        ref={(ref) => {
+          this.scrollView = ref;
+        }}
+        onContentSizeChange={() =>
+          this.scrollView.scrollToEnd({animated: true})
+        }>
+        <Loader loading={this.state.showLoading} />
+        <TouchableWithoutFeedback>
+          <View style={{padding: 20}}>
+            {this.renderChatBox('Olá, muito bem vindo!', 500, true)}
+            {this.renderChatBox(
+              'Sou o Pesquisa Vagas e estou aqui para ajuda-lo a conseguir um novo trabalho. Vamos lá?',
+              1500,
+            )}
+            {this.renderChatBox(
+              'Muito bem, que tal começar se apresentando?',
+              3000,
+            )}
+            {this.renderChatBox('Como você se chama?', 4500)}
+            {this.inputWithKeyBoard(
+              5500,
+              (val) => this.setState({UserName: val}),
+              () => this.handleSubmitText("userName"),
+              'NOME E SOBRENOME',
+              // Falta que pueda dejar de editarlo al continuar
+            )}            
+            
+            {this.state.isCorrectUser ? (
+              this.renderChatBox('Lindo nome!'),
+              this.renderChatBox('Qual o número do seu celular?', 1400),
+              // Ver si puedo dejar todo esto en una linea hermosamente
+              input_phoneNumber) : null}
+            {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
+          </View>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     );
   }
 }
