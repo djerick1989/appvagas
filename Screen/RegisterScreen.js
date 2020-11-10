@@ -1301,7 +1301,7 @@ export default class RegiterScreen extends Component {
             }}>
             <View style={{flex: 1}}>
               <View style={{flex: 3, justifyContent: 'flex-start'}}>
-                <Image
+                {/* <Image
                   source={require('../Image/map.png')}
                   style={{
                     width: '100%',
@@ -1309,7 +1309,13 @@ export default class RegiterScreen extends Component {
                     resizeMode: 'contain',
                     top: 60,
                   }}
-                />
+                /> */}
+
+                <WebView
+                    javaScriptEnabled={true}
+                      // originWhitelist={['*']}
+                      source={{html:mapbox}}  
+                    />
               </View>
               <View
                 style={{

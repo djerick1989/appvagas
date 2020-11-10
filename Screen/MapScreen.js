@@ -6,13 +6,43 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
+import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 export default class MapScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  async checkMapPermission() {
+    if (Platform.OS === 'ios') {
+      let locWhenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if(locWhenUse == RESULTS.GRANTED){
+        console.log('the user has actived location when in use');
+        this.props.navigation.navigate('RegisterScreen');
+      }
+      let locAlways = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
+      if(locAlways == RESULTS.GRANTED){
+        console.log('the user has actived location Always');
+        this.props.navigation.navigate('RegisterScreen');
+      }
+      await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
+      await request(PERMISSIONS.IOS.LocationWhenInUse);
+
+      this.props.navigation.navigate('RegisterScreen');
+
+    } else {
+      let locFine = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if(locFine == RESULTS.GRANTED){
+        console.log('the user has actived fine location when in use');
+        this.props.navigation.navigate('RegisterScreen');
+      }
+      await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      this.props.navigation.navigate('RegisterScreen');
+    } 
   }
 
   render() {
@@ -59,9 +89,7 @@ export default class MapScreen extends Component {
               margin: 10,
             }}
             activeOpacity={0.5}
-            onPress={() =>
-              this.props.navigation.navigate('RegisterScreen')
-            }>
+            onPress={() => this.props.navigation.navigate('RegisterScreen')}>
             <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -75,7 +103,7 @@ export default class MapScreen extends Component {
             }}
             activeOpacity={0.5}
             onPress={() => {
-              this.ConfirmLocation();
+              this.checkMapPermission();
             }}>
             <Text style={styles.blueButtonTextStyle}>Permitir</Text>
           </TouchableOpacity>

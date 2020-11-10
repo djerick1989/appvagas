@@ -6166,6 +6166,11 @@ react-native-masked-text@^1.13.0:
     date-and-time "0.9.0"
     tinymask "1.0.2"
 
+react-native-permissions@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
+  integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
+
 react-native-reanimated@^1.13.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.13.1.tgz#c370c32cc4d447ae896cb029bb9c6a2f7608c5b4"
