@@ -108,7 +108,8 @@ export default class RegiterScreen extends Component {
                 resizeMode: 'contain',
                 marginTop: 10,
               }}
-              source={require('../Image/smile.png')}></Image>
+              source={require('../Image/smile.png')}
+            />
           ) : null}
         </FadeInView>
       </View>
@@ -174,10 +175,9 @@ export default class RegiterScreen extends Component {
   };
 
   render() {
-
     const input_phoneNumber = (
       <KeyboardAvoidingView enabled>
-        <FadeInView duration={750} style={styles.InputBoxStyle}>
+        <FadeInView duration={3750} style={styles.InputBoxStyle}>
           <TextInputMask
             style={styles.inputStyle}
             type={'cel-phone'}
@@ -227,16 +227,19 @@ export default class RegiterScreen extends Component {
             {this.inputWithKeyBoard(
               5500,
               (val) => this.setState({UserName: val}),
-              () => this.handleSubmitText("userName"),
+              () => this.handleSubmitText('userName'),
               'NOME E SOBRENOME',
               // Falta que pueda dejar de editarlo al continuar
-            )}            
-            
-            {this.state.isCorrectUser ? (
-              this.renderChatBox('Lindo nome!'),
-              this.renderChatBox('Qual o número do seu celular?', 1400),
-              // Ver si puedo dejar todo esto en una linea hermosamente
-              input_phoneNumber) : null}
+            )}
+
+            {this.state.isCorrectUser
+              ? this.renderChatBox('Lindo nome!', 1200)
+              : null}
+            {this.state.isCorrectUser
+              ? this.renderChatBox('Qual o número do seu celular?', 2000)
+              : null}
+            {this.state.isCorrectUser ? input_phoneNumber : null}
+
             {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
           </View>
         </TouchableWithoutFeedback>
