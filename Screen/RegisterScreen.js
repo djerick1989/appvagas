@@ -35,6 +35,9 @@ export default class RegiterScreen extends Component {
     super(props);
     this.state = {
       isCorrectUser: false,
+      isValidPhone: false,
+      isValidPassword: false,
+      isValidCpf: false,
       showLoading: false,
       UserName: '',
       FirstName: '',
@@ -139,9 +142,127 @@ export default class RegiterScreen extends Component {
             FirstName: userName.substring(0, firstSpace),
             LastName: userName.substring(firstSpace + 1, userName.length),
           });
+          this.setState({isCorrectUser: true});
         }
-        this.setState({isCorrectUser: true});
+        break;
+      case 'phone':
+        if (this.state.PhonNumber.length === 11) {
+          this.setState({isValidPhone: true});
+        }
+        break;
+      case 'password':
+        if (this.state.Password.length >= 4) {
+          this.setState({showLoading: true});
+          fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username: this.state.PhonNumber,
+              first_name: this.state.FirstName,
+              last_name: this.state.LastName,
+              password: this.state.Password,
+            }),
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.first_name) {
+                fetch('https://mobapivagas.jobconvo.com/v1/rest/login/', {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    username: this.state.PhonNumber,
+                    password: this.state.Password,
+                  }),
+                })
+                  .then((response) => response.json())
+                  .then((responseJsonLogin) => {
+                    this.setState({isValidPassword: true});
+                    this.setState({showLoading: false});
+                    this.setState({isregistered: true});
+                    if (responseJsonLogin.token) {
+                      this.setState({user_info: responseJsonLogin});
+                    }
+                  })
+                  .catch((error) => {
+                    this.setState({showLoading: false});
+                    console.error(error);
+                  });
+              } else {
+                this.setState({showLoading: false});
+                Alert.alert(
+                  'usuario',
+                  responseJson.username[0],
+                  [
+                    {
+                      text: 'OK',
+                      onPress: () =>
+                        this.props.navigation.navigate('LoginScreen'),
+                    },
+                    ,
+                  ],
+                  {cancelable: false},
+                );
+                // requiero mostrar el boton volver
+                return;
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
+        break;
+      case 'cpf':
+        if (!this.state.CPF) {
+          return;
+        }
 
+        this.setState({showLogin: true});
+        fetch(
+          'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
+            this.state.user_info.id +
+            '/update/',
+          {
+            method: 'PATCH',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Token ' + this.state.user_info.token.api_key,
+            },
+            body: JSON.stringify({
+              cpf: this.state.CPF,
+            }),
+          },
+        )
+          .then((response) => response.json())
+          .then((responseJson) => {
+            console.log(responseJson);
+            this.setState({showLogin: false});
+            if (responseJson.user) {
+              this.setState({RenderTextState: 12});
+            } else {
+              if (responseJson.message) {
+                Alert.alert(responseJson.message);
+              } else {
+                Alert.alert(
+                  'Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n' +
+                    'Favor entrar em contato com nosso suporte em: \n' +
+                    'suporte@jobconvo.com',
+                );
+              }
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            Alert.alert('server error');
+          });
+        this.setState({isValidCpf: true});
         break;
       default:
         break;
@@ -177,34 +298,38 @@ export default class RegiterScreen extends Component {
     );
   };
 
-  render() {
-    const input_phoneNumber = (
+  inputWithInputMask = (
+    time = 750,
+    type,
+    options,
+    value,
+    onChangeText,
+    onSubmitEditing,
+    placeholder,
+    editable,
+  ) => {
+    return (
       <KeyboardAvoidingView enabled>
-        <FadeInView duration={3750} style={styles.InputBoxStyle}>
+        <FadeInView duration={time} style={styles.InputBoxStyle}>
           <TextInputMask
             style={styles.inputStyle}
-            type={'cel-phone'}
-            options={{
-              maskType: 'BRL',
-              withDDD: true,
-              dddMask: '(99) ',
-            }}
-            value={this.state.PhonNumber}
-            onChangeText={(text) => {
-              this.setState({
-                PhonNumber: text.replace(/[^0-9]/g, ''),
-              });
-            }}
-            onSubmitEditing={() => this.handleSubmitButton()}
-            placeholder="(11) 98877 5566"
+            type={type}
+            options={options}
+            value={value}
+            onChangeText={onChangeText}
+            onSubmitEditing={onSubmitEditing}
+            placeholder={placeholder}
             placeholderTextColor="#aaaaaa"
+            returnKeyType="next"
             blurOnSubmit={false}
-            editable={this.state.RenderTextState > 7 ? false : true}
-            ref={(ref) => (this.phoneField = ref)}
+            editable={!editable}
           />
         </FadeInView>
       </KeyboardAvoidingView>
     );
+  };
+
+  render() {
     return (
       <ScrollView
         style={styles.container}
@@ -241,7 +366,61 @@ export default class RegiterScreen extends Component {
             {this.state.isCorrectUser
               ? this.renderChatBox('Qual o número do seu celular?', 2000)
               : null}
-            {this.state.isCorrectUser ? input_phoneNumber : null}
+            {this.state.isCorrectUser
+              ? this.inputWithInputMask(
+                  750,
+                  'cel-phone',
+                  {
+                    maskType: 'BRL',
+                    withDDD: true,
+                    dddMask: '(99) ',
+                  },
+                  this.state.PhonNumber,
+                  (text) => {
+                    this.setState({
+                      PhonNumber: text.replace(/[^0-9]/g, ''),
+                    });
+                  },
+                  () => this.handleSubmitText('phone'),
+                  '(11) 98877 5566',
+                  this.state.isValidPhone,
+                )
+              : null}
+
+            {this.state.isValidPhone
+              ? this.renderChatBox('Cadastre agora a sua senha de acesso')
+              : null}
+
+            {this.state.isValidPhone
+              ? this.inputWithKeyBoard(
+                  5500,
+                  (val) => this.setState({Password: val}),
+                  () => this.handleSubmitText('password'),
+                  '*******',
+                  this.state.isValidPassword,
+                )
+              : null}
+
+            {this.state.isValidPassword
+              ? this.renderChatBox('Qual o seu CPF?')
+              : null}
+
+            {this.state.isValidPassword
+              ? this.inputWithInputMask(
+                  1800,
+                  'cpf',
+                  {},
+                  this.state.CPF,
+                  (text) => {
+                    this.setState({
+                      CPF: text.replace(/[^0-9]/g, ''),
+                    });
+                  },
+                  () => this.handleSubmitText('cpf'),
+                  '(11) 98877 5566',
+                  this.state.isValidCpf,
+                )
+              : null}
 
             {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
           </View>
