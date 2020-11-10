@@ -225,7 +225,7 @@ export default class ConditionsScreen extends Component {
             style={styles.buttonStyle}
             title="Concordo"
             onPress={() =>
-              this.props.navigation.navigate('RegisterScreen')
+              this.props.navigation.navigate('MapScreen')
             }></Button>
         </View>
       </>

@@ -10,6 +10,7 @@ import ChangePassScreen from '../Screen/ChangePassScreen';
 import ConfirmCodeScreen from '../Screen/ConfirmCodeScreen';
 import ConditionsScreen from './Screen/ConditionsScreen';
 import RegisterScreen from '../Screen/RegisterScreen';
+import MapScreen from '../Screen/MapScreen';
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
@@ -22,6 +23,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="ChangePassScreen" component={ChangePassScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="ConfirmCodeScreen" component={ConfirmCodeScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="RegisterScreen" component={RegisterScreen} options={{headerShown: false,}}/>
+    <AuthStack.Screen name="MapScreen" component={MapScreen} options={{headerShown: false,}}/>
     <AuthStack.Screen name="ConditionsScreen" component={ConditionsScreen} options={{headerShown: false,}}/>
   </AuthStack.Navigator>
 );
