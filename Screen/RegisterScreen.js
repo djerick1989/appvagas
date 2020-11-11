@@ -95,19 +95,8 @@ export default class RegiterScreen extends Component {
       isVisible10: false,
       isVisible11: false,
       isVisible12: false,
+      subarea: null,
     };
-    this.controller1;
-    this.controller2;
-    this.controller3;
-    this.controller4;
-    this.controller5;
-    this.controller6;
-    this.controller7;
-    this.controller8;
-    this.controller9;
-    this.controller10;
-    this.controller11;
-    this.controller12;
   }
 
   componentDidMount() {}
@@ -357,26 +346,6 @@ export default class RegiterScreen extends Component {
     }
   };
 
-  changeValue = (item) => {
-    console.log(item);
-    this.controller1.reset();
-    this.setState({
-      subarea: item.value,
-      item1: null,
-      item2: null,
-      item3: null,
-      item4: null,
-      item5: null,
-      item6: null,
-      item7: null,
-      item8: null,
-      item9: null,
-      item10: null,
-      item11: null,
-      item12: null,
-    });
-  };
-
   changValue(state) {
     this.setState({
       subarea: null,
@@ -397,29 +366,25 @@ export default class RegiterScreen extends Component {
   }
 
   clickOkJob = () => {
-    this.setState({showLoading: true});
-    for (let index = 1; index <= 12; index++) {
-      this.state['item' + index].forEach((element) => {
-        this.setState({
-          collectionItems: this.state.collectionItems + ' ' + element,
-        });
-        fetch('https://mobapivagas.jobconvo.com/v1/user/add/area/', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            // Authorization: 'Token ' + this.state.user_info.token.api_key,
-          },
-          body: JSON.stringify({
-            area: element,
-          }),
-        });
-      });
+    if (this.state.subarea == null) {
+      return;
     }
+    this.setState({showLoading: true});
+    fetch('https://mobapivagas.jobconvo.com/v1/user/add/area/', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        // Authorization: 'Token ' + this.state.user_info.token.api_key,
+      },
+      body: JSON.stringify({
+        area: this.state.subarea,
+      }),
+    });
     this.setState({
+      showLoading: false,
       modalVisible: !this.state.modalVisible,
       isValidJob: true,
-      showLoading: false,
     });
   };
 
