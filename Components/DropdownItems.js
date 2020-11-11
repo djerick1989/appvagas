@@ -1,23 +1,37 @@
-[
-  [
+export default {
+  mainarea: [
+    {title: 'Administrativo'},
+    {title: 'Construção'},
+    {title: 'Cuidado de Animais'},
+    {title: 'Industrial'},
+    {title: 'Limpeza'},
+    {title: 'Restaurante'},
+    {title: 'Saúde'},
+    {title: 'Serviços Gerais'},
+    {title: 'Telemarketing'},
+    {title: 'Transporte'},
+    {title: 'Varejo'},
+    {title: 'Vendas'},
+  ],
+  items1: [
     {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
     {label: 'Escrituário', value: 'Escrituário'},
     {label: 'Office Boy', value: 'Office Boy'},
     {label: 'Recepcionista', value: 'Recepcionista'},
     {label: 'Secretária', value: 'Secretária'},
   ],
-  [
+  items2: [
     {label: 'Carpiteiro', value: 'Carpiteiro'},
     {label: 'Eletricista', value: 'Eletricista'},
     {label: 'Encanador', value: 'Encanador'},
     {label: 'Pedreiro', value: 'Pedreiro'},
     {label: 'Pintor', value: 'Pintor'},
   ],
-  [
+  items3: [
     {label: 'Banhista', value: 'Banhista'},
     {label: 'Tosador', value: 'Tosador'},
   ],
-  [
+  items4: [
     {label: 'Auxiliar de Produção', value: 'Auxiliar de Produção'},
     {label: 'Caldeireiro', value: 'Caldeireiro'},
     {label: 'Ferramenteiro', value: 'Ferramenteiro'},
@@ -29,7 +43,7 @@
     {label: 'Soldador', value: 'Soldador'},
     {label: 'Torneiro', value: 'Torneiro'},
   ],
-  [
+  items5: [
     {label: 'Auxiliar de Limpeza', value: 'Auxiliar de Limpeza'},
     {label: 'Doméstica', value: 'Doméstica'},
     {label: 'Faxineiro', value: 'Faxineiro'},
@@ -38,7 +52,7 @@
     {label: 'Operador de Varredeira', value: 'Operador de Varredeira'},
     {label: 'Supervisor de Limpeza', value: 'Supervisor de Limpeza'},
   ],
-  [
+  items6: [
     {label: 'Ajudante de Cozinha', value: 'Ajudante de Cozinha'},
     {label: 'Atendente', value: 'Atendente'},
     {label: 'Auxiliar de Garçom', value: 'Auxiliar de Garçom'},
@@ -50,7 +64,7 @@
     {label: 'Pizzaiolo', value: 'Pizzaiolo'},
     {label: 'Sushiman', value: 'Sushiman'},
   ],
-  [
+  items7: [
     {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
     {label: 'Atendente de Farmácia', value: 'Atendente de Farmácia'},
     {label: 'Auxiliar Hospitalar', value: 'Auxiliar Hospitalar'},
@@ -73,7 +87,7 @@
       value: 'Técnico de Patologia Clínica',
     },
   ],
-  [
+  items8: [
     {label: 'Aux. Tec. Em Telecom', value: 'Aux. Tec. Em Telecom'},
     {label: 'Auxiliar de Manutenção', value: 'Auxiliar de Manutenção'},
     {
@@ -90,7 +104,7 @@
     {label: 'Vigilante', value: 'Vigilante'},
     {label: 'Zelador', value: 'Zelador'},
   ],
-  [
+  items9: [
     {label: 'Analista de Help Desk', value: 'Analista de Help Desk'},
     {label: 'Operador de Call Center', value: 'Operador de Call Center'},
     {
@@ -103,7 +117,7 @@
     },
     {label: 'Operador de Cobrança', value: 'Operador de Cobrança'},
   ],
-  [
+  items10: [
     {label: 'Ajudante de Entrega', value: 'Ajudante de Entrega'},
     {label: 'Auxiliar de Logística', value: 'Auxiliar de Logística'},
     {label: 'Auxiliar de Motorista', value: 'Auxiliar de Motorista'},
@@ -113,7 +127,7 @@
     {label: 'Operador de Estacionamento', value: 'Operador de Estacionamento'},
     {label: 'Tratorista', value: 'Tratorista'},
   ],
-  [
+  items11: [
     {label: 'Ajudante de Padeiro', value: 'Ajudante de Padeiro'},
     {label: 'Atendente de Loja', value: 'Atendente de Loja'},
     {label: 'Açougueiro', value: 'Açougueiro'},
@@ -133,7 +147,7 @@
     {label: 'Shopper', value: 'Shopper'},
     {label: 'Visual Merchandising', value: 'Visual Merchandising'},
   ],
-  [
+  items12: [
     {label: 'Assistente Comercial', value: 'Assistente Comercial'},
     {label: 'Atendente de Loja', value: 'Atendente de Loja'},
     {label: 'Balconista', value: 'Balconista'},
@@ -142,4 +156,4 @@
     {label: 'Vendedor', value: 'Vendedor'},
     {label: 'Vendedor Externo', value: 'Vendedor Externo'},
   ],
-];
+};
