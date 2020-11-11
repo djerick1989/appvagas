@@ -49,7 +49,12 @@ export default class RegiterScreen extends Component {
       isValidCity: false,
       isValidState: false,
       isValidCountry: false,
+      isValidExperience: false,
       showLoading: false,
+      isValidExperienceInfo: false,
+      hasClickEducation: false,
+      hasExperience: null,
+      hasWorking: null,
       isValidJob: false,
       // TODO just testing
       modalVisible: true,
@@ -69,6 +74,7 @@ export default class RegiterScreen extends Component {
       isregistered: false,
       CPF: '',
       Email: '',
+      InfoExp: '',
       user_info: null,
       item1: '',
       item2: '',
@@ -341,6 +347,15 @@ export default class RegiterScreen extends Component {
             Alert.alert('server error');
           });
         break;
+      case 'YearsExp':
+        if (this.state.YearsExp == '' || this.state.YearsExp == null) {
+          this.setState({YearsExp: 0});
+        }
+        this.setState({isValidExperience: true});
+        break;
+      case 'InfoExp':
+        this.setState({isValidExperienceInfo: true});
+        break;
       default:
         break;
     }
@@ -415,6 +430,7 @@ export default class RegiterScreen extends Component {
     placeholderTextColor = '#aaaaaa',
     autoCapitalize = 'sentences',
     returnKeyType = 'next',
+    keyboardType = 'default',
   ) => {
     return (
       <KeyboardAvoidingView enabled>
@@ -428,6 +444,7 @@ export default class RegiterScreen extends Component {
             autoCapitalize={autoCapitalize}
             returnKeyType={returnKeyType}
             blurOnSubmit={false}
+            keyboardType={keyboardType}
             editable={!editable}
           />
         </FadeInView>
@@ -479,11 +496,11 @@ export default class RegiterScreen extends Component {
     );
   };
 
-  buttonsIn = (caseTrue, caseFalse) => {
+  buttonsIn = (caseTrue, caseFalse, timer = 750) => {
     return (
       <View style={styles.InputBoxStyle}>
         <FadeInView
-          duration={750}
+          duration={timer}
           style={(styles.InputBoxStyle, {flexDirection: 'row'})}>
           <TouchableOpacity
             style={styles.YbuttonStyleTwo}
@@ -546,7 +563,6 @@ export default class RegiterScreen extends Component {
               'NOME E SOBRENOME',
               this.state.isCorrectUser,
             )}
-
             {this.state.isCorrectUser
               ? this.renderChatBox('Lindo nome!', 1200)
               : null}
@@ -573,11 +589,9 @@ export default class RegiterScreen extends Component {
                   this.state.isValidPhone,
                 )
               : null}
-
             {this.state.isValidPhone
               ? this.renderChatBox('Cadastre agora a sua senha de acesso')
               : null}
-
             {this.state.isValidPhone
               ? this.inputWithKeyBoard(
                   5500,
@@ -587,11 +601,9 @@ export default class RegiterScreen extends Component {
                   this.state.isValidPassword,
                 )
               : null}
-
             {this.state.isValidPassword
               ? this.renderChatBox('Qual o seu CPF?')
               : null}
-
             {this.state.isValidPassword
               ? this.inputWithInputMask(
                   1800,
@@ -608,7 +620,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidCpf,
                 )
               : null}
-
             {this.state.isValidCpf
               ? this.renderChatBox('Você tem email?')
               : null}
@@ -618,7 +629,6 @@ export default class RegiterScreen extends Component {
                   () => this.setState({hasEmail: false}),
                 )
               : null}
-
             {this.state.hasEmail
               ? this.inputWithKeyBoard(
                   1000,
@@ -628,7 +638,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidEmail,
                 )
               : null}
-
             {this.state.hasEmail == false
               ? this.renderChatBox(
                   'Eu não tenho email',
@@ -637,11 +646,9 @@ export default class RegiterScreen extends Component {
                   styles.answerboxStyle,
                 )
               : null}
-
             {this.state.hasEmail == false
               ? this.renderChatBox('Tudo bem, vamos continuar.', 2000)
               : null}
-
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.renderChatBox(
                   'Legal. Seu cadastro foi realizado com sucesso!',
@@ -661,7 +668,6 @@ export default class RegiterScreen extends Component {
                   'CADASTRAR ENDEREÇO',
                 )
               : null}
-
             {this.state.hasClickAdress
               ? this.inputWithKeyBoard(
                   1000,
@@ -671,7 +677,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidCep,
                 )
               : null}
-
             {this.state.isValidCep
               ? this.inputWithKeyBoard(
                   1000,
@@ -681,7 +686,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidAddress,
                 )
               : null}
-
             {this.state.isValidAddress
               ? this.inputWithKeyBoard(
                   1000,
@@ -691,7 +695,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidNeiboughood,
                 )
               : null}
-
             {this.state.isValidNeiboughood
               ? this.inputWithKeyBoard(
                   1000,
@@ -701,7 +704,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidCity,
                 )
               : null}
-
             {this.state.isValidCity
               ? this.inputWithKeyBoard(
                   1000,
@@ -711,7 +713,6 @@ export default class RegiterScreen extends Component {
                   this.state.isValidState,
                 )
               : null}
-
             {this.state.isValidState
               ? this.inputWithKeyBoard(
                   1000,
@@ -721,14 +722,12 @@ export default class RegiterScreen extends Component {
                   this.state.isValidCountry,
                 )
               : null}
-
             {this.state.isValidCountry
               ? this.renderChatBox(
                   'Agora me diga em que área você quer trabalhar?',
                   1200,
                 )
               : null}
-
             {this.state.isValidCountry
               ? this.buttonInChat(
                   2000,
@@ -736,17 +735,238 @@ export default class RegiterScreen extends Component {
                   'ESCOLHER AREA',
                 )
               : null}
-
             {this.state.isValidJob
               ? this.renderChatBox('Ótima escolha!')
               : null}
             {this.state.isValidJob
               ? this.renderChatBox(
                   'Se quiser adicionar outras áreas de interesse, é super fácil. Basta ir em sua página de perfil.',
+                  1500,
+                )
+              : null}
+            {this.state.isValidJob
+              ? this.renderChatBox(
+                  'Você têm experiência em ' + this.state.subarea + '?',
+                  2500,
+                )
+              : null}
+            {this.state.isValidJob && this.state.hasExperience == null
+              ? this.buttonsIn(
+                  () => this.setState({hasExperience: true}),
+                  () => this.setState({hasExperience: false}),
+                  3000,
+                )
+              : null}
+            {this.state.hasExperience == true
+              ? this.renderChatBox('QUANTOS ANOS DE EXPERIÊNCIA?')
+              : null}
+            {this.state.hasExperience
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (num) => this.setState({YearsExp: num}),
+                  () => this.handleSubmitText('YearsExp'),
+                  'ANOS DE EXPERIÊNCIA',
+                  this.state.isValidExperience,
+                  '#aaaaaa',
+                  'sentences',
+                  'next',
+                  'phone-pad',
+                )
+              : null}
+            {this.state.hasExperience && this.state.isValidExperience
+              ? this.renderChatBox(
+                  'Me fale sobre seus trabalhos, atual e anteriores.',
+                )
+              : null}
+            {this.state.hasExperience && this.state.isValidExperience
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({InfoExp: text}),
+                  () => this.handleSubmitText('InfoExp'),
+                  'CADASTRAR EXPERIÊNCIA',
+                  this.state.isValidExperienceInfo,
                 )
               : null}
 
-            {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
+            {this.state.hasExperience == false
+              ? this.renderChatBox(
+                  'Eu não tenho experiência',
+                  1200,
+                  false,
+                  styles.answerboxStyle,
+                )
+              : null}
+
+            {this.state.hasExperience == false
+              ? this.renderChatBox(
+                  'Tranquilo, temos vagas sem experência também',
+                  1600,
+                )
+              : null}
+
+            {this.state.isValidExperienceInfo ||
+            this.state.hasExperience == false
+              ? this.renderChatBox(
+                  'Estamos quase acabando. Vou te mostrar vagas já já.',
+                  2100,
+                )
+              : null}
+
+            {this.state.isValidExperienceInfo ||
+            this.state.hasExperience == false
+              ? this.renderChatBox(
+                  'Você está trabalhando neste momento ou está desempregado?',
+                  2400,
+                )
+              : null}
+
+            {this.state.isValidExperienceInfo ||
+            this.state.hasExperience == false
+              ? this.buttonsIn(
+                  () => this.setState({hasWorking: true}),
+                  () => this.setState({hasWorking: false}),
+                  3000,
+                )
+              : null}
+
+            {this.state.hasWorking != null
+              ? this.renderChatBox('Entendi')
+              : null}
+
+            {this.state.hasWorking != null
+              ? this.renderChatBox(
+                  'Me fale sobre sua formação acadêmica. Onde você estudou e qual o seu nível de instrução?',
+                  1500,
+                )
+              : null}
+
+            {this.state.hasWorking != null
+              ? this.buttonInChat(
+                  2400,
+                  () => this.setState({hasClickEducation: true}),
+                  'CADASTRAR EDUCAÇÃO',
+                )
+              : null}
+
+            {/* Cambiar a un combo box que tenga todos estos elementos */}
+            {this.state.hasClickEducation
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Nivel: text}),
+                  () => this.handleSubmitText('Nivel'),
+                  'Nivel',
+                  this.state.isValidNivel,
+                )
+              : null}
+
+            {this.state.isValidNivel
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Formation: text}),
+                  () => this.handleSubmitText('Formation'),
+                  'Formation',
+                  this.state.isValidFormation,
+                )
+              : null}
+
+            {this.state.isValidFormation
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Institution: text}),
+                  () => this.handleSubmitText('Institution'),
+                  'Institution',
+                  this.state.isValidInstitution,
+                )
+              : null}
+
+            {this.state.isValidInstitution
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Status: text}),
+                  () => this.handleSubmitText('Status'),
+                  'Status',
+                  this.state.isValidStatus,
+                )
+              : null}
+
+            {this.state.isValidStatus
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Inicio: text}),
+                  () => this.handleSubmitText('Inicio'),
+                  'Inicio',
+                  this.state.isValidInicio,
+                )
+              : null}
+            {this.state.isValidInicio
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({Concluido: text}),
+                  () => this.handleSubmitText('Concluido'),
+                  'Concluido',
+                  this.state.isValidConcluido,
+                )
+              : null}
+
+            {this.state.isValidConcluido
+              ? this.renderChatBox(
+                  'Legal. Para finalizar, me fale o seu último salário e sua pretensão salarial',
+                )
+              : null}
+
+            {this.state.isValidConcluido
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({FirstSaldo: text}),
+                  () => this.handleSubmitText('FirstSaldo'),
+                  'Salário anterior',
+                  this.state.isValidFirstSaldo,
+                )
+              : null}
+
+            {this.state.isValidFirstSaldo
+              ? this.inputWithKeyBoard(
+                  1200,
+                  (text) => this.setState({LastSaldo: text}),
+                  () => this.handleSubmitText('LastSaldo'),
+                  'pretensão salarial',
+                  this.state.isValidLastSaldo,
+                )
+              : null}
+
+            {this.state.isValidLastSaldo
+              ? this.renderChatBox('Maravilha!')
+              : null}
+
+            {this.state.isValidLastSaldo
+              ? this.renderChatBox(
+                  'Foi fácil certo! Agora vamos ver as vagas disponíveis mais perto de você. Boa sorte!',
+                  1500,
+                )
+              : null}
+
+            {this.state.isValidLastSaldo ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'stretch',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#6948F4',
+                    alignItems: 'center',
+                    padding: 20,
+                  }}>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.clickOkJob();
+                    }}>
+                    <Text style={{color: '#FFFFFF'}}>Enterokay</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            ) : null}
           </View>
         </TouchableWithoutFeedback>
         <Modal
