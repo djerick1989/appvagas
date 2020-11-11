@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
-import DropdownItems from '../Components/DropdownItems';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, {Marker, Callout} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -86,6 +85,153 @@ export default class RegiterScreen extends Component {
       user_info: null,
     };
   }
+
+  DropdownItems = [
+    [
+      {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
+      {label: 'Escrituário', value: 'Escrituário'},
+      {label: 'Office Boy', value: 'Office Boy'},
+      {label: 'Recepcionista', value: 'Recepcionista'},
+      {label: 'Secretária', value: 'Secretária'},
+    ],
+    [
+      {label: 'Carpiteiro', value: 'Carpiteiro'},
+      {label: 'Eletricista', value: 'Eletricista'},
+      {label: 'Encanador', value: 'Encanador'},
+      {label: 'Pedreiro', value: 'Pedreiro'},
+      {label: 'Pintor', value: 'Pintor'},
+    ],
+    [
+      {label: 'Banhista', value: 'Banhista'},
+      {label: 'Tosador', value: 'Tosador'},
+    ],
+    [
+      {label: 'Auxiliar de Produção', value: 'Auxiliar de Produção'},
+      {label: 'Caldeireiro', value: 'Caldeireiro'},
+      {label: 'Ferramenteiro', value: 'Ferramenteiro'},
+      {label: 'Fresador', value: 'Fresador'},
+      {label: 'Funileiro', value: 'Funileiro'},
+      {label: 'Mecanico Industrial', value: 'Mecanico Industrial'},
+      {label: 'Operador de Máquinas', value: 'Operador de Máquinas'},
+      {label: 'Serralheiro', value: 'Serralheiro'},
+      {label: 'Soldador', value: 'Soldador'},
+      {label: 'Torneiro', value: 'Torneiro'},
+    ],
+    [
+      {label: 'Auxiliar de Limpeza', value: 'Auxiliar de Limpeza'},
+      {label: 'Doméstica', value: 'Doméstica'},
+      {label: 'Faxineiro', value: 'Faxineiro'},
+      {label: 'Lavador de Auto', value: 'Lavador de Auto'},
+      {label: 'Limpador de Vidros', value: 'Limpador de Vidros'},
+      {label: 'Operador de Varredeira', value: 'Operador de Varredeira'},
+      {label: 'Supervisor de Limpeza', value: 'Supervisor de Limpeza'},
+    ],
+    [
+      {label: 'Ajudante de Cozinha', value: 'Ajudante de Cozinha'},
+      {label: 'Atendente', value: 'Atendente'},
+      {label: 'Auxiliar de Garçom', value: 'Auxiliar de Garçom'},
+      {label: 'Barista', value: 'Barista'},
+      {label: 'Barman', value: 'Barman'},
+      {label: 'Cozinheiro', value: 'Cozinheiro'},
+      {label: 'Garçom', value: 'Garçom'},
+      {label: 'Masseiro', value: 'Masseiro'},
+      {label: 'Pizzaiolo', value: 'Pizzaiolo'},
+      {label: 'Sushiman', value: 'Sushiman'},
+    ],
+    [
+      {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
+      {label: 'Atendente de Farmácia', value: 'Atendente de Farmácia'},
+      {label: 'Auxiliar Hospitalar', value: 'Auxiliar Hospitalar'},
+      {label: 'Auxiliar de Enfermagem', value: 'Auxiliar de Enfermagem'},
+      {
+        label: 'Auxiliar de Limpeza Hospitalar',
+        value: 'Auxiliar de Limpeza Hospitalar',
+      },
+      {label: 'Estoquista Hospitalar', value: 'Estoquista Hospitalar'},
+      {label: 'Farmaceutico', value: 'Farmaceutico'},
+      {label: 'Recepcionista Hospitalar', value: 'Recepcionista Hospitalar'},
+      {
+        label: 'Técnico de Análises Clínicas',
+        value: 'Técnico de Análises Clínicas',
+      },
+      {label: 'Técnico de Coleta', value: 'Técnico de Coleta'},
+      {label: 'Técnico de Enfermagem', value: 'Técnico de Enfermagem'},
+      {
+        label: 'Técnico de Patologia Clínica',
+        value: 'Técnico de Patologia Clínica',
+      },
+    ],
+    [
+      {label: 'Aux. Tec. Em Telecom', value: 'Aux. Tec. Em Telecom'},
+      {label: 'Auxiliar de Manutenção', value: 'Auxiliar de Manutenção'},
+      {
+        label: 'Auxiliar de Serviços Gerais',
+        value: 'Auxiliar de Serviços Gerais',
+      },
+      {label: 'Bombeiro', value: 'Bombeiro'},
+      {label: 'Copeira', value: 'Copeira'},
+      {label: 'Frentista', value: 'Frentista'},
+      {label: 'Jardineiro', value: 'Jardineiro'},
+      {label: 'Limpador de Piscina', value: 'Limpador de Piscina'},
+      {label: 'Porteiro', value: 'Porteiro'},
+      {label: 'Segurança', value: 'Segurança'},
+      {label: 'Vigilante', value: 'Vigilante'},
+      {label: 'Zelador', value: 'Zelador'},
+    ],
+    [
+      {label: 'Analista de Help Desk', value: 'Analista de Help Desk'},
+      {label: 'Operador de Call Center', value: 'Operador de Call Center'},
+      {
+        label: 'Operador de Call Center Ativo',
+        value: 'Operador de Call Center Ativo',
+      },
+      {
+        label: 'Operador de Call Center Receptivo',
+        value: 'Operador de Call Center Receptivo',
+      },
+      {label: 'Operador de Cobrança', value: 'Operador de Cobrança'},
+    ],
+    [
+      {label: 'Ajudante de Entrega', value: 'Ajudante de Entrega'},
+      {label: 'Auxiliar de Logística', value: 'Auxiliar de Logística'},
+      {label: 'Auxiliar de Motorista', value: 'Auxiliar de Motorista'},
+      {label: 'Manobrista', value: 'Manobrista'},
+      {label: 'Motoboy', value: 'Motoboy'},
+      {label: 'Motorista Entregador', value: 'Motorista Entregador'},
+      {label: 'Operador de Estacionamento', value: 'Operador de Estacionamento'},
+      {label: 'Tratorista', value: 'Tratorista'},
+    ],
+    [
+      {label: 'Ajudante de Padeiro', value: 'Ajudante de Padeiro'},
+      {label: 'Atendente de Loja', value: 'Atendente de Loja'},
+      {label: 'Açougueiro', value: 'Açougueiro'},
+      {label: 'Balconista', value: 'Balconista'},
+      {label: 'Cartazista', value: 'Cartazista'},
+      {label: 'Confeiteiro', value: 'Confeiteiro'},
+      {label: 'Conferente', value: 'Conferente'},
+      {label: 'Especialista em Frios', value: 'Especialista em Frios'},
+      {label: 'Especialista em Queijos', value: 'Especialista em Queijos'},
+      {label: 'Estoquista', value: 'Estoquista'},
+      {label: 'Feirante', value: 'Feirante'},
+      {label: 'Fiscal de Loja', value: 'Fiscal de Loja'},
+      {label: 'Operador de Caixa', value: 'Operador de Caixa'},
+      {label: 'Padeiro', value: 'Padeiro'},
+      {label: 'Peixeiro', value: 'Peixeiro'},
+      {label: 'Repositor', value: 'Repositor'},
+      {label: 'Shopper', value: 'Shopper'},
+      {label: 'Visual Merchandising', value: 'Visual Merchandising'},
+    ],
+    [
+      {label: 'Assistente Comercial', value: 'Assistente Comercial'},
+      {label: 'Atendente de Loja', value: 'Atendente de Loja'},
+      {label: 'Balconista', value: 'Balconista'},
+      {label: 'Corretor de Imóveis', value: 'Corretor de Imóveis'},
+      {label: 'Promotor de Vendas', value: 'Promotor de Vendas'},
+      {label: 'Vendedor', value: 'Vendedor'},
+      {label: 'Vendedor Externo', value: 'Vendedor Externo'},
+    ],
+  ];
+  
 
   componentDidMount() {
     Geolocation.getCurrentPosition(
@@ -172,7 +318,8 @@ export default class RegiterScreen extends Component {
     return (
       <Image
         style={{width: 25, height: 25, resizeMode: 'contain', marginTop: 10}}
-        source={require('../Image/smile.png')}></Image>
+        source={require('../Image/smile.png')}
+      />
     );
   }
 
@@ -248,9 +395,13 @@ export default class RegiterScreen extends Component {
         this.state.PhonNumber.length,
     );
 
-    if (this.state.PhonNumber.length != 11) return;
+    if (this.state.PhonNumber.length != 11) {
+      return;
+    }
 
-    if (this.state.RenderTextState < 8) this.setState({RenderTextState: 8});
+    if (this.state.RenderTextState < 8) {
+      this.setState({RenderTextState: 8});
+    }
 
     if (!this.state.Password) {
       return;
@@ -344,13 +495,15 @@ export default class RegiterScreen extends Component {
             if (responseJson.user) {
               this.setState({RenderTextState: 12});
             } else {
-              if (responseJson.message) Alert.alert(responseJson.message);
-              else
+              if (responseJson.message) {
+                Alert.alert(responseJson.message);
+              } else {
                 Alert.alert(
                   'Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n' +
                     'Favor entrar em contato com nosso suporte em: \n' +
                     'suporte@jobconvo.com',
                 );
+              }
               return;
             }
           })
@@ -362,7 +515,7 @@ export default class RegiterScreen extends Component {
     } else {
       return;
     }
-    if (this.state.EmailYN == 'Y')
+    if (this.state.EmailYN == 'Y') {
       if (this.state.Email) {
         if (this.state.RenderTextState == 14) {
           this.setState({showIndicator: true});
@@ -401,6 +554,7 @@ export default class RegiterScreen extends Component {
         Alert.alert('Valid Email!');
         return;
       }
+    }
 
     if (this.state.confirm_location) {
       if (this.state.RenderTextState == 17) {
@@ -803,6 +957,20 @@ export default class RegiterScreen extends Component {
     );
 
     return (
+      const mainarea = [
+        {title: 'Administrativo'},
+        {title: 'Construção'},
+        {title: 'Cuidado de Animais'},
+        {title: 'Industrial'},
+        {title: 'Limpeza'},
+        {title: 'Restaurante'},
+        {title: 'Saúde'},
+        {title: 'Serviços Gerais'},
+        {title: 'Telemarketing'},
+        {title: 'Transporte'},
+        {title: 'Varejo'},
+        {title: 'Vendas'},
+      ];
       this.state.x !== null && (
         <ScrollView
           style={styles.container}
@@ -1312,10 +1480,10 @@ export default class RegiterScreen extends Component {
                 /> */}
 
                 <WebView
-                    javaScriptEnabled={true}
-                      // originWhitelist={['*']}
-                      source={{html:mapbox}}  
-                    />
+                  javaScriptEnabled={true}
+                  // originWhitelist={['*']}
+                  source={{html: mapbox}}
+                />
               </View>
               <View
                 style={{

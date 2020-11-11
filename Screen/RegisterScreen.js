@@ -19,9 +19,9 @@ import {
 } from 'react-native';
 import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
-import DropdownItems from '../Components/DropdownItems';
 import DropDownPicker from 'react-native-dropdown-picker';
 import MapView, {Marker, Callout} from 'react-native-maps';
+import Icon from 'react-native-vector-icons/Feather';
 import Geolocation from '@react-native-community/geolocation';
 import LocationIQ from 'react-native-locationiq';
 import {TextInputMask} from 'react-native-masked-text';
@@ -31,6 +31,154 @@ import {WebView} from 'react-native-webview';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 
+const DropdownItems = [
+  [
+    {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
+    {label: 'Escrituário', value: 'Escrituário'},
+    {label: 'Office Boy', value: 'Office Boy'},
+    {label: 'Recepcionista', value: 'Recepcionista'},
+    {label: 'Secretária', value: 'Secretária'},
+  ],
+  [
+    {label: 'Carpiteiro', value: 'Carpiteiro'},
+    {label: 'Eletricista', value: 'Eletricista'},
+    {label: 'Encanador', value: 'Encanador'},
+    {label: 'Pedreiro', value: 'Pedreiro'},
+    {label: 'Pintor', value: 'Pintor'},
+  ],
+  [
+    {label: 'Banhista', value: 'Banhista'},
+    {label: 'Tosador', value: 'Tosador'},
+  ],
+  [
+    {label: 'Auxiliar de Produção', value: 'Auxiliar de Produção'},
+    {label: 'Caldeireiro', value: 'Caldeireiro'},
+    {label: 'Ferramenteiro', value: 'Ferramenteiro'},
+    {label: 'Fresador', value: 'Fresador'},
+    {label: 'Funileiro', value: 'Funileiro'},
+    {label: 'Mecanico Industrial', value: 'Mecanico Industrial'},
+    {label: 'Operador de Máquinas', value: 'Operador de Máquinas'},
+    {label: 'Serralheiro', value: 'Serralheiro'},
+    {label: 'Soldador', value: 'Soldador'},
+    {label: 'Torneiro', value: 'Torneiro'},
+  ],
+  [
+    {label: 'Auxiliar de Limpeza', value: 'Auxiliar de Limpeza'},
+    {label: 'Doméstica', value: 'Doméstica'},
+    {label: 'Faxineiro', value: 'Faxineiro'},
+    {label: 'Lavador de Auto', value: 'Lavador de Auto'},
+    {label: 'Limpador de Vidros', value: 'Limpador de Vidros'},
+    {label: 'Operador de Varredeira', value: 'Operador de Varredeira'},
+    {label: 'Supervisor de Limpeza', value: 'Supervisor de Limpeza'},
+  ],
+  [
+    {label: 'Ajudante de Cozinha', value: 'Ajudante de Cozinha'},
+    {label: 'Atendente', value: 'Atendente'},
+    {label: 'Auxiliar de Garçom', value: 'Auxiliar de Garçom'},
+    {label: 'Barista', value: 'Barista'},
+    {label: 'Barman', value: 'Barman'},
+    {label: 'Cozinheiro', value: 'Cozinheiro'},
+    {label: 'Garçom', value: 'Garçom'},
+    {label: 'Masseiro', value: 'Masseiro'},
+    {label: 'Pizzaiolo', value: 'Pizzaiolo'},
+    {label: 'Sushiman', value: 'Sushiman'},
+  ],
+  [
+    {label: 'Assistente Administrativo', value: 'Assistente Administrativo'},
+    {label: 'Atendente de Farmácia', value: 'Atendente de Farmácia'},
+    {label: 'Auxiliar Hospitalar', value: 'Auxiliar Hospitalar'},
+    {label: 'Auxiliar de Enfermagem', value: 'Auxiliar de Enfermagem'},
+    {
+      label: 'Auxiliar de Limpeza Hospitalar',
+      value: 'Auxiliar de Limpeza Hospitalar',
+    },
+    {label: 'Estoquista Hospitalar', value: 'Estoquista Hospitalar'},
+    {label: 'Farmaceutico', value: 'Farmaceutico'},
+    {label: 'Recepcionista Hospitalar', value: 'Recepcionista Hospitalar'},
+    {
+      label: 'Técnico de Análises Clínicas',
+      value: 'Técnico de Análises Clínicas',
+    },
+    {label: 'Técnico de Coleta', value: 'Técnico de Coleta'},
+    {label: 'Técnico de Enfermagem', value: 'Técnico de Enfermagem'},
+    {
+      label: 'Técnico de Patologia Clínica',
+      value: 'Técnico de Patologia Clínica',
+    },
+  ],
+  [
+    {label: 'Aux. Tec. Em Telecom', value: 'Aux. Tec. Em Telecom'},
+    {label: 'Auxiliar de Manutenção', value: 'Auxiliar de Manutenção'},
+    {
+      label: 'Auxiliar de Serviços Gerais',
+      value: 'Auxiliar de Serviços Gerais',
+    },
+    {label: 'Bombeiro', value: 'Bombeiro'},
+    {label: 'Copeira', value: 'Copeira'},
+    {label: 'Frentista', value: 'Frentista'},
+    {label: 'Jardineiro', value: 'Jardineiro'},
+    {label: 'Limpador de Piscina', value: 'Limpador de Piscina'},
+    {label: 'Porteiro', value: 'Porteiro'},
+    {label: 'Segurança', value: 'Segurança'},
+    {label: 'Vigilante', value: 'Vigilante'},
+    {label: 'Zelador', value: 'Zelador'},
+  ],
+  [
+    {label: 'Analista de Help Desk', value: 'Analista de Help Desk'},
+    {label: 'Operador de Call Center', value: 'Operador de Call Center'},
+    {
+      label: 'Operador de Call Center Ativo',
+      value: 'Operador de Call Center Ativo',
+    },
+    {
+      label: 'Operador de Call Center Receptivo',
+      value: 'Operador de Call Center Receptivo',
+    },
+    {label: 'Operador de Cobrança', value: 'Operador de Cobrança'},
+  ],
+  [
+    {label: 'Ajudante de Entrega', value: 'Ajudante de Entrega'},
+    {label: 'Auxiliar de Logística', value: 'Auxiliar de Logística'},
+    {label: 'Auxiliar de Motorista', value: 'Auxiliar de Motorista'},
+    {label: 'Manobrista', value: 'Manobrista'},
+    {label: 'Motoboy', value: 'Motoboy'},
+    {label: 'Motorista Entregador', value: 'Motorista Entregador'},
+    {
+      label: 'Operador de Estacionamento',
+      value: 'Operador de Estacionamento',
+    },
+    {label: 'Tratorista', value: 'Tratorista'},
+  ],
+  [
+    {label: 'Ajudante de Padeiro', value: 'Ajudante de Padeiro'},
+    {label: 'Atendente de Loja', value: 'Atendente de Loja'},
+    {label: 'Açougueiro', value: 'Açougueiro'},
+    {label: 'Balconista', value: 'Balconista'},
+    {label: 'Cartazista', value: 'Cartazista'},
+    {label: 'Confeiteiro', value: 'Confeiteiro'},
+    {label: 'Conferente', value: 'Conferente'},
+    {label: 'Especialista em Frios', value: 'Especialista em Frios'},
+    {label: 'Especialista em Queijos', value: 'Especialista em Queijos'},
+    {label: 'Estoquista', value: 'Estoquista'},
+    {label: 'Feirante', value: 'Feirante'},
+    {label: 'Fiscal de Loja', value: 'Fiscal de Loja'},
+    {label: 'Operador de Caixa', value: 'Operador de Caixa'},
+    {label: 'Padeiro', value: 'Padeiro'},
+    {label: 'Peixeiro', value: 'Peixeiro'},
+    {label: 'Repositor', value: 'Repositor'},
+    {label: 'Shopper', value: 'Shopper'},
+    {label: 'Visual Merchandising', value: 'Visual Merchandising'},
+  ],
+  [
+    {label: 'Assistente Comercial', value: 'Assistente Comercial'},
+    {label: 'Atendente de Loja', value: 'Atendente de Loja'},
+    {label: 'Balconista', value: 'Balconista'},
+    {label: 'Corretor de Imóveis', value: 'Corretor de Imóveis'},
+    {label: 'Promotor de Vendas', value: 'Promotor de Vendas'},
+    {label: 'Vendedor', value: 'Vendedor'},
+    {label: 'Vendedor Externo', value: 'Vendedor Externo'},
+  ],
+];
 export default class RegiterScreen extends Component {
   constructor(props) {
     super(props);
@@ -47,6 +195,7 @@ export default class RegiterScreen extends Component {
       isValidState: false,
       isValidCountry: false,
       showLoading: false,
+      isValidJob: false,
       // TODO just testing
       modalVisible: true,
       allowNotification: props.route.params.allowNotification,
@@ -66,11 +215,19 @@ export default class RegiterScreen extends Component {
       CPF: '',
       Email: '',
       user_info: null,
-    };
-  }
-
-  changeVisibility(state) {
-    this.setState({
+      item1: [],
+      item2: [],
+      item3: [],
+      item4: [],
+      item5: [],
+      item6: [],
+      item7: [],
+      item8: [],
+      item9: [],
+      item10: [],
+      item11: [],
+      item12: [],
+      collectionItems: '',
       isVisible1: false,
       isVisible2: false,
       isVisible3: false,
@@ -83,8 +240,7 @@ export default class RegiterScreen extends Component {
       isVisible10: false,
       isVisible11: false,
       isVisible12: false,
-      ...state,
-    });
+    };
   }
 
   componentDidMount() {}
@@ -334,6 +490,51 @@ export default class RegiterScreen extends Component {
     }
   };
 
+  clickOkJob = () => {
+    this.setState({showLoading: true});
+    for (let index = 1; index <= 12; index++) {
+      this.state['item' + index].forEach((element) => {
+        this.setState({
+          collectionItems: this.state.collectionItems + ' ' + element,
+        });
+        fetch('https://mobapivagas.jobconvo.com/v1/user/add/area/', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            // Authorization: 'Token ' + this.state.user_info.token.api_key,
+          },
+          body: JSON.stringify({
+            area: element,
+          }),
+        });
+      });
+    }
+    this.setState({
+      modalVisible: !this.state.modalVisible,
+      isValidJob: true,
+      showLoading: false,
+    });
+  };
+
+  changeVisibility(state) {
+    this.setState({
+      isVisible1: false,
+      isVisible2: false,
+      isVisible3: false,
+      isVisible4: false,
+      isVisible5: false,
+      isVisible6: false,
+      isVisible7: false,
+      isVisible8: false,
+      isVisible9: false,
+      isVisible10: false,
+      isVisible11: false,
+      isVisible12: false,
+      ...state,
+    });
+  }
+
   inputWithKeyBoard = (
     timer = 750,
     changeState,
@@ -431,6 +632,20 @@ export default class RegiterScreen extends Component {
   };
 
   render() {
+    const mainarea = [
+      {title: 'Administrativo'},
+      {title: 'Construção'},
+      {title: 'Cuidado de Animais'},
+      {title: 'Industrial'},
+      {title: 'Limpeza'},
+      {title: 'Restaurante'},
+      {title: 'Saúde'},
+      {title: 'Serviços Gerais'},
+      {title: 'Telemarketing'},
+      {title: 'Transporte'},
+      {title: 'Varejo'},
+      {title: 'Vendas'},
+    ];
     return (
       <ScrollView
         style={styles.container}
@@ -651,6 +866,15 @@ export default class RegiterScreen extends Component {
                 )
               : null}
 
+            {this.state.isValidJob
+              ? this.renderChatBox('Ótima escolha!')
+              : null}
+            {this.state.isValidJob
+              ? this.renderChatBox(
+                  'Se quiser adicionar outras áreas de interesse, é super fácil. Basta ir em sua página de perfil.',
+                )
+              : null}
+
             {/* {this.renderChatBox('Como você se chama?', 4500, false, styles.answerboxStyle)} */}
           </View>
         </TouchableWithoutFeedback>
@@ -662,335 +886,46 @@ export default class RegiterScreen extends Component {
             console.log('Modal has been closed.');
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
-            <View style={styles.modal}>
-              <View style={{flex: 5, justifyContent: 'flex-start'}}>
-                <DropDownPicker
-                  items={DropdownItems.items1}
-                  defaultValue={this.state.item1}
-                  containerStyle={{height: 40}}
-                  isVisible={this.state.isVisible1}
-                  onOpen={() =>
-                    this.changeVisibility({
-                      isVisible1: true,
-                    })
-                  }
-                  onClose={() =>
-                    this.setState({
-                      isVisible1: false,
-                    })
-                  }
-                  onChangeItem={(item) =>
-                    this.changValue({
-                      item1: item.value,
-                      subarea: item.value,
-                    })
-                  }
-                  placeholder={DropdownItems.mainarea[0].title}
-                  labelStyle={styles.dLabelStyle}
-                  itemStyle={styles.dItemStyle}
-                  placeholderStyle={styles.dPlaceholderStyle}
-                  dropDownStyle={styles.dStyle}
-                />
-              </View>
-              <View>
-                <DropDownPicker
-                  items={DropdownItems.items2}
-                  defaultValue={this.state.item2}
-                  containerStyle={{height: 40}}
-                  isVisible={this.state.isVisible2}
-                  onOpen={() =>
-                    this.changeVisibility({
-                      isVisible2: true,
-                    })
-                  }
-                  onClose={() =>
-                    this.setState({
-                      isVisible2: false,
-                    })
-                  }
-                  onChangeItem={(item) =>
-                    this.changValue({
-                      item2: item.value,
-                      subarea: item.value,
-                    })
-                  }
-                  placeholder={DropdownItems.mainarea[1].title}
-                  labelStyle={styles.dLabelStyle}
-                  itemStyle={styles.dItemStyle}
-                  placeholderStyle={styles.dPlaceholderStyle}
-                  dropDownStyle={styles.dStyle}
-                />
-              </View>
-              <DropDownPicker
-                items={DropdownItems.items3}
-                defaultValue={this.state.item3}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible3}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible3: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible3: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item3: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[2].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items4}
-                defaultValue={this.state.item4}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible4}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible4: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible4: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item4: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[3].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items5}
-                defaultValue={this.state.item5}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible5}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible5: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible5: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item5: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[4].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items6}
-                defaultValue={this.state.item6}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible6}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible6: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible6: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item6: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[5].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items7}
-                defaultValue={this.state.item7}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible7}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible7: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible7: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item7: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[6].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items8}
-                defaultValue={this.state.item8}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible8}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible8: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible8: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item8: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[7].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items9}
-                defaultValue={this.state.item9}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible9}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible9: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible9: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item9: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[8].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items10}
-                defaultValue={this.state.item10}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible10}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible10: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible10: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item10: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[9].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items11}
-                defaultValue={this.state.item11}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible11}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible11: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible11: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item11: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[10].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items12}
-                defaultValue={this.state.item12}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible12}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible12: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible12: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item12: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[11].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
+            <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              {DropdownItems.map((element, index) => {
+                return (
+                  <DropDownPicker
+                    items={element}
+                    multiple={true}
+                    defaultValue={this.state['item' + (index + 1)]}
+                    containerStyle={{height: 40}}
+                    style={{backgroundColor: '#fafafa'}}
+                    isVisible={this.state['isVisible' + (index + 1)]}
+                    onOpen={() =>
+                      this.changeVisibility({
+                        ['isVisible' + (index + 1)]: true,
+                      })
+                    }
+                    onClose={() =>
+                      this.setState({
+                        ['isVisible' + (index + 1)]: false,
+                      })
+                    }
+                    zIndex={15 - index}
+                    multipleText={
+                      mainarea[index].title + ' - %d área selecionada'
+                    }
+                    placeholder={mainarea[index].title}
+                    labelStyle={styles.dLabelStyle}
+                    itemStyle={styles.dItemStyle}
+                    placeholderStyle={styles.dPlaceholderStyle}
+                    dropDownStyle={styles.dStyle}
+                    onChangeItem={(item) => {
+                      this.setState({
+                        ['isVisible' + (index + 1)]: false,
+                      });
+                      this.setState({
+                        ['item' + (index + 1)]: item,
+                      });
+                    }}
+                  />
+                );
+              })}
             </View>
             <View
               style={{
@@ -1006,10 +941,7 @@ export default class RegiterScreen extends Component {
                 }}>
                 <TouchableHighlight
                   onPress={() => {
-                    this.setState({
-                      modalVisible: !this.state.modalVisible,
-                      RenderTextState: 20,
-                    });
+                    this.clickOkJob();
                   }}>
                   <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
                 </TouchableHighlight>
