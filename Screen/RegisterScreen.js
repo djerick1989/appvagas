@@ -89,6 +89,26 @@ export default class RegiterScreen extends Component {
       item11: '',
       item12: '',
       areaSelected: '',
+      listNivels: [
+        {label: 'Até 5º ano do Ensino Fundamental', value: 0},
+        {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
+        {label: 'Ensino Fundamental', value: 2},
+        {label: 'Ensino Medio', value: 3},
+        {label: 'Curso Tecnico', value: 4},
+        {label: 'Tecnologo', value: 5},
+        {label: 'Ensino Superior', value: 6},
+        {label: 'Pos', value: 7},
+        {label: 'Mestrado', value: 8},
+        {label: 'Doutorado', value: 9},
+        {label: 'Curso', value: 10},
+      ],
+      listStatus: [
+        {label: 'Todos', value: 0},
+        {label: 'Concluido', value: 1},
+        {label: 'Cursando', value: 2},
+        {label: 'Incompleto', value: 3},
+        {label: 'Desconhecido', value: 4},
+      ],
       isVisible1: false,
       isVisible2: false,
       isVisible3: false,
@@ -101,6 +121,8 @@ export default class RegiterScreen extends Component {
       isVisible10: false,
       isVisible11: false,
       isVisible12: false,
+      isOneDropdownActive: false,
+      allAreas: [],
       subarea: null,
     };
   }
@@ -133,7 +155,7 @@ export default class RegiterScreen extends Component {
     );
   }
 
-  handleSubmitText = (keyToSearch) => {
+  handleSubmitText = (keyToSearch, value = false) => {
     switch (keyToSearch) {
       case 'userName':
         //bypass
@@ -347,6 +369,38 @@ export default class RegiterScreen extends Component {
             Alert.alert('server error');
           });
         break;
+      case 'hasExperience':
+        if (value === false) {
+          this.setState({showLoading: true});
+          fetch(
+            'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+              this.state.user_info.id +
+              '/update/',
+            {
+              method: 'PATCH',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Token ' + this.state.user_info.token.api_key,
+              },
+              body: JSON.stringify({
+                years_of_experience: 0,
+                career_objective: 'Eu não tenho experiência',
+              }),
+            },
+          )
+            .then((response) => response.json())
+            .then(() => {
+              this.setState({showLoading: false, hasExperience: value});
+            })
+            .catch((error) => {
+              console.error(error);
+              Alert.alert('server error');
+            });
+        } else {
+          this.setState({hasExperience: value});
+        }
+        break;
       case 'YearsExp':
         if (this.state.YearsExp == '' || this.state.YearsExp == null) {
           this.setState({YearsExp: 0});
@@ -354,7 +408,67 @@ export default class RegiterScreen extends Component {
         this.setState({isValidExperience: true});
         break;
       case 'InfoExp':
+        // Bypass
         this.setState({isValidExperienceInfo: true});
+        return;
+
+        this.setState({showLoading: true});
+        fetch(
+          'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+            this.state.user_info.id +
+            '/update/',
+          {
+            method: 'PATCH',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Token ' + this.state.user_info.token.api_key,
+            },
+            body: JSON.stringify({
+              years_of_experience: this.state.YearsExp,
+              career_objective: this.state.InfoExp,
+            }),
+          },
+        )
+          .then((response) => response.json())
+          .then(() => {
+            this.setState({showLoading: false, isValidExperienceInfo: true});
+          })
+          .catch((error) => {
+            console.error(error);
+            Alert.alert('server error');
+          });
+        break;
+      case 'hasWorking':
+        if (value === false) {
+          this.setState({showLoading: true});
+          fetch(
+            'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+              this.state.user_info.id +
+              '/update/',
+            {
+              method: 'PATCH',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Token ' + this.state.user_info.token.api_key,
+              },
+              body: JSON.stringify({
+                unemployed: false,
+              }),
+            },
+          )
+            .then((response) => response.json())
+            .then(() => {
+              this.setState({showLoading: false, hasWorking: value});
+            })
+            .catch((error) => {
+              console.error(error);
+              Alert.alert('server error');
+            });
+        } else {
+          this.setState({hasWorking: value});
+        }
         break;
       default:
         break;
@@ -496,7 +610,13 @@ export default class RegiterScreen extends Component {
     );
   };
 
-  buttonsIn = (caseTrue, caseFalse, timer = 750) => {
+  buttonsIn = (
+    caseTrue,
+    caseFalse,
+    timer = 750,
+    textOk = 'SIM',
+    textNo = 'NÃO',
+  ) => {
     return (
       <View style={styles.InputBoxStyle}>
         <FadeInView
@@ -520,20 +640,6 @@ export default class RegiterScreen extends Component {
   };
 
   render() {
-    const mainarea = [
-      {title: 'Administrativo'},
-      {title: 'Construção'},
-      {title: 'Cuidado de Animais'},
-      {title: 'Industrial'},
-      {title: 'Limpeza'},
-      {title: 'Restaurante'},
-      {title: 'Saúde'},
-      {title: 'Serviços Gerais'},
-      {title: 'Telemarketing'},
-      {title: 'Transporte'},
-      {title: 'Varejo'},
-      {title: 'Vendas'},
-    ];
     return (
       <ScrollView
         style={styles.container}
@@ -752,8 +858,8 @@ export default class RegiterScreen extends Component {
               : null}
             {this.state.isValidJob && this.state.hasExperience == null
               ? this.buttonsIn(
-                  () => this.setState({hasExperience: true}),
-                  () => this.setState({hasExperience: false}),
+                  () => this.handleSubmitText('hasExperience', true),
+                  () => this.handleSubmitText('hasExperience', false),
                   3000,
                 )
               : null}
@@ -823,9 +929,11 @@ export default class RegiterScreen extends Component {
             {this.state.isValidExperienceInfo ||
             this.state.hasExperience == false
               ? this.buttonsIn(
-                  () => this.setState({hasWorking: true}),
-                  () => this.setState({hasWorking: false}),
+                  () => this.handleSubmitText('hasWorking', true),
+                  () => this.handleSubmitText('hasWorking', false),
                   3000,
+                  'TRABALHANDO',
+                  'DESEMPREGADO',
                 )
               : null}
 
@@ -848,7 +956,39 @@ export default class RegiterScreen extends Component {
                 )
               : null}
 
-            {/* Cambiar a un combo box que tenga todos estos elementos */}
+            {/* TODO Cambiar a un combo box que tenga todos estos elementos */}
+            <KeyboardAvoidingView enabled>
+              <FadeInView duration={750} style={styles.InputBoxStyle}>
+                <DropDownPicker
+                  items={DropdownItems.items1}
+                  defaultValue={this.state.item1}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible1}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible1: true,
+                    })
+                  }
+                  zIndex={15}
+                  onClose={() =>
+                    this.setState({
+                      isVisible1: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item1: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[0].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+              </FadeInView>
+            </KeyboardAvoidingView>
             {this.state.hasClickEducation
               ? this.inputWithKeyBoard(
                   1200,
@@ -978,6 +1118,12 @@ export default class RegiterScreen extends Component {
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
             <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              <Text style={styles.LabelStyle}>
+                Escolha a área que mais lhe interessar.
+              </Text>
+              <Text style={styles.LabelStyles}>
+                Posteriormente vocé poderá adicionar mais áreas.
+              </Text>
               <DropDownPicker
                 items={DropdownItems.items1}
                 defaultValue={this.state.item1}
@@ -986,12 +1132,14 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible1: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 zIndex={15}
                 onClose={() =>
                   this.setState({
                     isVisible1: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1014,12 +1162,14 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible2: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 zIndex={14}
                 onClose={() =>
                   this.setState({
                     isVisible2: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1042,12 +1192,14 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible3: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 zIndex={13}
                 onClose={() =>
                   this.setState({
                     isVisible3: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1071,11 +1223,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible4: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible4: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1099,11 +1253,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible5: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible5: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1127,11 +1283,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible6: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible6: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1155,11 +1313,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible7: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible7: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1183,11 +1343,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible8: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible8: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1211,11 +1373,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible9: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible9: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1239,11 +1403,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible10: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible10: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1267,11 +1433,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible11: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible11: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1295,11 +1463,13 @@ export default class RegiterScreen extends Component {
                 onOpen={() =>
                   this.changeVisibility({
                     isVisible12: true,
+                    isOneDropdownActive: true,
                   })
                 }
                 onClose={() =>
                   this.setState({
                     isVisible12: false,
+                    isOneDropdownActive: false,
                   })
                 }
                 onChangeItem={(item) =>
@@ -1315,26 +1485,28 @@ export default class RegiterScreen extends Component {
                 dropDownStyle={styles.dStyle}
               />
             </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'stretch',
-              }}>
+            {!this.state.isOneDropdownActive ? (
               <View
                 style={{
-                  backgroundColor: '#6948F4',
-                  alignItems: 'center',
-                  padding: 20,
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'stretch',
                 }}>
-                <TouchableHighlight
-                  onPress={() => {
-                    this.clickOkJob();
+                <View
+                  style={{
+                    backgroundColor: '#6948F4',
+                    alignItems: 'center',
+                    padding: 20,
                   }}>
-                  <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
-                </TouchableHighlight>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.clickOkJob();
+                    }}>
+                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                  </TouchableHighlight>
+                </View>
               </View>
-            </View>
+            ) : null}
           </SafeAreaView>
         </Modal>
       </ScrollView>
@@ -1485,6 +1657,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     padding: 5,
     fontSize: 16,
+  },
+  LabelStyle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  LabelStyles: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30,
   },
   dLabelStyle: {
     fontWeight: 'bold',
