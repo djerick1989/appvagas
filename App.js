@@ -22,6 +22,7 @@ import HomeScreen from './Screen/NavScreen/HomeScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
 import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
+import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -41,26 +42,12 @@ const HomeStackScreen = () => (
   </HomeStack.Navigator>
 );
 
-// const ListStack = createStackNavigator();
-// const ListStackScreen = () => (
-//   <ListStack.Navigator>
-//     <ListStack.Screen name="ActionsList" component={ActionsList} options={{headerShown: false}}/>
-//   </ListStack.Navigator>
-// );
-
-// const ProfileStack = createStackNavigator();
-// const ProfileStackScreen = () => (
-//   <ProfileStack.Navigator>
-//     <ProfileStack.Screen name="ActionsList" component={ActionsList} options={{headerShown: false}}/>
-//   </ProfileStack.Navigator>
-// );
-
 const AppTabs = createBottomTabNavigator();
 const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      component={ObjetivoScreen}
+      component={FormacaoScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (
