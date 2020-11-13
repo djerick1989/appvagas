@@ -192,3 +192,50 @@ export async function patchUserDisability(dataInJson) {
       return [true, error];
     });
 }
+
+export async function postUserEducation(dataInJson) {
+  const newUrl = apiUrl + 'user/add/education/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserEducation(dataInJson) {
+  const newUrl = apiUrl + 'user/add/education/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function getUserEducations() {
+  const newUrl = apiUrl + 'user/list/educations/' + user_info.id + '/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}

@@ -15,6 +15,7 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownItems from '../../Components/DropdownItems';
 import Loader from '../../Components/Loader';
+import {TextInputMask} from 'react-native-masked-text';
 import Slider from '@react-native-community/slider';
 import {
   getUserAreas,
@@ -23,18 +24,46 @@ import {
   patchUserExp,
   postUserAreas,
   patchUserSalary,
+  postUserEducation,
+  patchUserEducation,
+  getUserEducations,
 } from '../../helpers/api';
 
 export default class FormacaoScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listOfAreas: [],
-      dataExp: '',
+      nameEscola: '',
+      nameCurso: '',
+      listNivels: [
+        {label: 'Até 5º ano do Ensino Fundamental', value: 0},
+        {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
+        {label: 'Ensino Fundamental', value: 2},
+        {label: 'Ensino Medio', value: 3},
+        {label: 'Curso Tecnico', value: 4},
+        {label: 'Tecnologo', value: 5},
+        {label: 'Ensino Superior', value: 6},
+        {label: 'Pos', value: 7},
+        {label: 'Mestrado', value: 8},
+        {label: 'Doutorado', value: 9},
+        {label: 'Curso', value: 10},
+      ],
+      listStatus: [
+        {label: 'Concluido', value: 1},
+        {label: 'Cursando', value: 2},
+        {label: 'Incompleto', value: 3},
+        {label: 'Desconhecido', value: 4},
+      ],
+      modalIs: 'created',
+      itemNivel: '',
+      itemStatus: '',
       yearsExp: '',
+      dateStart: '',
+      dateFinish: '',
       prof: '',
       currentSalary: 0,
       listOfNewAreas: [],
+      listOfEducations: [],
       lastSalary: 0,
       dataSalary: '',
       modalVisible: false,
@@ -44,17 +73,9 @@ export default class FormacaoScreen extends Component {
   }
 
   async componentDidMount() {
-    const [isValid, areas] = await getUserAreas();
-    const [isValid2, exp] = await getUserExp();
-    const [isValid3, salary] = await getUserSalary();
+    const [isValid, educations] = await getUserEducations();
     this.setState({
-      listOfAreas: areas,
-      dataExp: exp,
-      dataSalary: salary,
-      currentSalary: salary.current_salary ?? 0,
-      lastSalary: salary.last_salary ?? 0,
-      prof: exp.career_objective,
-      yearsExp: '' + exp.years_of_experience,
+      listOfEducations: educations,
       loading: false,
     });
   }
@@ -65,6 +86,31 @@ export default class FormacaoScreen extends Component {
     this.setState({
       modalVisible: false,
     });
+  };
+
+  clickAddOrEdit = async () => {
+    this.setState({loading: true});
+    const date = this.state.dateStart.split('/');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '-' + date[1] + '-' + date[0];
+    }
+    const date2 = this.state.dateFinish.split('/');
+    let realDate2 = '';
+    if (date2[0] && date2[1] && date2[2]) {
+      realDate2 = date2[2] + '-' + date2[1] + '-' + date2[0];
+    }
+    if (this.state.modalIs == 'created') {
+      const [a, v] = await postUserEducation({
+        level: this.state.itemNivel,
+        title: this.state.nameCurso,
+        school: this.state.nameEscola,
+        status: this.state.itemStatus,
+        start: realDate,
+        end: realDate2,
+      });
+    }
+    this.setState({loading: false, modalVisible: false});
   };
 
   changeVisibility(state) {
@@ -149,7 +195,7 @@ export default class FormacaoScreen extends Component {
                   }}>
                   <TouchableHighlight
                     onPress={() => {
-                      this.clickOkJob();
+                      this.setState({modalVisible: true, modalIs: 'created'});
                     }}>
                     <Text style={{color: '#FFFFFF'}}>Adicionar</Text>
                   </TouchableHighlight>
@@ -175,6 +221,183 @@ export default class FormacaoScreen extends Component {
             </KeyboardAvoidingView>
           </View>
         </ScrollView>
+        <Modal
+          animationType={'slide'}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+          }}>
+          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+            <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              <View style={{paddingBottom: 40}}>
+                <Text
+                  style={styles.BackStyle2}
+                  onPress={() => this.setState({modalVisible: false})}>
+                  Voltar
+                </Text>
+              </View>
+              <KeyboardAvoidingView enabled style={{flex: 4}}>
+                <View style={styles.SectionStyle}>
+                  <Text style={styles.InputLabelStyle}>Nome da Escola</Text>
+                  <TextInput
+                    style={styles.inputStyle}
+                    value={this.state.nameEscola}
+                    onChangeText={(text) => this.setState({nameEscola: text})}
+                    placeholderTextColor="#aaaaaa"
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                  />
+                </View>
+                <View style={styles.SectionStyle}>
+                  <Text style={styles.InputLabelStyle}>Nome do Curso</Text>
+                  <TextInput
+                    style={styles.inputStyle}
+                    value={this.state.nameCurso}
+                    onChangeText={(text) => this.setState({nameCurso: text})}
+                    placeholderTextColor="#aaaaaa"
+                    autoCapitalize="sentences"
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                  />
+                </View>
+                <View style={styles.SectionStyle}>
+                  <Text style={styles.InputLabelStyle}>Nivel</Text>
+                  <DropDownPicker
+                    items={this.state.listNivels}
+                    defaultValue={this.state.itemNivel}
+                    containerStyle={{height: 40}}
+                    isVisible={this.state.isVisibleThisOne}
+                    onOpen={() =>
+                      this.changeVisibility({
+                        isVisibleThisOne: true,
+                      })
+                    }
+                    zIndex={15}
+                    onClose={() =>
+                      this.setState({
+                        isVisibleThisOne: false,
+                      })
+                    }
+                    onChangeItem={(item) => {
+                      this.changValue({
+                        itemNivel: item.value,
+                      });
+                    }}
+                    placeholder={'Seleccionar'}
+                    labelStyle={styles.dLabelStyle}
+                    itemStyle={styles.dItemStyle}
+                    placeholderStyle={styles.dPlaceholderStyle}
+                    dropDownStyle={styles.dStyle}
+                  />
+                </View>
+                {!this.state.isVisibleThisOne ? (
+                  <>
+                    <View style={styles.SectionStyle}>
+                      <Text style={styles.InputLabelStyle}>Status</Text>
+                      <DropDownPicker
+                        items={this.state.listStatus}
+                        defaultValue={this.state.itemStatus}
+                        containerStyle={{height: 40}}
+                        isVisible={this.state.isVisibleThisOneToo}
+                        onOpen={() =>
+                          this.changeVisibility({
+                            isVisibleThisOneToo: true,
+                          })
+                        }
+                        zIndex={15}
+                        onClose={() =>
+                          this.setState({
+                            isVisibleThisOneToo: false,
+                          })
+                        }
+                        onChangeItem={(item) => {
+                          this.changValue({
+                            itemStatus: item.value,
+                          });
+                        }}
+                        placeholder={'Seleccionar'}
+                        labelStyle={styles.dLabelStyle}
+                        itemStyle={styles.dItemStyle}
+                        placeholderStyle={styles.dPlaceholderStyle}
+                        dropDownStyle={styles.dStyle}
+                      />
+                    </View>
+
+                    {!this.state.isVisibleThisOneToo ? (
+                      <View style={styles.containerEspecial}>
+                        <View style={styles.item}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyle}>
+                              Data de Inicio
+                            </Text>
+                            <TextInputMask
+                              style={styles.inputStyle}
+                              type={'datetime'}
+                              options={{
+                                format: 'DD/MM/YYYY',
+                              }}
+                              placeholder="30/10/1990"
+                              value={this.state.dateStart}
+                              onChangeText={(text) => {
+                                this.setState({
+                                  dateStart: text,
+                                });
+                              }}
+                            />
+                          </View>
+                        </View>
+                        <View style={styles.item}>
+                          <View style={styles.SectionStyleEspecial1}>
+                            <Text style={styles.InputLabelStyle}>
+                              Data de Término
+                            </Text>
+                            <TextInputMask
+                              style={styles.inputStyle}
+                              type={'datetime'}
+                              options={{
+                                format: 'DD/MM/YYYY',
+                              }}
+                              placeholder="30/10/1990"
+                              value={this.state.dateFinish}
+                              onChangeText={(text) => {
+                                this.setState({
+                                  dateFinish: text,
+                                });
+                              }}
+                            />
+                          </View>
+                        </View>
+                      </View>
+                    ) : null}
+                  </>
+                ) : null}
+              </KeyboardAvoidingView>
+            </View>
+            {!this.state.isVisibleThisOneToo ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'stretch',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#6948F4',
+                    alignItems: 'center',
+                    padding: 20,
+                  }}>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.clickAddOrEdit();
+                    }}>
+                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            ) : null}
+          </SafeAreaView>
+        </Modal>
       </>
     );
   }
