@@ -19,7 +19,7 @@ const user_info = {
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  Authorization: 'Token ' + user_info.token.api_key,
+  Authorization: 'Token 63ea9f16d61fa6fd9165575d26f15cfe667984e3',
 };
 
 export async function getUserProfile() {
@@ -38,8 +38,100 @@ export async function getUserProfile() {
 }
 
 export async function patchUserProfile(dataInJson) {
-  console.log(dataInJson);
   const newUrl = apiUrl + 'user/profile/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function getUserSalary() {
+  const newUrl = apiUrl + 'user/salary/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserSalary(dataInJson) {
+  const newUrl = apiUrl + 'user/salary/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function getUserExp() {
+  const newUrl = apiUrl + 'user/resume/exp/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserExp(dataInJson) {
+  const newUrl = apiUrl + 'user/resume/exp/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function getUserAreas() {
+  const newUrl = apiUrl + 'user/list/areas/' + user_info.id + '/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserAreas(dataInJson) {
+  const newUrl = apiUrl + 'user/list/areas/' + user_info.id + '/';
   return fetch(newUrl, {
     method: 'PATCH',
     headers: headers,
