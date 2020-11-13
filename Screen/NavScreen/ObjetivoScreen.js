@@ -3,18 +3,25 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
+  SafeAreaView,
   View,
   TouchableOpacity,
   TextInput,
+  Modal,
+  TouchableHighlight,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import DropdownItems from '../../Components/DropdownItems';
+import Loader from '../../Components/Loader';
 import Slider from '@react-native-community/slider';
 import {
   getUserAreas,
   getUserExp,
   getUserSalary,
   patchUserExp,
+  postUserAreas,
   patchUserSalary,
 } from '../../helpers/api';
 
@@ -27,14 +34,16 @@ export default class ObjetivoScreen extends Component {
       yearsExp: '',
       prof: '',
       currentSalary: 0,
+      listOfNewAreas: [],
       lastSalary: 0,
       dataSalary: '',
-      loading: '',
+      modalVisible: false,
+      loading: true,
+      subarea: null,
     };
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
     const [isValid, areas] = await getUserAreas();
     const [isValid2, exp] = await getUserExp();
     const [isValid3, salary] = await getUserSalary();
@@ -50,142 +59,597 @@ export default class ObjetivoScreen extends Component {
     });
   }
 
+  clickOkJob = () => {
+    this.state.listOfNewAreas.push({area: this.state.subarea});
+    this.state.listOfAreas.push({area: this.state.subarea});
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  changeVisibility(state) {
+    this.setState({
+      isVisible1: false,
+      isVisible2: false,
+      isVisible3: false,
+      isVisible4: false,
+      isVisible5: false,
+      isVisible6: false,
+      isVisible7: false,
+      isVisible8: false,
+      isVisible9: false,
+      isVisible10: false,
+      isVisible11: false,
+      isVisible12: false,
+      ...state,
+    });
+  }
+
+  changValue(state) {
+    this.setState({
+      subarea: null,
+      item1: null,
+      item2: null,
+      item3: null,
+      item4: null,
+      item5: null,
+      item6: null,
+      item7: null,
+      item8: null,
+      item9: null,
+      item10: null,
+      item11: null,
+      item12: null,
+      ...state,
+    });
+  }
+
   async handleSubmitButton() {
-    const dataInJson = this.state;
-    delete dataInJson.loading;
-    const [isValid, areas] = await patchUserSalary({
+    this.setState({loading: true});
+    await patchUserSalary({
       last_salary: this.state.lastSalary,
       current_salary: this.state.currentSalary,
     });
-    console.log(isValid);
-    console.log(areas);
-    const [isValid2, ex] = await patchUserExp({
+    await patchUserExp({
       years_of_experience: this.state.yearsExp,
       career_objective: this.state.prof,
     });
-    console.log(isValid2);
-    console.log(ex);
+    if (this.state.listOfNewAreas.length) {
+      for (let index = 0; index < this.state.listOfNewAreas.length; index++) {
+        const [a, b] = await postUserAreas(this.state.listOfNewAreas[index]);
+        console.log(a, b);
+      }
+    }
+    this.setState({listOfNewAreas: [], loading: false});
   }
 
   render() {
     return (
-      <ScrollView style={styles.scrollContainer}>
-        <View>
+      <>
+        <ScrollView style={styles.scrollContainer}>
+          <Loader loading={this.state.loading} />
           <View>
-            <Text
-              style={styles.BackStyle2}
-              onPress={() => this.props.navigation.navigate('Candidaturas')}>
-              Voltar
-            </Text>
-          </View>
-          <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <Text style={styles.LabelStyle}>Objetivo Profissional</Text>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>
-                Qual o seu objetivo profissional?
+            <View>
+              <Text
+                style={styles.BackStyle2}
+                onPress={() => this.props.navigation.navigate('Candidaturas')}>
+                Voltar
               </Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.prof}
-                onChangeText={(text) => this.setState({prof: text})}
-                placeholderTextColor="#aaaaaa"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
             </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>
-                Quantos anos de experiéncia possui?
-              </Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.yearsExp}
-                onChangeText={(text) => this.setState({yearsExp: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
+            <KeyboardAvoidingView enabled style={{flex: 4}}>
+              <Text style={styles.LabelStyle}>Objetivo Profissional</Text>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>
+                  Qual o seu objetivo profissional?
+                </Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  numberOfLines={4}
+                  multiline
+                  value={this.state.prof}
+                  onChangeText={(text) => this.setState({prof: text})}
+                  placeholderTextColor="#aaaaaa"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>
+                  Quantos anos de experiéncia possui?
+                </Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.yearsExp}
+                  onChangeText={(text) => this.setState({yearsExp: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
 
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>
-                Qual foi seu ultimo ou atual salario?
-              </Text>
-              <Text style={styles.textHoverSlider}>
-                R$ {this.state.currentSalary}
-              </Text>
-              <Slider
-                minimumValue={0}
-                value={this.state.currentSalary}
-                onValueChange={(value) => this.setState({currentSalary: value})}
-                step={100}
-                maximumValue={50000}
-                minimumTrackTintColor="#6948f45c"
-                maximumTrackTintColor="#6948F4"
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Pretensao Salarial</Text>
-              <Text style={styles.textHoverSlider}>
-                R$ {this.state.lastSalary}
-              </Text>
-              <Slider
-                minimumValue={0}
-                step={100}
-                value={this.state.lastSalary}
-                onValueChange={(value) => this.setState({lastSalary: value})}
-                maximumValue={50000}
-                minimumTrackTintColor="#6948f45c"
-                maximumTrackTintColor="#6948F4"
-              />
-            </View>
-            <View style={styles.containerEspecial2}>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial12}>
-                  <Text style={styles.InputLabelStyle}>Areas</Text>
-                </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>
+                  Qual foi seu ultimo ou atual salario?
+                </Text>
+                <Text style={styles.textHoverSlider}>
+                  R$ {this.state.currentSalary}
+                </Text>
+                <Slider
+                  minimumValue={0}
+                  value={this.state.currentSalary}
+                  onValueChange={(value) =>
+                    this.setState({currentSalary: value})
+                  }
+                  step={100}
+                  maximumValue={50000}
+                  minimumTrackTintColor="#6948f45c"
+                  maximumTrackTintColor="#6948F4"
+                />
               </View>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial11}>
-                  <Text style={styles.InputLabelStyleArea}>
-                    <Text
-                      style={styles.BackStyle2}
-                      onPress={() =>
-                        this.props.navigation.navigate('Candidaturas')
-                      }>
-                      Adicionar
-                    </Text>
-                  </Text>
-                </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Pretensao Salarial</Text>
+                <Text style={styles.textHoverSlider}>
+                  R$ {this.state.lastSalary}
+                </Text>
+                <Slider
+                  minimumValue={0}
+                  step={100}
+                  value={this.state.lastSalary}
+                  onValueChange={(value) => this.setState({lastSalary: value})}
+                  maximumValue={50000}
+                  minimumTrackTintColor="#6948f45c"
+                  maximumTrackTintColor="#6948F4"
+                />
               </View>
-              <View style={styles.item2}>
-                <ScrollView style={styles.scrollContainer}>
-                  <View style={styles.containerEspecial2}>
-                    {this.state.listOfAreas.map((element) => {
-                      return (
-                        <TouchableOpacity
-                          style={styles.buttonStyleArea}
-                          activeOpacity={0.5}>
-                          <Text style={styles.buttonTextStyleArea}>
-                            {element.area}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
+              <View style={styles.containerEspecial2}>
+                <View style={styles.item}>
+                  <View style={styles.SectionStyleEspecial12}>
+                    <Text style={styles.InputLabelStyle}>Areas</Text>
                   </View>
-                </ScrollView>
+                </View>
+                <View style={styles.item}>
+                  <View style={styles.SectionStyleEspecial11}>
+                    <Text style={styles.InputLabelStyleArea}>
+                      <Text
+                        style={styles.BackStyle2}
+                        onPress={() => {
+                          this.setState({modalVisible: true, subarea: null});
+                          this.changValue();
+                        }}>
+                        Adicionar
+                      </Text>
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.item2}>
+                  <ScrollView style={styles.scrollContainer}>
+                    <View style={styles.containerEspecial2}>
+                      {this.state.listOfAreas.map((element) => {
+                        return (
+                          <TouchableOpacity
+                            style={styles.buttonStyleArea}
+                            activeOpacity={0.5}>
+                            <Text style={styles.buttonTextStyleArea}>
+                              {element.area}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </ScrollView>
+                </View>
               </View>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={() => this.handleSubmitButton()}>
+                <Text style={styles.buttonTextStyle}>Confirmar</Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+        <Modal
+          animationType={'slide'}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+          }}>
+          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+            <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              <Text style={styles.LabelStyle1}>
+                Escolha a área que mais lhe interessar.
+              </Text>
+              <Text style={styles.LabelStyles1}>
+                Posteriormente vocé poderá adicionar mais áreas.
+              </Text>
+              <DropDownPicker
+                items={DropdownItems.items1}
+                defaultValue={this.state.item1}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible1}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible1: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                zIndex={15}
+                onClose={() =>
+                  this.setState({
+                    isVisible1: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item1: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[0].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items2}
+                defaultValue={this.state.item2}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible2}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible2: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                zIndex={14}
+                onClose={() =>
+                  this.setState({
+                    isVisible2: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item2: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[1].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items3}
+                defaultValue={this.state.item3}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible3}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible3: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                zIndex={13}
+                onClose={() =>
+                  this.setState({
+                    isVisible3: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item3: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[2].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items4}
+                defaultValue={this.state.item4}
+                containerStyle={{height: 40}}
+                zIndex={12}
+                isVisible={this.state.isVisible4}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible4: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible4: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item4: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[3].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                items={DropdownItems.items5}
+                zIndex={11}
+                defaultValue={this.state.item5}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible5}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible5: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible5: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item5: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[4].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={10}
+                items={DropdownItems.items6}
+                defaultValue={this.state.item6}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible6}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible6: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible6: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item6: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[5].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={9}
+                items={DropdownItems.items7}
+                defaultValue={this.state.item7}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible7}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible7: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible7: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item7: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[6].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={8}
+                items={DropdownItems.items8}
+                defaultValue={this.state.item8}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible8}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible8: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible8: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item8: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[7].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={7}
+                items={DropdownItems.items9}
+                defaultValue={this.state.item9}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible9}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible9: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible9: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item9: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[8].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={6}
+                items={DropdownItems.items10}
+                defaultValue={this.state.item10}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible10}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible10: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible10: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item10: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[9].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={5}
+                items={DropdownItems.items11}
+                defaultValue={this.state.item11}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible11}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible11: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible11: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item11: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[10].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
+              <DropDownPicker
+                zIndex={4}
+                items={DropdownItems.items12}
+                defaultValue={this.state.item12}
+                containerStyle={{height: 40}}
+                isVisible={this.state.isVisible12}
+                onOpen={() =>
+                  this.changeVisibility({
+                    isVisible12: true,
+                    isOneDropdownActive: true,
+                  })
+                }
+                onClose={() =>
+                  this.setState({
+                    isVisible12: false,
+                    isOneDropdownActive: false,
+                  })
+                }
+                onChangeItem={(item) =>
+                  this.changValue({
+                    item12: item.value,
+                    subarea: item.value,
+                  })
+                }
+                placeholder={DropdownItems.mainarea[11].title}
+                labelStyle={styles.dLabelStyle}
+                itemStyle={styles.dItemStyle}
+                placeholderStyle={styles.dPlaceholderStyle}
+                dropDownStyle={styles.dStyle}
+              />
             </View>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => this.handleSubmitButton()}>
-              <Text style={styles.buttonTextStyle}>Confirmar</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+            {!this.state.isOneDropdownActive ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'stretch',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#6948F4',
+                    alignItems: 'center',
+                    padding: 20,
+                  }}>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.clickOkJob();
+                    }}>
+                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            ) : null}
+          </SafeAreaView>
+        </Modal>
+      </>
     );
   }
 }
@@ -271,6 +735,24 @@ const styles = StyleSheet.create({
   InputLabelStyleArea: {
     alignSelf: 'flex-end',
   },
+  dLabelStyle: {
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: '#6948F4',
+  },
+  dItemStyle: {
+    justifyContent: 'flex-start',
+  },
+  dPlaceholderStyle: {
+    textAlign: 'left',
+    color: 'black',
+    fontWeight: '200',
+  },
+  dStyle: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    minHeight: 300,
+  },
   subarea: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -314,6 +796,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     paddingVertical: 8,
     fontSize: 18,
+  },
+  LabelStyle1: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  LabelStyles1: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30,
   },
   inputStyle: {
     flex: 1,

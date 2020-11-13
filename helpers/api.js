@@ -22,6 +22,22 @@ const headers = {
   Authorization: 'Token 63ea9f16d61fa6fd9165575d26f15cfe667984e3',
 };
 
+export async function patchuserUpdate(dataInJson) {
+  const newUrl = apiUrl + 'user/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
 export async function getUserProfile() {
   const newUrl = apiUrl + 'user/profile/' + user_info.id + '/update/';
   return fetch(newUrl, {
@@ -130,8 +146,39 @@ export async function getUserAreas() {
     });
 }
 
-export async function patchUserAreas(dataInJson) {
-  const newUrl = apiUrl + 'user/list/areas/' + user_info.id + '/';
+export async function postUserAreas(dataInJson) {
+  const newUrl = apiUrl + 'user/add/area/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function getUserDisability() {
+  const newUrl = apiUrl + 'user/disability/' + user_info.id + '/update/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserDisability(dataInJson) {
+  const newUrl = apiUrl + 'user/disability/' + user_info.id + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
     headers: headers,

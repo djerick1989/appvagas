@@ -20,6 +20,8 @@ import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
+import DadosScreen from './Screen/NavScreen/DadosScreen';
+import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -109,32 +111,6 @@ const AppTabsScreen = () => (
         ),
       }}
     />
-    {/* <AppTabs.Screen
-      name="List"
-      component={ListStackScreen}
-      options={{
-        tabBarIcon: props => (
-          <Ionicons
-            name="ios-checkmark-circle-outline"
-            size={props.size}
-            color={props.color}
-          />
-        ),
-      }}
-    />
-    <AppTabs.Screen
-      name="Profile"
-      component={ProfileStackScreen}
-      options={{
-        tabBarIcon: props => (
-          <Ionicons
-            name="ios-checkmark-circle-outline"
-            size={props.size}
-            color={props.color}
-          />
-        ),
-      }}
-    /> */}
   </AppTabs.Navigator>
 );
 

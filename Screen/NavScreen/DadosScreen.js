@@ -10,52 +10,46 @@ import {
   ScrollView,
 } from 'react-native';
 import Loader from '../../Components/Loader';
-import {getUserProfile, patchUserProfile} from '../../helpers/api';
+import {patchuserUpdate, patchUserProfile} from '../../helpers/api';
+import {TextInputMask} from 'react-native-masked-text';
 
-export default class EnderecoScreen extends Component {
+export default class DadosScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      estado: '',
-      cidade: '',
-      bairro: '',
-      complemento: '',
-      number: '',
-      endereco: '',
-      userPhon: '',
-      loading: true,
+      cpf: '',
+      email: '',
+      fullName: '',
+      phone: '',
+      loading: false,
     };
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
-    const [data, user] = await getUserProfile();
-
-    this.setState({
-      estado: user.state,
-      cidade: user.city,
-      bairro: user.neighbourhood,
-      complemento: user.complement,
-      number: user.adddressnumber,
-      endereco: user.address,
-      userPhon: user.phone1,
-      loading: false,
-    });
+    // TODO Falta conseguir la informacion desde el asyncstorage
+    // this.setState({loading: true});
+    // const [data, user] = await getUserProfile();
+    // this.setState({
+    //   estado: user.state,
+    //   cidade: user.city,
+    //   bairro: user.neighbourhood,
+    //   complemento: user.complement,
+    //   number: user.adddressnumber,
+    //   endereco: user.address,
+    //   userPhon: user.phone1,
+    //   loading: false,
+    // });
   }
 
   async handleSubmitButton() {
     this.setState({loading: true});
-    const dataInJson = this.state;
-    delete dataInJson.loading;
-    // aqui llamo al update
+    await patchuserUpdate({
+      email: this.state.email,
+      first_name: this.state.fullName.split(' ')[0],
+      last_name: this.state.fullName.split(' ')[1],
+    });
     await patchUserProfile({
-      state: this.state.estado,
-      city: this.state.cidade,
-      neighbourhood: this.state.bairro,
-      complement: this.state.complemento,
-      adddressnumber: this.state.number,
-      address: this.state.endereco,
-      phone1: this.state.userPhon,
+      phone1: this.state.phone,
     });
     this.setState({loading: false});
   }
@@ -73,99 +67,72 @@ export default class EnderecoScreen extends Component {
             </Text>
           </View>
           <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <Text style={styles.LabelStyle}>Endereço</Text>
+            <Text style={styles.LabelStyle}>Dados Cadastrais</Text>
             <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>CEP</Text>
+              <Text style={styles.InputLabelStyle}>Nome Completo</Text>
               <TextInput
+                style={styles.inputStyle}
+                value={this.state.fullName}
+                onChangeText={(text) => this.setState({fullName: text})}
+                placeholder="NOME E SOBRENOME"
+                placeholderTextColor="#aaaaaa"
+                returnKeyType="next"
+                blurOnSubmit={false}
+              />
+            </View>
+            <View style={styles.SectionStyle}>
+              <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
+              <TextInputMask
                 style={styles.inputStyle}
                 type={'cel-phone'}
-                value={this.state.userPhon}
-                onChangeText={(text) => this.setState({userPhon: text})}
-                placeholder="30130-000"
+                options={{
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99) ',
+                }}
+                value={this.state.phone}
+                onChangeText={(text) => {
+                  this.setState({
+                    phone: text.replace(/[^0-9]/g, ''),
+                  });
+                }}
+                onSubmitEditing={() => this.handleSubmitButton()}
+                placeholder="(11) 98877 5566"
                 placeholderTextColor="#aaaaaa"
-                returnKeyType="next"
                 blurOnSubmit={false}
+                ref={(ref) => (this.phoneField = ref)}
               />
             </View>
             <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Endereço</Text>
+              <Text style={styles.InputLabelStyle}>CPF</Text>
+              <TextInputMask
+                style={styles.inputStyle}
+                type={'cpf'}
+                value={this.state.cpf}
+                onChangeText={(text) => {
+                  this.setState({
+                    cpf: text.replace(/[^0-9]/g, ''),
+                  });
+                }}
+                onSubmitEditing={() => this.handleSubmitButton()}
+                placeholderTextColor="#aaaaaa"
+                returnKeyType="next"
+              />
+            </View>
+            <View style={styles.SectionStyle}>
+              <Text style={styles.InputLabelStyle}>Email</Text>
               <TextInput
                 style={styles.inputStyle}
-                value={this.state.endereco}
-                onChangeText={(text) => this.setState({endereco: text})}
+                value={this.state.email}
+                onChangeText={(text) => this.setState({email: text})}
                 placeholderTextColor="#aaaaaa"
+                placeholder="INSERIR EMAIL"
                 autoCapitalize="sentences"
                 returnKeyType="next"
                 blurOnSubmit={false}
               />
-            </View>
-            <View style={styles.containerEspecial}>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial2}>
-                  <Text style={styles.InputLabelStyle}>Nº</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.number}
-                    onChangeText={(text) => this.setState({number: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-              </View>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial1}>
-                  <Text style={styles.InputLabelStyle}>Complemento</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.complemento}
-                    onChangeText={(text) => this.setState({complemento: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-              </View>
             </View>
 
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Bairro</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.bairro}
-                onChangeText={(text) => this.setState({bairro: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Cidade</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.cidade}
-                onChangeText={(text) => this.setState({cidade: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Estado</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.estado}
-                onChangeText={(text) => this.setState({estado: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
