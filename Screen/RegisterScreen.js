@@ -14,7 +14,9 @@ import {
   TouchableHighlight,
   Alert,
   SafeAreaView,
+  Button,
   ActivityIndicator,
+  Platform,
   Dimensions,
 } from 'react-native';
 import Loader from '../Components/Loader';
@@ -26,6 +28,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Geolocation from '@react-native-community/geolocation';
 import LocationIQ from 'react-native-locationiq';
 import {TextInputMask} from 'react-native-masked-text';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-community/async-storage';
 import {WebView} from 'react-native-webview';
 
@@ -122,11 +125,80 @@ export default class RegiterScreen extends Component {
       isVisible11: false,
       isVisible12: false,
       isValidNivel: false,
+      //TODO Just for test
+      isValidStatus: true,
+      isValidInicio: null,
+      dismissed: false,
       isOneDropdownActive: false,
+      show: true,
+      mode: 'date',
+      date: new Date(),
+      dateConcluido: new Date(),
       allAreas: [],
       subarea: null,
     };
   }
+
+  onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+    this.setState({
+      date: currentDate,
+      isValidInicio: true,
+      show: Platform.OS === 'ios' ? true : false,
+    });
+  };
+
+  onChangeConcluido = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+    fetch(
+      'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+        this.state.user_info.id +
+        '/update/',
+      {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Token ' + this.state.user_info.token.api_key,
+        },
+        body: JSON.stringify({
+          level: this.state.itemNivel,
+          title: this.state.Formation,
+          school: this.state.Institution,
+          status: this.state.status,
+          start: this.state.date,
+          end: this.state.dateConcluido,
+        }),
+      },
+    )
+      .then((response) => response.json())
+      .then(() => {
+        this.setState({
+          dateConcluido: currentDate,
+          isValidConcluido: true,
+          show: Platform.OS === 'ios' ? true : false,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        Alert.alert('server error');
+      });
+  };
+
+  showMode = (currentMode) => {
+    this.setState({
+      mode: currentMode,
+      show: true,
+    });
+  };
+
+  showDatepicker = () => {
+    this.showMode('date');
+  };
+
+  showTimepicker = () => {
+    this.showMode('time');
+  };
 
   componentDidMount() {}
 
@@ -449,6 +521,44 @@ export default class RegiterScreen extends Component {
         this.setState({
           isValidInstitution: true,
         });
+        break;
+      case 'FirstSaldo':
+        this.setState({
+          isValidFirstSaldo: true,
+        });
+        break;
+      case 'LastSaldo':
+        this.setState({
+          isValidLastSaldo: true,
+        });
+        break;
+
+        this.setState({showLoading: true});
+        fetch(
+          'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+            this.state.user_info.id +
+            '/update/',
+          {
+            method: 'PATCH',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Token ' + this.state.user_info.token.api_key,
+            },
+            body: JSON.stringify({
+              last_salary: this.state.FirstSaldo,
+              current_salary: this.state.LastSaldo,
+            }),
+          },
+        )
+          .then((response) => response.json())
+          .then(() => {
+            this.setState({showLoading: false, isValidLastSaldo: true});
+          })
+          .catch((error) => {
+            console.error(error);
+            Alert.alert('server error');
+          });
         break;
       case 'hasWorking':
         if (value === false) {
@@ -1073,24 +1183,49 @@ export default class RegiterScreen extends Component {
               </KeyboardAvoidingView>
             ) : null}
 
-            {this.state.isValidStatus
-              ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Inicio: text}),
-                  () => this.handleSubmitText('Inicio'),
-                  'Inicio',
-                  this.state.isValidInicio,
-                )
+            {this.state.isValidStatus != null
+              ? this.renderChatBox('insira o Inicio', 750)
               : null}
-            {this.state.isValidInicio
-              ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Concluido: text}),
-                  () => this.handleSubmitText('Concluido'),
-                  'Concluido',
-                  this.state.isValidConcluido,
-                )
+
+            {this.state.isValidStatus != null ? (
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStyle}>
+                  <View>
+                    {this.state.show && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={this.state.date}
+                        mode="date"
+                        display="default"
+                        onChange={this.onChange}
+                      />
+                    )}
+                  </View>
+                </FadeInView>
+              </KeyboardAvoidingView>
+            ) : null}
+
+            {this.state.isValidInicio != null
+              ? this.renderChatBox('Concluido', 750)
               : null}
+
+            {this.state.isValidInicio != null ? (
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStyle}>
+                  <View>
+                    {this.state.show && (
+                      <DateTimePicker
+                        testID="dateTimePicker"
+                        value={this.state.dateConcluido}
+                        mode="date"
+                        display="default"
+                        onChange={this.onChangeConcluido}
+                      />
+                    )}
+                  </View>
+                </FadeInView>
+              </KeyboardAvoidingView>
+            ) : null}
 
             {this.state.isValidConcluido
               ? this.renderChatBox(
@@ -1105,6 +1240,10 @@ export default class RegiterScreen extends Component {
                   () => this.handleSubmitText('FirstSaldo'),
                   'Salário anterior',
                   this.state.isValidFirstSaldo,
+                  '#aaaaaa',
+                  'sentences',
+                  'next',
+                  'phone-pad',
                 )
               : null}
 
@@ -1115,6 +1254,10 @@ export default class RegiterScreen extends Component {
                   () => this.handleSubmitText('LastSaldo'),
                   'pretensão salarial',
                   this.state.isValidLastSaldo,
+                  '#aaaaaa',
+                  'sentences',
+                  'next',
+                  'phone-pad',
                 )
               : null}
 
@@ -1146,7 +1289,7 @@ export default class RegiterScreen extends Component {
                     onPress={() => {
                       this.clickOkJob();
                     }}>
-                    <Text style={{color: '#FFFFFF'}}>Enterokay</Text>
+                    <Text style={{color: '#FFFFFF'}}>VER VAGAS</Text>
                   </TouchableHighlight>
                 </View>
               </View>
