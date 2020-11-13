@@ -191,7 +191,7 @@ export default () => {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-        {userToken == '' ? <AuthStackScreen /> : <AppTabsScreen />}
+        {userToken !== '' ? <AuthStackScreen /> : <AppTabsScreen />}
       </NavigationContainer>
     </SafeAreaView>
   );
