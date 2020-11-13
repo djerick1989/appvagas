@@ -26,7 +26,6 @@ import Icon from 'react-native-vector-icons/Feather';
 import Geolocation from '@react-native-community/geolocation';
 import LocationIQ from 'react-native-locationiq';
 import {TextInputMask} from 'react-native-masked-text';
-import DatePicker from 'react-native-datepicker';
 import AsyncStorage from '@react-native-community/async-storage';
 import {WebView} from 'react-native-webview';
 
@@ -54,10 +53,9 @@ export default class RegiterScreen extends Component {
       isValidExperienceInfo: false,
       hasClickEducation: false,
       hasExperience: null,
-      hasWorking: null,
+      hasWorking: true,
       isValidJob: false,
-      // TODO just testing
-      modalVisible: true,
+      modalVisible: false,
       allowNotification: props.route.params.allowNotification,
       hasEmail: null,
       UserName: '',
@@ -88,6 +86,8 @@ export default class RegiterScreen extends Component {
       item10: '',
       item11: '',
       item12: '',
+      itemNivel: '',
+      itemStatus: '',
       areaSelected: '',
       listNivels: [
         {label: 'Até 5º ano do Ensino Fundamental', value: 0},
@@ -121,6 +121,7 @@ export default class RegiterScreen extends Component {
       isVisible10: false,
       isVisible11: false,
       isVisible12: false,
+      isValidNivel: false,
       isOneDropdownActive: false,
       allAreas: [],
       subarea: null,
@@ -439,6 +440,16 @@ export default class RegiterScreen extends Component {
             Alert.alert('server error');
           });
         break;
+      case 'Formation':
+        this.setState({
+          isValidFormation: true,
+        });
+        break;
+      case 'Institution':
+        this.setState({
+          isValidInstitution: true,
+        });
+        break;
       case 'hasWorking':
         if (value === false) {
           this.setState({showLoading: true});
@@ -476,22 +487,36 @@ export default class RegiterScreen extends Component {
   };
 
   changValue(state) {
-    this.setState({
-      subarea: null,
-      item1: null,
-      item2: null,
-      item3: null,
-      item4: null,
-      item5: null,
-      item6: null,
-      item7: null,
-      item8: null,
-      item9: null,
-      item10: null,
-      item11: null,
-      item12: null,
-      ...state,
-    });
+    this.setState(
+      {
+        subarea: null,
+        item1: null,
+        item2: null,
+        item3: null,
+        item4: null,
+        item5: null,
+        item6: null,
+        item7: null,
+        item8: null,
+        item9: null,
+        item10: null,
+        item11: null,
+        item12: null,
+        ...state,
+      },
+      () => {
+        if (state.isValidNivel) {
+          this.setState({
+            isValidNivel: true,
+          });
+        }
+        if (state.isValidStatus) {
+          this.setState({
+            isValidStatus: true,
+          });
+        }
+      },
+    );
   }
 
   clickOkJob = () => {
@@ -956,55 +981,48 @@ export default class RegiterScreen extends Component {
                 )
               : null}
 
-            {/* TODO Cambiar a un combo box que tenga todos estos elementos */}
-            <KeyboardAvoidingView enabled>
-              <FadeInView duration={750} style={styles.InputBoxStyle}>
-                <DropDownPicker
-                  items={DropdownItems.items1}
-                  defaultValue={this.state.item1}
-                  containerStyle={{height: 40}}
-                  isVisible={this.state.isVisible1}
-                  onOpen={() =>
-                    this.changeVisibility({
-                      isVisible1: true,
-                    })
-                  }
-                  zIndex={15}
-                  onClose={() =>
-                    this.setState({
-                      isVisible1: false,
-                    })
-                  }
-                  onChangeItem={(item) =>
-                    this.changValue({
-                      item1: item.value,
-                      subarea: item.value,
-                    })
-                  }
-                  placeholder={DropdownItems.mainarea[0].title}
-                  labelStyle={styles.dLabelStyle}
-                  itemStyle={styles.dItemStyle}
-                  placeholderStyle={styles.dPlaceholderStyle}
-                  dropDownStyle={styles.dStyle}
-                />
-              </FadeInView>
-            </KeyboardAvoidingView>
-            {this.state.hasClickEducation
-              ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Nivel: text}),
-                  () => this.handleSubmitText('Nivel'),
-                  'Nivel',
-                  this.state.isValidNivel,
-                )
-              : null}
+            {this.state.hasClickEducation ? (
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStyle}>
+                  <DropDownPicker
+                    items={this.state.listNivels}
+                    defaultValue={this.state.itemNivel}
+                    containerStyle={{height: 40}}
+                    isVisible={this.state.isVisibleThisOne}
+                    onOpen={() =>
+                      this.changeVisibility({
+                        isVisibleThisOne: true,
+                      })
+                    }
+                    zIndex={15}
+                    onClose={() =>
+                      this.setState({
+                        isVisibleThisOne: false,
+                      })
+                    }
+                    onChangeItem={(item) => {
+                      this.changValue({
+                        itemNivel: item.value,
+                        isValidNivel: true,
+                      });
+                    }}
+                    disabled={this.state.isValidNivel}
+                    placeholder={'Nivel'}
+                    labelStyle={styles.dLabelStyle}
+                    itemStyle={styles.dItemStyle}
+                    placeholderStyle={styles.dPlaceholderStyle}
+                    dropDownStyle={styles.dStyle}
+                  />
+                </FadeInView>
+              </KeyboardAvoidingView>
+            ) : null}
 
             {this.state.isValidNivel
               ? this.inputWithKeyBoard(
                   1200,
                   (text) => this.setState({Formation: text}),
                   () => this.handleSubmitText('Formation'),
-                  'Formation',
+                  'Formação',
                   this.state.isValidFormation,
                 )
               : null}
@@ -1014,20 +1032,46 @@ export default class RegiterScreen extends Component {
                   1200,
                   (text) => this.setState({Institution: text}),
                   () => this.handleSubmitText('Institution'),
-                  'Institution',
+                  'Instituicao',
                   this.state.isValidInstitution,
                 )
               : null}
 
-            {this.state.isValidInstitution
-              ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Status: text}),
-                  () => this.handleSubmitText('Status'),
-                  'Status',
-                  this.state.isValidStatus,
-                )
-              : null}
+            {this.state.isValidInstitution ? (
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStyle}>
+                  <DropDownPicker
+                    items={this.state.listStatus}
+                    defaultValue={this.state.itemStatus}
+                    containerStyle={{height: 40}}
+                    isVisible={this.state.isVisibleThisOneToo}
+                    onOpen={() =>
+                      this.changeVisibility({
+                        isVisibleThisOneToo: true,
+                      })
+                    }
+                    zIndex={15}
+                    onClose={() =>
+                      this.setState({
+                        isVisibleThisOneToo: false,
+                      })
+                    }
+                    onChangeItem={(item) => {
+                      this.changValue({
+                        itemStatus: item.value,
+                        isValidStatus: true,
+                      });
+                    }}
+                    disabled={this.state.isValidStatus}
+                    placeholder={'Status'}
+                    labelStyle={styles.dLabelStyle}
+                    itemStyle={styles.dItemStyle}
+                    placeholderStyle={styles.dPlaceholderStyle}
+                    dropDownStyle={styles.dStyle}
+                  />
+                </FadeInView>
+              </KeyboardAvoidingView>
+            ) : null}
 
             {this.state.isValidStatus
               ? this.inputWithKeyBoard(
@@ -1621,10 +1665,11 @@ const styles = StyleSheet.create({
     color: '#000000',
     paddingLeft: 10,
     paddingTop: 0,
+    height: 35,
     paddingBottom: 0,
     paddingRight: 10,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 5,
     borderColor: '#6948F4',
   },
   buttonStyle: {
