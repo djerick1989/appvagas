@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,33 +8,19 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
-  Keyboard,
   TouchableWithoutFeedback,
   Modal,
   TouchableHighlight,
   Alert,
   SafeAreaView,
-  Button,
-  ActivityIndicator,
   Platform,
-  Dimensions,
 } from 'react-native';
 import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
 import DropdownItems from '../Components/DropdownItems';
 import DropDownPicker from 'react-native-dropdown-picker';
-import MapView, {Marker, Callout} from 'react-native-maps';
-import Icon from 'react-native-vector-icons/Feather';
-import Geolocation from '@react-native-community/geolocation';
-import LocationIQ from 'react-native-locationiq';
 import {TextInputMask} from 'react-native-masked-text';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AsyncStorage from '@react-native-community/async-storage';
-import {WebView} from 'react-native-webview';
-
-const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
-
-let controller;
 
 export default class RegiterScreen extends Component {
   constructor(props) {
@@ -56,7 +42,7 @@ export default class RegiterScreen extends Component {
       isValidExperienceInfo: false,
       hasClickEducation: false,
       hasExperience: null,
-      hasWorking: true,
+      hasWorking: null,
       isValidJob: false,
       modalVisible: false,
       allowNotification: props.route.params.allowNotification,
@@ -125,8 +111,7 @@ export default class RegiterScreen extends Component {
       isVisible11: false,
       isVisible12: false,
       isValidNivel: false,
-      //TODO Just for test
-      isValidStatus: true,
+      isValidStatus: null,
       isValidInicio: null,
       dismissed: false,
       isOneDropdownActive: false,
@@ -232,7 +217,7 @@ export default class RegiterScreen extends Component {
     switch (keyToSearch) {
       case 'userName':
         //bypass
-        this.setState({isCorrectUser: true});
+        // this.setState({isCorrectUser: true});
 
         if (this.state.UserName.indexOf(' ') > 0) {
           const userName = this.state.UserName;
@@ -246,14 +231,14 @@ export default class RegiterScreen extends Component {
         break;
       case 'phone':
         //bypass
-        this.setState({isValidPhone: true});
+        // this.setState({isValidPhone: true});
         if (this.state.PhonNumber.length === 11) {
           this.setState({isValidPhone: true});
         }
         break;
       case 'password':
-        //bypass
-        this.setState({isValidPassword: true});
+        // //bypass
+        // this.setState({isValidPassword: true});
 
         if (this.state.Password.length >= 4) {
           this.setState({showLoading: true});
@@ -323,10 +308,10 @@ export default class RegiterScreen extends Component {
         break;
       case 'cpf':
         //bypass
-        this.setState({isValidCpf: true});
-        if (!this.state.CPF) {
-          return;
-        }
+        // this.setState({isValidCpf: true});
+        // if (!this.state.CPF) {
+        //   return;
+        // }
 
         this.setState({showLoading: true});
         fetch(
@@ -395,9 +380,9 @@ export default class RegiterScreen extends Component {
         this.setState({isValidState: true});
         break;
       case 'Country':
-        //bypass
-        this.setState({isValidCountry: true});
-        return;
+        // //bypass
+        // this.setState({isValidCountry: true});
+        // return;
 
         this.setState({showLoading: true});
         fetch('https://mobapivagas.jobconvo.com/v1/user/profile/1/update/', {
@@ -481,9 +466,9 @@ export default class RegiterScreen extends Component {
         this.setState({isValidExperience: true});
         break;
       case 'InfoExp':
-        // Bypass
-        this.setState({isValidExperienceInfo: true});
-        return;
+        // // Bypass
+        // this.setState({isValidExperienceInfo: true});
+        // return;
 
         this.setState({showLoading: true});
         fetch(
@@ -528,10 +513,10 @@ export default class RegiterScreen extends Component {
         });
         break;
       case 'LastSaldo':
-        this.setState({
-          isValidLastSaldo: true,
-        });
-        break;
+        // this.setState({
+        //   isValidLastSaldo: true,
+        // });
+        // break;
 
         this.setState({showLoading: true});
         fetch(
@@ -751,23 +736,26 @@ export default class RegiterScreen extends Component {
     timer = 750,
     textOk = 'SIM',
     textNo = 'NÃO',
+    styleY = styles.YbuttonStyleTwo,
+    styleN = styles.NbuttonStyleTwo,
+    inputStyle = styles.InputBoxStyle,
   ) => {
     return (
-      <View style={styles.InputBoxStyle}>
+      <View style={inputStyle}>
         <FadeInView
           duration={timer}
           style={(styles.InputBoxStyle, {flexDirection: 'row'})}>
           <TouchableOpacity
-            style={styles.YbuttonStyleTwo}
+            style={styleY}
             activeOpacity={0.5}
             onPress={caseTrue}>
-            <Text style={styles.blueButtonTextStyle}>SIM</Text>
+            <Text style={styles.blueButtonTextStyle}>{textOk}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.NbuttonStyleTwo}
+            style={styleN}
             activeOpacity={0.5}
             onPress={caseFalse}>
-            <Text style={styles.WhiteButtonTextStyle}>NÃO</Text>
+            <Text style={styles.WhiteButtonTextStyle}>{textNo}</Text>
           </TouchableOpacity>
         </FadeInView>
       </View>
@@ -1069,6 +1057,9 @@ export default class RegiterScreen extends Component {
                   3000,
                   'TRABALHANDO',
                   'DESEMPREGADO',
+                  styles.YbuttonStyleThree,
+                  styles.NbuttonStyleThree,
+                  styles.InputBoxStyleTwo,
                 )
               : null}
 
@@ -1287,7 +1278,7 @@ export default class RegiterScreen extends Component {
                   }}>
                   <TouchableHighlight
                     onPress={() => {
-                      this.clickOkJob();
+                      alert('Usuario registrado con exito');
                     }}>
                     <Text style={{color: '#FFFFFF'}}>VER VAGAS</Text>
                   </TouchableHighlight>
@@ -1730,6 +1721,31 @@ const styles = StyleSheet.create({
     width: '70%',
     alignSelf: 'flex-end',
   },
+  YbuttonStyleThree: {
+    backgroundColor: '#6948F4',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
+    borderWidth: 0,
+    textAlignVertical: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+  NbuttonStyleThree: {
+    backgroundColor: 'white',
+    borderColor: '#6948F4',
+    color: '#6948F4',
+    fontWeight: 'bold',
+    fontSize: 14,
+    borderWidth: 2,
+    textAlignVertical: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
 
   YbuttonStyleTwo: {
     backgroundColor: '#6948F4',
@@ -1802,6 +1818,11 @@ const styles = StyleSheet.create({
     width: '70%',
     marginBottom: 15,
     alignSelf: 'flex-end',
+    height: 40,
+  },
+  InputBoxStyleTwo: {
+    marginBottom: 15,
+    alignSelf: 'center',
     height: 40,
   },
   inputStyle: {
