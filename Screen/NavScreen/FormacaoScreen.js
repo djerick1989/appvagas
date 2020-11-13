@@ -201,23 +201,47 @@ export default class FormacaoScreen extends Component {
                   </TouchableHighlight>
                 </View>
               </View>
-              <View style={styles.cardContainer}>
-                <View style={styles.cardItem}>
-                  <Text style={styles.CardTitle}>Administracion</Text>
-                  <Text style={styles.CardSubTitle}>Facultade </Text>
-                  <Text style={styles.CardType}>Cursando</Text>
-                </View>
-              </View>
+              {this.state.listOfEducations.map((element) => {
+                if (element.level != 10 && element.level != 4) {
+                  return (
+                    <View style={styles.cardContainer}>
+                      <View style={styles.cardItem}>
+                        <Text style={styles.CardTitle}>{element.title}</Text>
+                        <Text style={styles.CardSubTitle}>
+                          {element.school}
+                        </Text>
+                        <Text style={styles.CardType}>
+                          {this.state.listStatus.map((el) =>
+                            el.value == element.status ? el.label : null,
+                          )}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
               <View style={styles.SectionStyleEspecial122}>
                 <Text style={styles.InputLabelStyle}>Cursos</Text>
               </View>
-              <View style={styles.cardContainer}>
-                <View style={styles.cardItem}>
-                  <Text style={styles.CardTitle}>Python</Text>
-                  <Text style={styles.CardSubTitle}>Udemy </Text>
-                  <Text style={styles.CardType}>Concluido em Octubre/2020</Text>
-                </View>
-              </View>
+              {this.state.listOfEducations.map((element) => {
+                if (element.level == 10 || element.level == 4) {
+                  return (
+                    <View style={styles.cardContainer}>
+                      <View style={styles.cardItem}>
+                        <Text style={styles.CardTitle}>{element.title}</Text>
+                        <Text style={styles.CardSubTitle}>
+                          {element.school}
+                        </Text>
+                        <Text style={styles.CardType}>
+                          {this.state.listStatus.map((el) =>
+                            el.value == element.status ? el.label : null,
+                          )}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
             </KeyboardAvoidingView>
           </View>
         </ScrollView>
