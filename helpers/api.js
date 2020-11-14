@@ -209,12 +209,31 @@ export async function postUserEducation(dataInJson) {
     });
 }
 
-export async function patchUserEducation(dataInJson) {
-  const newUrl = apiUrl + 'user/add/education/';
+export async function patchUserEducation(dataInJson, id) {
+  const newUrl = apiUrl + 'user/education/' + id + '/update/';
   return fetch(newUrl, {
-    method: 'PATCH',
+    method: 'PUT',
     headers: headers,
     body: JSON.stringify(dataInJson),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function deleteUserEducation(id) {
+  const newUrl = apiUrl + 'user/remove/education/' + id + '/?';
+  return fetch(newUrl, {
+    method: 'DELETE',
+    headers: headers,
   })
     .then((response) => response.json())
     .then((responseJson) => {

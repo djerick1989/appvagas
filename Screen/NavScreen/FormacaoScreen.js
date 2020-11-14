@@ -5,7 +5,6 @@ import {
   Text,
   SafeAreaView,
   View,
-  TouchableOpacity,
   TextInput,
   Modal,
   TouchableHighlight,
@@ -13,20 +12,16 @@ import {
   ScrollView,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import DropdownItems from '../../Components/DropdownItems';
 import Loader from '../../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text';
-import Slider from '@react-native-community/slider';
 import {
-  getUserAreas,
-  getUserExp,
-  getUserSalary,
   patchUserExp,
   postUserAreas,
   patchUserSalary,
   postUserEducation,
   patchUserEducation,
   getUserEducations,
+  deleteUserEducation,
 } from '../../helpers/api';
 
 export default class FormacaoScreen extends Component {
@@ -35,6 +30,7 @@ export default class FormacaoScreen extends Component {
     this.state = {
       nameEscola: '',
       nameCurso: '',
+      currentID: 0,
       listNivels: [
         {label: 'Até 5º ano do Ensino Fundamental', value: 0},
         {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
@@ -66,7 +62,7 @@ export default class FormacaoScreen extends Component {
       listOfEducations: [],
       lastSalary: 0,
       dataSalary: '',
-      modalVisible: false,
+      modalVisible: true,
       loading: true,
       subarea: null,
     };
@@ -88,20 +84,30 @@ export default class FormacaoScreen extends Component {
     });
   };
 
-  clickAddOrEdit = async () => {
-    this.setState({loading: true});
-    const date = this.state.dateStart.split('/');
+  transformDate(dateIn) {
+    const date = dateIn.split('/');
     let realDate = '';
     if (date[0] && date[1] && date[2]) {
       realDate = date[2] + '-' + date[1] + '-' + date[0];
     }
-    const date2 = this.state.dateFinish.split('/');
-    let realDate2 = '';
-    if (date2[0] && date2[1] && date2[2]) {
-      realDate2 = date2[2] + '-' + date2[1] + '-' + date2[0];
+    return realDate;
+  }
+
+  retransformDate(dateIn) {
+    const date = dateIn.split('-');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '/' + date[1] + '/' + date[0];
     }
+    return realDate;
+  }
+
+  clickAddOrEdit = async () => {
+    this.setState({loading: true});
+    let realDate = this.transformDate(this.state.dateStart);
+    let realDate2 = this.transformDate(this.state.dateFinish);
     if (this.state.modalIs == 'created') {
-      const [a, v] = await postUserEducation({
+      await postUserEducation({
         level: this.state.itemNivel,
         title: this.state.nameCurso,
         school: this.state.nameEscola,
@@ -109,8 +115,37 @@ export default class FormacaoScreen extends Component {
         start: realDate,
         end: realDate2,
       });
+    } else {
+      const [a, b] = await patchUserEducation(
+        {
+          level: this.state.itemNivel,
+          title: this.state.nameCurso,
+          school: this.state.nameEscola,
+          status: this.state.itemStatus,
+          start: realDate,
+          end: realDate2,
+        },
+        this.state.currentID,
+      );
     }
-    this.setState({loading: false, modalVisible: false});
+    const [isValid, educations] = await getUserEducations();
+    this.setState({
+      loading: false,
+      modalVisible: false,
+      listOfEducations: educations,
+    });
+  };
+
+  deleteThisOne = async () => {
+    this.setState({loading: true});
+    const [a, b] = await deleteUserEducation(this.state.currentID);
+    console.log(a, b);
+    const [isValid, educations] = await getUserEducations();
+    this.setState({
+      loading: false,
+      modalVisible: false,
+      listOfEducations: educations,
+    });
   };
 
   changeVisibility(state) {
@@ -162,8 +197,7 @@ export default class FormacaoScreen extends Component {
     });
     if (this.state.listOfNewAreas.length) {
       for (let index = 0; index < this.state.listOfNewAreas.length; index++) {
-        const [a, b] = await postUserAreas(this.state.listOfNewAreas[index]);
-        console.log(a, b);
+        await postUserAreas(this.state.listOfNewAreas[index]);
       }
     }
     this.setState({listOfNewAreas: [], loading: false});
@@ -206,11 +240,55 @@ export default class FormacaoScreen extends Component {
                   return (
                     <View style={styles.cardContainer}>
                       <View style={styles.cardItem}>
-                        <Text style={styles.CardTitle}>{element.title}</Text>
-                        <Text style={styles.CardSubTitle}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {element.title}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
                           {element.school}
                         </Text>
-                        <Text style={styles.CardType}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardType}>
                           {this.state.listStatus.map((el) =>
                             el.value == element.status ? el.label : null,
                           )}
@@ -228,11 +306,55 @@ export default class FormacaoScreen extends Component {
                   return (
                     <View style={styles.cardContainer}>
                       <View style={styles.cardItem}>
-                        <Text style={styles.CardTitle}>{element.title}</Text>
-                        <Text style={styles.CardSubTitle}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {element.title}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
                           {element.school}
                         </Text>
-                        <Text style={styles.CardType}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              nameEscola: element.school,
+                              itemNivel: element.level,
+                              nameCurso: element.title,
+                              itemStatus: element.status,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardType}>
                           {this.state.listStatus.map((el) =>
                             el.value == element.status ? el.label : null,
                           )}
@@ -248,17 +370,24 @@ export default class FormacaoScreen extends Component {
         <Modal
           animationType={'slide'}
           transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
-          }}>
+          visible={this.state.modalVisible}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
             <View style={{flex: 5, justifyContent: 'flex-start'}}>
-              <View style={{paddingBottom: 40}}>
+              <View
+                style={{
+                  paddingBottom: 40,
+                  flexDirection: 'row',
+                  display: 'flex',
+                }}>
                 <Text
                   style={styles.BackStyle2}
                   onPress={() => this.setState({modalVisible: false})}>
                   Voltar
+                </Text>
+                <Text
+                  style={styles.BackStyle3}
+                  onPress={() => this.deleteThisOne()}>
+                  Excluir
                 </Text>
               </View>
               <KeyboardAvoidingView enabled style={{flex: 4}}>
@@ -658,10 +787,20 @@ const styles = StyleSheet.create({
   BackStyle2: {
     color: '#6948F4',
     fontWeight: 'bold',
+    alignSelf: 'flex-start',
     fontSize: 16,
     paddingTop: 30,
     paddingLeft: 35,
   },
+  BackStyle3: {
+    color: '#6948F4',
+    fontWeight: 'bold',
+    alignSelf: 'flex-end',
+    fontSize: 16,
+    paddingTop: 30,
+    paddingLeft: 35,
+  },
+
   BackStyle22: {
     backgroundColor: '#6948F4',
     color: '#FFFFFF',
