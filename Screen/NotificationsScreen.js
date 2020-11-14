@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -6,15 +7,37 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Platform,
 } from 'react-native';
-import {request, check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 export default class NotificationsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    let comeFrom = '';
+    if (props.route.params && props.route.params.comeFrom) {
+      comeFrom = props.route.params.comeFrom;
+    }
+    this.state = {
+      comeFrom: comeFrom,
+    };
+  }
+
+  clickNo() {
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('RegisterScreen', {
+        allowNotification: false,
+      });
+    }
+    this.props.navigation.goBack();
+  }
+
+  clickYes() {
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('RegisterScreen', {
+        allowNotification: true,
+      });
+    }
+    this.props.navigation.goBack();
   }
 
   render() {
@@ -60,9 +83,7 @@ export default class NotificationsScreen extends Component {
               margin: 10,
             }}
             activeOpacity={0.5}
-            onPress={() => this.props.navigation.navigate('RegisterScreen', {
-              allowNotification: false
-            })}>
+            onPress={() => this.clickNo()}>
             <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -76,9 +97,7 @@ export default class NotificationsScreen extends Component {
             }}
             activeOpacity={0.5}
             onPress={() => {
-              this.props.navigation.navigate('RegisterScreen', {
-                allowNotification: true
-              });
+              this.clickYes();
             }}>
             <Text style={styles.blueButtonTextStyle}>Permitir</Text>
           </TouchableOpacity>

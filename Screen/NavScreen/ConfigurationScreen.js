@@ -76,19 +76,17 @@ export default class IdiomasScreen extends Component {
               <View style={styles.SectionStyle}>
                 <List.Item
                   title="Preferências"
-                  onPress={() => this.props.navigation.navigate('Dados')}
+                  onPress={() => this.props.navigation.navigate('Preferences')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
                   title="Termos"
-                  onPress={() =>
-                    this.props.navigation.navigate('DadosPessoais')
-                  }
+                  onPress={() => this.props.navigation.navigate('Termos')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
                   title="Políticas"
-                  onPress={() => this.props.navigation.navigate('Endereco')}
+                  onPress={() => this.props.navigation.navigate('Policy')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item

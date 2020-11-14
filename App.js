@@ -15,7 +15,7 @@ import ForgetPassScreen from './Screen/ForgetPassScreen';
 import ChangePassScreen from './Screen/ChangePassScreen';
 import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
 import ConditionsScreen from './Screen/ConditionsScreen';
-import PolicyScreen from './Screen/PolicyScreen';
+import PolicyScreen from './Screen/NavScreen/PolicyScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
@@ -23,6 +23,7 @@ import ExperienciaScreen from './Screen/NavScreen/ExperienciaScreen';
 import CurriculumScreen from './Screen/NavScreen/CurriculumScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import ConfigurationScreen from './Screen/NavScreen/ConfigurationScreen';
+import PreferencesScreen from './Screen/NavScreen/PreferencesScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
 import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
@@ -76,6 +77,7 @@ const HomeStackScreen = () => (
     />
   </HomeStack.Navigator>
 );
+
 const ConfigsStack = createStackNavigator();
 const ConfigsStackScreen = () => (
   <ConfigsStack.Navigator>
@@ -90,33 +92,23 @@ const ConfigsStackScreen = () => (
       options={{headerShown: false}}
     />
     <ConfigsStack.Screen
-      name="DadosPessoais"
-      component={DadosPessoaisScreen}
+      name="Termos"
+      component={ConditionsScreen}
       options={{headerShown: false}}
     />
     <ConfigsStack.Screen
-      name="Endereco"
-      component={EnderecoScreen}
+      name="Preferences"
+      component={PreferencesScreen}
       options={{headerShown: false}}
     />
     <ConfigsStack.Screen
-      name="Objetivo"
-      component={ObjetivoScreen}
+      name="Notifications"
+      component={NotificationsScreen}
       options={{headerShown: false}}
     />
     <ConfigsStack.Screen
-      name="Formacao"
-      component={FormacaoScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsStack.Screen
-      name="Experiencia"
-      component={ExperienciaScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsStack.Screen
-      name="Idiom"
-      component={IdiomasScreen}
+      name="MapScreen"
+      component={MapScreen}
       options={{headerShown: false}}
     />
   </ConfigsStack.Navigator>

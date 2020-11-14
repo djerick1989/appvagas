@@ -355,3 +355,18 @@ export async function postUserLanguage(dataInJson) {
       return [true, error];
     });
 }
+
+export async function deleteUser() {
+  const newUrl = apiUrl + 'user/' + user_info.id + '/delete/?';
+  return fetch(newUrl, {
+    method: 'DELETE',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}

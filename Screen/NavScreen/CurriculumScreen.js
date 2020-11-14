@@ -37,10 +37,9 @@ export default class IdiomasScreen extends Component {
   };
 
   onClickImage = () => {
-    console.log('image press');
     const options = {
       mediaType: 'photo',
-      includeBase64: false,
+      includeBase64: true,
       maxHeight: 200,
       maxWidth: 200,
     };

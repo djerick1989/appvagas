@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -14,35 +15,49 @@ const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 export default class MapScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    let comeFrom = '';
+    if (props.route.params && props.route.params.comeFrom) {
+      comeFrom = props.route.params.comeFrom;
+    }
+    this.state = {
+      comeFrom: comeFrom,
+    };
+  }
+
+  clickNo() {
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('NotificationsScreen');
+    }
+    this.props.navigation.goBack();
+  }
+
+  async clickYes() {
+    await this.checkMapPermission();
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('NotificationsScreen');
+    }
+    this.props.navigation.goBack();
   }
 
   async checkMapPermission() {
     if (Platform.OS === 'ios') {
       let locWhenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-      if(locWhenUse == RESULTS.GRANTED){
-        console.log('the user has actived location when in use');
-        this.props.navigation.navigate('NotificationsScreen');
+      if (locWhenUse == RESULTS.GRANTED) {
+        return console.log('the user has actived location when in use');
       }
       let locAlways = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
-      if(locAlways == RESULTS.GRANTED){
-        console.log('the user has actived location Always');
-        this.props.navigation.navigate('NotificationsScreen');
+      if (locAlways == RESULTS.GRANTED) {
+        return console.log('the user has actived location Always');
       }
       await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
       await request(PERMISSIONS.IOS.LocationWhenInUse);
-
-      this.props.navigation.navigate('NotificationsScreen');
-
     } else {
       let locFine = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      if(locFine == RESULTS.GRANTED){
-        console.log('the user has actived fine location when in use');
-        this.props.navigation.navigate('NotificationsScreen');
+      if (locFine == RESULTS.GRANTED) {
+        return console.log('the user has actived fine location when in use');
       }
       await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      this.props.navigation.navigate('NotificationsScreen');
-    } 
+    }
   }
 
   render() {
@@ -89,7 +104,7 @@ export default class MapScreen extends Component {
               margin: 10,
             }}
             activeOpacity={0.5}
-            onPress={() => this.props.navigation.navigate('NotificationsScreen')}>
+            onPress={() => this.clickNo()}>
             <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -103,7 +118,7 @@ export default class MapScreen extends Component {
             }}
             activeOpacity={0.5}
             onPress={() => {
-              this.checkMapPermission();
+              this.clickYes();
             }}>
             <Text style={styles.blueButtonTextStyle}>Permitir</Text>
           </TouchableOpacity>
