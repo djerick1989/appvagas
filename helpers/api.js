@@ -324,3 +324,34 @@ export async function deleteUserExperience(id) {
       return [true, error];
     });
 }
+
+export async function getUserLanguages() {
+  const newUrl = apiUrl + 'user/list/languages/' + user_info.id + '/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function postUserLanguage(dataInJson) {
+  const newUrl = apiUrl + 'user/add/language/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}

@@ -245,10 +245,10 @@ export default class FormacaoScreen extends Component {
                   </TouchableHighlight>
                 </View>
               </View>
-              {this.state.listOfEducations.map((element) => {
+              {this.state.listOfEducations.map((element, index) => {
                 if (element.level != 10 && element.level != 4) {
                   return (
-                    <View style={styles.cardContainer}>
+                    <View style={styles.cardContainer} key={index}>
                       <View style={styles.cardItem}>
                         <Text
                           onPress={() =>
@@ -311,10 +311,10 @@ export default class FormacaoScreen extends Component {
               <View style={styles.SectionStyleEspecial122}>
                 <Text style={styles.InputLabelStyle}>Cursos</Text>
               </View>
-              {this.state.listOfEducations.map((element) => {
+              {this.state.listOfEducations.map((element, index) => {
                 if (element.level == 10 || element.level == 4) {
                   return (
-                    <View style={styles.cardContainer}>
+                    <View style={styles.cardContainer} key={index}>
                       <View style={styles.cardItem}>
                         <Text
                           onPress={() =>

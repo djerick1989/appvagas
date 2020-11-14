@@ -24,6 +24,7 @@ import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
 import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
 import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
+import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -48,7 +49,7 @@ const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      component={ExperienciaScreen}
+      component={IdiomasScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (

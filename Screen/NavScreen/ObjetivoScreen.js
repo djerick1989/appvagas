@@ -225,9 +225,10 @@ export default class ObjetivoScreen extends Component {
                 <View style={styles.item2}>
                   <ScrollView style={styles.scrollContainer}>
                     <View style={styles.containerEspecial2}>
-                      {this.state.listOfAreas.map((element) => {
+                      {this.state.listOfAreas.map((element, index) => {
                         return (
                           <TouchableOpacity
+                            key={index}
                             style={styles.buttonStyleArea}
                             activeOpacity={0.5}>
                             <Text style={styles.buttonTextStyleArea}>

@@ -186,10 +186,10 @@ export default class ExperienciaScreen extends Component {
                   </TouchableHighlight>
                 </View>
               </View>
-              {this.state.listOfExperiences.map((element) => {
+              {this.state.listOfExperiences.map((element, index) => {
                 if (element.level != 10 && element.level != 4) {
                   return (
-                    <View style={styles.cardContainer}>
+                    <View style={styles.cardContainer} key={index}>
                       <View style={styles.cardItem}>
                         <Text
                           onPress={() =>
