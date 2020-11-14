@@ -81,12 +81,20 @@ export default class IdiomasScreen extends Component {
                 />
                 <List.Item
                   title="Termos"
-                  onPress={() => this.props.navigation.navigate('Termos')}
+                  onPress={() =>
+                    this.props.navigation.navigate('Termos', {
+                      comeFrom: 'preferences',
+                    })
+                  }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
                   title="Políticas"
-                  onPress={() => this.props.navigation.navigate('Policy')}
+                  onPress={() =>
+                    this.props.navigation.navigate('Policy', {
+                      comeFrom: 'preferences',
+                    })
+                  }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
@@ -98,11 +106,7 @@ export default class IdiomasScreen extends Component {
                 />
                 <List.Item
                   title="Convidar Amgios"
-                  onPress={() =>
-                    this.handleOpenLink(
-                      'https://www.jobconvo.com/pt-br/pricing/',
-                    )
-                  }
+                  onPress={() => alert('not implemented Yet')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item

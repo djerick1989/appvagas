@@ -4,53 +4,66 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Text,
+  SafeAreaView,
   View,
+  TextInput,
+  Modal,
   TouchableHighlight,
   KeyboardAvoidingView,
   ScrollView,
-  Image,
 } from 'react-native';
+import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
-import {patchUserProfile} from '../../helpers/api';
-import {List} from 'react-native-paper';
-import ImagePicker from 'react-native-image-picker';
+import {TextInputMask} from 'react-native-masked-text';
+import {getUserJobs} from '../../helpers/api';
 
-export default class IdiomasScreen extends Component {
+export default class ExperienciaScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      empresa: '',
+      cargo: '',
+      search: '',
+      descripcion: '',
+      currentID: 0,
+      modalIs: 'created',
+      dateStart: '',
+      dateFinish: '',
+      listOfJobs: [],
+      modalVisible: false,
       loading: true,
-      imageSource: require('../../Image/avatar.png'),
+      subarea: null,
     };
   }
 
   async componentDidMount() {
+    const [isValid, Jobs] = await getUserJobs();
     this.setState({
+      listOfJobs: Jobs,
       loading: false,
     });
   }
 
-  updateImageOnProfile = async (urlImage) => {
-    await patchUserProfile({
-      photo: urlImage,
-    });
-    this.setState({loading: false});
-  };
+  transformDate(dateIn) {
+    const date = dateIn.split('/');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '-' + date[1] + '-' + date[0];
+    }
+    return realDate;
+  }
 
-  onClickImage = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: true,
-      maxHeight: 200,
-      maxWidth: 200,
-    };
-    ImagePicker.launchCamera(options, (response) => {
-      console.log('imagen tomada');
-      // Agregar logica de la subida de imagen
-      console.log(response);
-      // al tener la url de la imagen subida
-      //this.updateImageOnProfile(urlImage);
-    });
+  retransformDate(dateIn) {
+    const date = dateIn.split('-');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '/' + date[1] + '/' + date[0];
+    }
+    return realDate;
+  }
+
+  updateSearch = (search) => {
+    this.setState({search});
   };
 
   render() {
@@ -59,65 +72,81 @@ export default class IdiomasScreen extends Component {
         <ScrollView style={styles.scrollContainer}>
           <Loader loading={this.state.loading} />
           <View>
+            <View>
+              <SearchBar
+                lightTheme={true}
+                containerStyle={{
+                  backgroundColor: 'transparent',
+                  borderColor: 'transparent',
+                }}
+                inputContainerStyle={{
+                  backgroundColor: 'transparent',
+                }}
+                placeholder="Buscar Vagas..."
+                onChangeText={this.updateSearch}
+                value={this.state.search}
+              />
+            </View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
-              <TouchableHighlight
-                activeOpacity={1}
-                underlayColor={'transparent'}
-                onPress={() => this.onClickImage()}>
-                <View style={{alignItems: 'center', flex: 1}}>
-                  <Image
-                    source={this.state.imageSource}
-                    style={{
-                      width: '100%',
-                      height: 150,
-                      resizeMode: 'contain',
-                      margin: 20,
-                      top: 10,
-                    }}
-                  />
-                </View>
-              </TouchableHighlight>
-              <Text style={styles.LabelStyle}>Nome e Sobrenome</Text>
-
-              <View style={styles.SectionStyle}>
-                <List.Item
-                  title="Dado Cadastrais"
-                  onPress={() => this.props.navigation.navigate('Dados')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Dados Pessoais"
-                  onPress={() =>
-                    this.props.navigation.navigate('DadosPessoais')
-                  }
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Endereço"
-                  onPress={() => this.props.navigation.navigate('Endereco')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Objetivo Profissional"
-                  onPress={() => this.props.navigation.navigate('Objetivo')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Formação Acadêmica"
-                  onPress={() => this.props.navigation.navigate('Formacao')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Experiência Profissional"
-                  onPress={() => this.props.navigation.navigate('Experiencia')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Idiomas"
-                  onPress={() => this.props.navigation.navigate('Idiom')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-              </View>
+              <Text style={styles.LabelStyle}>Candidaturas</Text>
+              {this.state.listOfJobs.map((element, index) => {
+                if (element.level != 10 && element.level != 4) {
+                  return (
+                    <View style={styles.cardContainer} key={index}>
+                      <View style={styles.cardItem}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {element.jobtitle}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
+                          {element.employer}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardType}>
+                          {element.start + ' - ' + element.end}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
             </KeyboardAvoidingView>
           </View>
         </ScrollView>
@@ -156,7 +185,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginLeft: 20,
     backgroundColor: '#66666621',
-    height: 80,
+    height: 120,
     color: '#6948F4',
     borderWidth: 1,
     borderRadius: 5,
@@ -182,9 +211,9 @@ const styles = StyleSheet.create({
   },
   SectionStyle: {
     height: 70,
-    marginTop: 40,
-    marginLeft: 15,
-    marginRight: 15,
+    marginTop: 20,
+    marginLeft: 35,
+    marginRight: 35,
     margin: 10,
   },
   SectionStyleEspecial1: {
@@ -211,15 +240,16 @@ const styles = StyleSheet.create({
   },
   SectionStyleEspecial13: {
     marginLeft: 35,
-    marginTop: 10,
-    marginBottom: 30,
+    marginTop: 15,
+    marginBottom: 15,
     marginRight: 10,
   },
   LabelStyle: {
     fontWeight: 'bold',
-    fontSize: 20,
-    alignSelf: 'center',
+    fontSize: 25,
     paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 35,
   },
   InputLabelStyle: {
     fontWeight: 'bold',
@@ -333,7 +363,7 @@ const styles = StyleSheet.create({
   },
   CardSubTitle: {
     fontWeight: 'bold',
-    fontSize: 12,
+    fontSize: 14,
     paddingTop: 5,
     paddingLeft: 10,
     color: '#00000096',

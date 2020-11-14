@@ -10,7 +10,6 @@ import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
 import StartScreen from './Screen/StartScreen';
 import LoginScreen from './Screen/LoginScreen';
-import CurriculoScreen from './Screen/LoginScreen';
 import ForgetPassScreen from './Screen/ForgetPassScreen';
 import ChangePassScreen from './Screen/ChangePassScreen';
 import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
@@ -20,6 +19,7 @@ import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
 import ExperienciaScreen from './Screen/NavScreen/ExperienciaScreen';
+import CandidaturasScreen from './Screen/NavScreen/CandidaturasScreen';
 import CurriculumScreen from './Screen/NavScreen/CurriculumScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import ConfigurationScreen from './Screen/NavScreen/ConfigurationScreen';
@@ -31,52 +31,6 @@ import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
 import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
-
-const HomeStack = createStackNavigator();
-const HomeStackScreen = () => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen
-      name="Curriculum"
-      component={CurriculumScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Dados"
-      component={DadosScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="DadosPessoais"
-      component={DadosPessoaisScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Endereco"
-      component={EnderecoScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Objetivo"
-      component={ObjetivoScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Formacao"
-      component={FormacaoScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Experiencia"
-      component={ExperienciaScreen}
-      options={{headerShown: false}}
-    />
-    <HomeStack.Screen
-      name="Idiom"
-      component={IdiomasScreen}
-      options={{headerShown: false}}
-    />
-  </HomeStack.Navigator>
-);
 
 const ConfigsStack = createStackNavigator();
 const ConfigsStackScreen = () => (
@@ -165,8 +119,7 @@ const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      // component={HomeStackScreen}
-      component={ConfigurationScreen}
+      component={HomeScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (
@@ -176,7 +129,7 @@ const AppTabsScreen = () => (
     />
     <AppTabs.Screen
       name="Candidaturas"
-      component={ExperienciaScreen}
+      component={CandidaturasScreen}
       options={{
         tabBarLabel: 'Candidaturas',
         tabBarIcon: ({color, size}) => (

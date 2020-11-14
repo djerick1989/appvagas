@@ -370,3 +370,18 @@ export async function deleteUser() {
       return [true, error];
     });
 }
+
+export async function getUserJobs() {
+  const newUrl = apiUrl + 'user/list/jobs/applied/' + user_info.id + '/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}

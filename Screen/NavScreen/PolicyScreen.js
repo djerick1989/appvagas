@@ -4,7 +4,20 @@ import {StyleSheet, Text, View, ScrollView, Button} from 'react-native';
 export default class PolicyScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    let comeFrom = '';
+    if (props.route.params && props.route.params.comeFrom) {
+      comeFrom = props.route.params.comeFrom;
+    }
+    this.state = {
+      comeFrom: comeFrom,
+    };
+  }
+
+  clickAccept() {
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('MapScreen');
+    }
+    this.props.navigation.goBack();
   }
 
   render() {
@@ -132,7 +145,7 @@ export default class PolicyScreen extends Component {
           <Button
             style={styles.buttonStyle}
             title="Concordo"
-            onPress={() => this.props.navigation.navigate('MapScreen')}
+            onPress={() => this.clickAccept()}
           />
         </View>
       </>

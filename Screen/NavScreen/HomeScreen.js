@@ -1,151 +1,293 @@
-import React, {useState, Component} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {Component} from 'react';
+
 import {
   StyleSheet,
   Text,
+  SafeAreaView,
   View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
+  TextInput,
+  Modal,
+  TouchableHighlight,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-const SLIDER_1_FIRST_ITEM = 0;
-const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
-function wp(percentage) {
-  const value = (percentage * viewportWidth) / 100;
-  return Math.round(value);
-}
+import {SearchBar} from 'react-native-elements';
+import Loader from '../../Components/Loader';
+import {TextInputMask} from 'react-native-masked-text';
+import {getUserJobs} from '../../helpers/api';
 
-const slideWidth = wp(100);
-const itemHorizontalMargin = wp(2);
-const sliderWidth = viewportWidth;
-const itemWidth = slideWidth + itemHorizontalMargin * 2;
-export default class HomeScreen extends Component {
+export default class ExperienciaScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      images: [
-        require('../../Image/1.png'),
-        require('../../Image/2.png'),
-        require('../../Image/3.png'),
-      ],
-      ActiveSlide: SLIDER_1_FIRST_ITEM,
+      empresa: '',
+      cargo: '',
+      search: '',
+      descripcion: '',
+      currentID: 0,
+      modalIs: 'created',
+      dateStart: '',
+      dateFinish: '',
+      listOfJobs: [],
+      modalVisible: false,
+      loading: true,
+      subarea: null,
     };
   }
-  _renderItem = ({item}) => {
-    return (
-      <View style={{alignItems: 'center'}}>
-        <Image
-          source={item}
-          style={{
-            width: '100%',
-            height: viewportHeight * 0.55,
-            resizeMode: 'contain',
-          }}
-        />
-      </View>
-    );
-  };
-  onPressBtn() {
-    this._slider1Ref.snapToNext();
+
+  async componentDidMount() {
+    const [isValid, Jobs] = await getUserJobs();
+    this.setState({
+      listOfJobs: Jobs,
+      loading: false,
+    });
   }
 
-  render() {
-    const buttonText1 = 'Avançar';
-    const buttonText2 = 'Começar';
-    let btntxt;
-    if (this.state.ActiveSlide == '2') {
-      btntxt = buttonText2;
-    } else {
-      btntxt = buttonText1;
+  transformDate(dateIn) {
+    const date = dateIn.split('/');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '-' + date[1] + '-' + date[0];
     }
-    const regText = (
-      <View style={{flexDirection: 'row', marginBottom: 20}}>
-        <Text style={{color: '#000000'}}>Já tem cadastro? </Text>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('StartScreen')}
-          activeOpacity={0.5}>
-          <Text style={{fontWeight: 'bold'}}>Começar</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return realDate;
+  }
+
+  retransformDate(dateIn) {
+    const date = dateIn.split('-');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '/' + date[1] + '/' + date[0];
+    }
+    return realDate;
+  }
+
+  updateSearch = (search) => {
+    this.setState({search});
+  };
+
+  render() {
     return (
-      <View style={styles.container}>
-        <View style={{alignItems: 'center', flex: 1}}>
-          <Image
-            source={require('../../Image/Logo-Pesquisa-Vagas.png')}
-            style={{
-              width: '70%',
-              height: 100,
-              resizeMode: 'contain',
-              margin: 20,
-              top: 0,
-            }}
-          />
-        </View>
-        <View style={styles.SectionStyle}>
-          <Carousel
-            ref={(c) => (this._slider1Ref = c)}
-            data={this.state.images}
-            renderItem={this._renderItem}
-            sliderWidth={sliderWidth}
-            itemWidth={itemWidth}
-            hasParallaxImages={false}
-            firstItem={SLIDER_1_FIRST_ITEM}
-            inactiveSlideScale={0}
-            inactiveSlideOpacity={0}
-            inactiveSlideShift={0}
-            containerCustomStyle={styles.slider}
-            contentContainerCustomStyle={styles.sliderContentContainer}
-            loop={false}
-            loopClonesPerSide={0}
-            autoplay={false}
-            autoplayDelay={500}
-            autoplayInterval={3000}
-            layout={'default'}
-            onSnapToItem={(index) => this.setState({ActiveSlide: index})}
-          />
-          <Pagination
-            dotsLength={this.state.images.length}
-            activeDotIndex={this.state.ActiveSlide}
-            containerStyle={styles.paginationContainer}
-            dotColor={'#9984f1'}
-            dotStyle={styles.paginationDot}
-            inactiveDotColor={'#90A4AE'}
-            inactiveDotOpacity={0.5}
-            inactiveDotScale={0.8}
-            carouselRef={this._slider1Ref}
-            tappableDots={!!this._slider1Ref}
-          />
-        </View>
-        <View style={{alignItems: 'center', flex: 1}}>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={() =>
-              this.state.ActiveSlide == '2'
-                ? this.props.navigation.navigate('StartScreen')
-                : this.onPressBtn()
-            }>
-            <Text style={styles.buttonTextStyle}>{btntxt}</Text>
-          </TouchableOpacity>
-          {this.state.ActiveSlide == '0' && regText}
-        </View>
-      </View>
+      <>
+        <ScrollView style={styles.scrollContainer}>
+          <Loader loading={this.state.loading} />
+          <View>
+            <View>
+              <SearchBar
+                lightTheme={true}
+                containerStyle={{
+                  backgroundColor: 'transparent',
+                  borderColor: 'transparent',
+                }}
+                inputContainerStyle={{
+                  backgroundColor: 'transparent',
+                }}
+                placeholder="Buscar Vagas..."
+                onChangeText={this.updateSearch}
+                value={this.state.search}
+              />
+            </View>
+            <KeyboardAvoidingView enabled style={{flex: 4}}>
+              {this.state.listOfJobs.map((element, index) => {
+                if (element.level != 10 && element.level != 4) {
+                  return (
+                    <View style={styles.cardContainer} key={index}>
+                      <View style={styles.cardItem}>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {element.jobtitle}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
+                          {element.employer}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.setState({
+                              modalVisible: true,
+                              modalIs: 'update',
+                              empresa: element.employer,
+                              cargo: element.jobtitle,
+                              descripcion: element.detail,
+                              dateStart: this.retransformDate(element.start),
+                              dateFinish: this.retransformDate(element.end),
+                              currentID: element.id,
+                            })
+                          }
+                          style={styles.CardType}>
+                          {element.start + ' - ' + element.end}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  containerEspecial: {
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    height: 70,
+    margin: 10,
+  },
+  cardContainer: {
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    margin: 10,
+  },
+  containerEspecial2: {
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    margin: 10,
+  },
+  item: {
+    width: '50%',
+  },
+  cardItem: {
+    width: '90%',
+    marginLeft: 20,
+    backgroundColor: '#66666621',
+    height: 120,
+    color: '#6948F4',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#6948F4',
+  },
+  item2: {
+    width: '90%',
+    marginLeft: 20,
+    height: 150,
+    color: '#6948F4',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#6948F4',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#ffffff',
   },
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
   SectionStyle: {
-    flex: 4,
-    // height: 450,
-    marginTop: 0,
-    // margin: 10,
+    height: 70,
+    marginTop: 20,
+    marginLeft: 35,
+    marginRight: 35,
+    margin: 10,
+  },
+  SectionStyleEspecial1: {
+    height: 70,
+    marginRight: 25,
+    marginLeft: 10,
+  },
+  SectionStyleEspecial2: {
+    height: 70,
+    marginLeft: 25,
+    marginRight: 10,
+  },
+  SectionStyleEspecial11: {
+    marginRight: 25,
+    marginLeft: 10,
+  },
+  SectionStyleEspecial12: {
+    marginLeft: 25,
+    marginRight: 10,
+  },
+  SectionStyleEspecial122: {
+    marginLeft: 30,
+    marginTop: 30,
+  },
+  SectionStyleEspecial13: {
+    marginLeft: 35,
+    marginTop: 15,
+    marginBottom: 15,
+    marginRight: 10,
+  },
+  LabelStyle: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 35,
+  },
+  InputLabelStyle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingBottom: 5,
+  },
+  textHoverSlider: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: '#6948F4',
+  },
+  InputLabelStyleArea: {
+    alignSelf: 'flex-end',
+  },
+  dLabelStyle: {
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: '#6948F4',
+  },
+  dItemStyle: {
+    justifyContent: 'flex-start',
+  },
+  dPlaceholderStyle: {
+    textAlign: 'left',
+    color: 'black',
+    fontWeight: '200',
+  },
+  dStyle: {
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    minHeight: 300,
+  },
+  subarea: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    padding: 10,
+    backgroundColor: '#6948F4',
+    borderRadius: 25,
+    margin: 5,
   },
   buttonStyle: {
     backgroundColor: '#6948F4',
@@ -153,40 +295,119 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     borderColor: '#6948F4',
     height: 40,
-    width: viewportWidth * 0.45,
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 25,
     marginLeft: 35,
     marginRight: 35,
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
+  },
+  buttonStyleArea: {
+    backgroundColor: '#6948F4',
+    borderWidth: 0,
+    color: '#FFFFFF',
+    borderColor: '#6948F4',
+    height: 30,
+    alignItems: 'center',
+    borderRadius: 25,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 10,
+  },
+  buttonTextStyleArea: {
+    color: '#FFFFFF',
+    paddingVertical: 8,
+    fontSize: 14,
+    padding: 15,
   },
   buttonTextStyle: {
     color: '#FFFFFF',
-    paddingVertical: 10,
-    fontSize: 16,
-  },
-
-  slider: {
-    // marginTop: 15,
-    // overflow: 'visible' // for custom animations
-  },
-  sliderContentContainer: {
-    paddingVertical: 10, // for custom animation
-  },
-
-  slideInnerContainer: {
-    width: '100%',
-    height: 350,
-  },
-
-  paginationContainer: {
-    alignItems: 'center',
     paddingVertical: 8,
+    fontSize: 18,
   },
-  paginationDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+  LabelStyle1: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  LabelStyles1: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 30,
+  },
+  inputStyle: {
+    flex: 1,
+    color: '#6948F4',
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: '#6948F4',
+  },
+  errorTextStyle: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  CardTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    paddingTop: 10,
+    paddingLeft: 10,
+    color: '#6948F4',
+  },
+  CardSubTitle: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    paddingTop: 5,
+    paddingLeft: 10,
+    color: '#00000096',
+  },
+  CardType: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    paddingTop: 30,
+    paddingLeft: 10,
+    color: '#6948f4b3',
+  },
+  BackStyle: {
+    color: '#6948F4',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+    bottom: 20,
+    right: 0,
+    left: 0,
+  },
+
+  BackStyle2: {
+    color: '#6948F4',
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    fontSize: 16,
+    paddingTop: 30,
+    paddingLeft: 35,
+  },
+  BackStyle3: {
+    color: '#ff0000c7',
+    fontWeight: 'bold',
+    alignSelf: 'flex-end',
+    fontSize: 12,
+    paddingTop: 30,
+    paddingLeft: 250,
+  },
+
+  BackStyle22: {
+    backgroundColor: '#6948F4',
+    color: '#FFFFFF',
+    margin: 20,
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingTop: 30,
+    paddingLeft: 35,
   },
 });

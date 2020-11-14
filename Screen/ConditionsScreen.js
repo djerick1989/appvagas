@@ -14,9 +14,21 @@ const {width: viewportWidth, height: viewportHeight} = Dimensions.get('window');
 export default class ConditionsScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    let comeFrom = '';
+    if (props.route.params && props.route.params.comeFrom) {
+      comeFrom = props.route.params.comeFrom;
+    }
+    this.state = {
+      comeFrom: comeFrom,
+    };
   }
 
+  clickAccept() {
+    if (this.state.comeFrom == '') {
+      return this.props.navigation.navigate('MapScreen');
+    }
+    this.props.navigation.goBack();
+  }
   render() {
     return (
       <>
@@ -224,9 +236,8 @@ export default class ConditionsScreen extends Component {
           <Button
             style={styles.buttonStyle}
             title="Concordo"
-            onPress={() =>
-              this.props.navigation.navigate('MapScreen')
-            }></Button>
+            onPress={() => this.clickAccept()}
+          />
         </View>
       </>
     );
