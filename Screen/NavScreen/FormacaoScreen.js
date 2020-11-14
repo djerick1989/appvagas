@@ -229,7 +229,17 @@ export default class FormacaoScreen extends Component {
                   }}>
                   <TouchableHighlight
                     onPress={() => {
-                      this.setState({modalVisible: true, modalIs: 'created'});
+                      this.setState({
+                        modalVisible: true,
+                        modalIs: 'created',
+                        nameEscola: '',
+                        itemNivel: '',
+                        nameCurso: '',
+                        itemStatus: '',
+                        dateStart: '',
+                        dateFinish: '',
+                        currentID: 0,
+                      });
                     }}>
                     <Text style={{color: '#FFFFFF'}}>Adicionar</Text>
                   </TouchableHighlight>
@@ -384,11 +394,13 @@ export default class FormacaoScreen extends Component {
                   onPress={() => this.setState({modalVisible: false})}>
                   Voltar
                 </Text>
-                <Text
-                  style={styles.BackStyle3}
-                  onPress={() => this.deleteThisOne()}>
-                  Excluir
-                </Text>
+                {this.state.modalIs !== 'created' ? (
+                  <Text
+                    style={styles.BackStyle3}
+                    onPress={() => this.deleteThisOne()}>
+                    Excluir
+                  </Text>
+                ) : null}
               </View>
               <KeyboardAvoidingView enabled style={{flex: 4}}>
                 <View style={styles.SectionStyle}>
@@ -793,12 +805,12 @@ const styles = StyleSheet.create({
     paddingLeft: 35,
   },
   BackStyle3: {
-    color: '#6948F4',
+    color: '#ff0000c7',
     fontWeight: 'bold',
     alignSelf: 'flex-end',
-    fontSize: 16,
+    fontSize: 12,
     paddingTop: 30,
-    paddingLeft: 35,
+    paddingLeft: 250,
   },
 
   BackStyle22: {
