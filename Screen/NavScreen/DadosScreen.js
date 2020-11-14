@@ -62,7 +62,7 @@ export default class DadosScreen extends Component {
           <View>
             <Text
               style={styles.BackStyle2}
-              onPress={() => this.props.navigation.navigate('Candidaturas')}>
+              onPress={() => this.props.navigation.goBack()}>
               Voltar
             </Text>
           </View>

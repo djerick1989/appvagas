@@ -19,6 +19,7 @@ import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
 import ExperienciaScreen from './Screen/NavScreen/ExperienciaScreen';
+import CurriculumScreen from './Screen/NavScreen/CurriculumScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
@@ -32,13 +33,43 @@ const HomeStack = createStackNavigator();
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen
-      name="Home"
+      name="Curriculum"
+      component={CurriculumScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="Dados"
+      component={DadosScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="DadosPessoais"
+      component={DadosPessoaisScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="Endereco"
+      component={EnderecoScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="Objetivo"
+      component={ObjetivoScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="Formacao"
+      component={FormacaoScreen}
+      options={{headerShown: false}}
+    />
+    <HomeStack.Screen
+      name="Experiencia"
       component={ExperienciaScreen}
       options={{headerShown: false}}
     />
     <HomeStack.Screen
-      name="Candidaturas"
-      component={ConditionsScreen}
+      name="Idiom"
+      component={IdiomasScreen}
       options={{headerShown: false}}
     />
   </HomeStack.Navigator>
@@ -49,7 +80,7 @@ const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      component={IdiomasScreen}
+      component={HomeStackScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (
@@ -57,7 +88,6 @@ const AppTabsScreen = () => (
         ),
       }}
     />
-    {/* DEben estar declaradas todas las paginas */}
     <AppTabs.Screen
       name="Candidaturas"
       component={ExperienciaScreen}

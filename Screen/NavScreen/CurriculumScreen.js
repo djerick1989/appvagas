@@ -11,6 +11,7 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 import Loader from '../../Components/Loader';
 import {postUserLanguage, getUserLanguages} from '../../helpers/api';
+import {List} from 'react-native-paper';
 
 export default class IdiomasScreen extends Component {
   constructor(props) {
@@ -106,118 +107,48 @@ export default class IdiomasScreen extends Component {
         <ScrollView style={styles.scrollContainer}>
           <Loader loading={this.state.loading} />
           <View>
-            <View>
-              <Text
-                style={styles.BackStyle2}
-                onPress={() => this.props.navigation.goBack()}>
-                Voltar
-              </Text>
-            </View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
-              <Text style={styles.LabelStyle}>Idiomas</Text>
+              <Text style={styles.LabelStyle}>Nome e Sobrenome</Text>
+
               <View style={styles.SectionStyle}>
-                <Text style={styles.InputLabelStyle}>Idiom</Text>
-                <DropDownPicker
-                  items={this.state.listIdioms}
-                  defaultValue={this.state.itemIdiom}
-                  containerStyle={{height: 40}}
-                  isVisible={this.state.isVisibleThis}
-                  onOpen={() =>
-                    this.changeVisibility({
-                      isVisibleThis: true,
-                    })
+                <List.Item
+                  title="Dado Cadastrais"
+                  onPress={() => this.props.navigation.navigate('Dados')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Dados Pessoais"
+                  onPress={() =>
+                    this.props.navigation.navigate('DadosPessoais')
                   }
-                  zIndex={15}
-                  onClose={() =>
-                    this.setState({
-                      isVisibleThis: false,
-                    })
-                  }
-                  onChangeItem={(item) => {
-                    this.changValue({
-                      itemIdiom: item.value,
-                    });
-                  }}
-                  placeholder={'Seleccionar'}
-                  labelStyle={styles.dLabelStyle}
-                  itemStyle={styles.dItemStyle}
-                  placeholderStyle={styles.dPlaceholderStyle}
-                  dropDownStyle={styles.dStyle}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Endereço"
+                  onPress={() => this.props.navigation.navigate('Endereco')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Objetivo Profissional"
+                  onPress={() => this.props.navigation.navigate('Objetivo')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Formação Acadêmica"
+                  onPress={() => this.props.navigation.navigate('Formacao')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Experiência Profissional"
+                  onPress={() => this.props.navigation.navigate('Experiencia')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                />
+                <List.Item
+                  title="Idiomas"
+                  onPress={() => this.props.navigation.navigate('Idiom')}
+                  right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
               </View>
-              {!this.state.isVisibleThis ? (
-                <>
-                  <View style={styles.SectionStyle}>
-                    <Text style={styles.InputLabelStyle}>Level</Text>
-                    <DropDownPicker
-                      items={this.state.listLevels}
-                      defaultValue={this.state.itemLevel}
-                      containerStyle={{height: 40}}
-                      isVisible={this.state.isVisibleThisOne}
-                      onOpen={() =>
-                        this.changeVisibility({
-                          isVisibleThisOne: true,
-                        })
-                      }
-                      zIndex={15}
-                      onClose={() =>
-                        this.setState({
-                          isVisibleThisOne: false,
-                        })
-                      }
-                      onChangeItem={(item) => {
-                        this.changValue({
-                          itemLevel: item.value,
-                        });
-                      }}
-                      placeholder={'Seleccionar'}
-                      labelStyle={styles.dLabelStyle}
-                      itemStyle={styles.dItemStyle}
-                      placeholderStyle={styles.dPlaceholderStyle}
-                      dropDownStyle={styles.dStyle}
-                    />
-                  </View>
-                  {!this.state.isVisibleThisOne ? (
-                    <>
-                      <View style={styles.SectionStyleEspecial13}>
-                        <View
-                          style={{
-                            backgroundColor: '#6948F4',
-                            alignItems: 'center',
-                            padding: 10,
-                            borderRadius: 25,
-                            width: '30%',
-                          }}>
-                          <TouchableHighlight
-                            onPress={() => this.addLanguage()}>
-                            <Text style={{color: '#FFFFFF'}}>Adicionar</Text>
-                          </TouchableHighlight>
-                        </View>
-                      </View>
-                      {this.state.listOfLanguages.map((element, index) => {
-                        if (element.level != 10 && element.level != 4) {
-                          return (
-                            <View style={styles.cardContainer} key={index}>
-                              <View style={styles.cardItem}>
-                                <Text style={styles.CardTitle}>
-                                  {this.state.listIdioms.map((el) =>
-                                    el.value == element.idiom ? el.label : null,
-                                  )}
-                                </Text>
-                                <Text style={styles.CardSubTitle}>
-                                  {this.state.listLevels.map((el) =>
-                                    el.value == element.level ? el.label : null,
-                                  )}
-                                </Text>
-                              </View>
-                            </View>
-                          );
-                        }
-                      })}
-                    </>
-                  ) : null}
-                </>
-              ) : null}
             </KeyboardAvoidingView>
           </View>
         </ScrollView>
@@ -282,9 +213,9 @@ const styles = StyleSheet.create({
   },
   SectionStyle: {
     height: 70,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
+    marginTop: 40,
+    marginLeft: 15,
+    marginRight: 15,
     margin: 10,
   },
   SectionStyleEspecial1: {
@@ -317,9 +248,9 @@ const styles = StyleSheet.create({
   },
   LabelStyle: {
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 20,
+    alignSelf: 'center',
     paddingTop: 20,
-    paddingLeft: 35,
   },
   InputLabelStyle: {
     fontWeight: 'bold',
