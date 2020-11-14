@@ -38,8 +38,8 @@ export default class ExperienciaScreen extends Component {
       loading: true,
       subarea: null,
       x: {
-        lastitude: 41.89,
-        longitude: 12.49,
+        latitude: '-122.42',
+        longitude: '37.779',
       },
     };
   }
@@ -112,46 +112,89 @@ export default class ExperienciaScreen extends Component {
     const mapbox = `<!DOCTYPE html>
     <html>
     <head>
-    <meta charset='utf-8' />
-    <title>Add style control</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <meta charset="utf-8" />
+    <title>Draggable Marker</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet' />
-    
-    <script src='https://tiles.locationiq.com/v2/js/liq-styles-ctrl-gl.js?v=0.1.6'></script>
-    <link href='https://tiles.locationiq.com/v2/css/liq-styles-ctrl-gl.css?v=0.1.6' rel='stylesheet' />
     <style>
-                body { margin:0px; padding:0px; }
-                #map { position:absolute; top:0px; bottom:0px; width:100%; }
-            </style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+    
+            #map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
-    <div id='map'></div>
-    <script>
-                //Add your LocationIQ Maps Access Token here (not the API token!)
-                locationiq.key = '5417ddeaa4502b';
-                //Define the map and configure the map's theme
-                var map = new mapboxgl.Map({
-                    container: 'map',
-                    attributionControl: false, //need this to show a compact attribution icon (i) instead of the whole text
-                    zoom: 12,
-                    center: [-122.42, 37.779]
-                });
-                
-                //Define layers you want to add to the layer controls; the first element will be the default layer
-                var layerStyles = {
-                    "Streets": "streets/vector",
-                    "Satellite": "earth/raster",
-                    "Hybrid": "hybrid/vector",
-                    "Dark": "dark/vector",
-                    "Light": "light/vector"
-                };
-                
-                map.addControl(new locationiqLayerControl({
-                    key: locationiq.key
-                }), 'top-left');
+    <style>
+            .marker {
+                display: block;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                width: 50px;
+                height: 50px;
     
-            </script>
+            }
+    
+            .coordinates {
+                background: rgba(0, 0, 0, 0.7);
+                color: #fff;
+                position: absolute;
+                bottom: 40px;
+                left: 10px;
+                padding: 5px 10px;
+                margin: 0;
+                font-size: 14px;
+                line-height: 18px;
+                border-radius: 3px;
+                display: none;
+            }
+        </style>
+    <div id="map"></div>
+    <pre id="coordinates" class="coordinates"></pre>
+    <script>
+            //Add your LocationIQ Maps Access Token here (not the API token!)
+            locationiqKey = '5417ddeaa4502b';
+            
+            var coordinates = document.getElementById('coordinates');
+            
+            //Define the map and configure the map's theme
+            var map = new mapboxgl.Map({
+                container: 'map',
+                center: [-122.42, 37.779],
+                style: 'https://tiles.locationiq.com/v2/streets/vector.json?key='+locationiqKey,
+                zoom: 12
+            });
+                
+            // First create DOM element for the marker
+            var el = document.createElement('div');
+            el.className = 'marker';
+            el.id = 'marker';
+            // Set marker properties using JS
+            el.style.backgroundImage = 'url(https://maps.locationiq.com/v2/samples/marker50px.png)';
+    
+            var marker = new mapboxgl.Marker(el, {
+                draggable: true
+            }).setLngLat([-122.42, 37.779])
+              .addTo(map);
+    
+            // After the mouse is released the following function is executed which updates the displayed lat and long
+            function onDragEnd() {
+                var lngLat = marker.getLngLat();
+                coordinates.style.display = 'block';
+                coordinates.innerHTML =
+                    'Latitude: ' + lngLat.lat + '<br />Longitude: ' + lngLat.lng;
+            }
+    
+            marker.on('dragend', onDragEnd);
+        </script>
     </body>
     </html>`;
     // const COLUMNS = 3;
@@ -195,7 +238,7 @@ export default class ExperienciaScreen extends Component {
               backgroundColor: '#00000',
             }}>
             <Text>Mapa</Text>
-            <View style={{width: '100%', height: '70%'}}>
+            <View style={{width: '100%', height: '40%'}}>
               <WebView
                 javaScriptEnabled={true}
                 // originWhitelist={['*']}
