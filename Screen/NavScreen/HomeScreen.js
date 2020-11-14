@@ -16,6 +16,7 @@ import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text';
 import {getUserJobs} from '../../helpers/api';
+import ViewPager from '@react-native-community/viewpager';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -68,25 +69,33 @@ export default class ExperienciaScreen extends Component {
 
   render() {
     return (
-      <>
-        <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
+      <View style={styles.scrollContainer}>
+        <Loader loading={this.state.loading} />
+        <View>
+          <SearchBar
+            lightTheme={true}
+            containerStyle={{
+              backgroundColor: 'transparent',
+              borderColor: 'transparent',
+            }}
+            inputContainerStyle={{
+              backgroundColor: 'transparent',
+            }}
+            placeholder="Buscar Vagas..."
+            onChangeText={this.updateSearch}
+            value={this.state.search}
+          />
+        </View>
+        <ViewPager style={styles.viewPager} initialPage={0}>
+          <View key="1">
+            <Text>First page</Text>
+          </View>
+          <View key="2">
+            <Text>Second page</Text>
+          </View>
+        </ViewPager>
+        {/* <ScrollView style={styles.scrollContainer}>
           <View>
-            <View>
-              <SearchBar
-                lightTheme={true}
-                containerStyle={{
-                  backgroundColor: 'transparent',
-                  borderColor: 'transparent',
-                }}
-                inputContainerStyle={{
-                  backgroundColor: 'transparent',
-                }}
-                placeholder="Buscar Vagas..."
-                onChangeText={this.updateSearch}
-                value={this.state.search}
-              />
-            </View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
               {this.state.listOfJobs.map((element, index) => {
                 if (element.level != 10 && element.level != 4) {
@@ -148,8 +157,8 @@ export default class ExperienciaScreen extends Component {
               })}
             </KeyboardAvoidingView>
           </View>
-        </ScrollView>
-      </>
+        </ScrollView> */}
+      </View>
     );
   }
 }
@@ -162,6 +171,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     height: 70,
     margin: 10,
+  },
+  viewPager: {
+    flex: 1,
   },
   cardContainer: {
     // flex: 1,
