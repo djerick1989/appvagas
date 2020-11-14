@@ -87,10 +87,80 @@ export default class ExperienciaScreen extends Component {
           />
         </View>
         <ViewPager style={styles.viewPager} initialPage={0}>
-          <View key="1">
-            <Text>First page</Text>
+          <View
+            key="1"
+            style={{
+              backgroundColor: '#00000',
+            }}>
+            <View style={styles.containerEspecial}>
+              <View style={styles.SectionStyleEspecial2}>
+                <Text style={styles.InputLabelStyleTitle}>
+                  Python Developer
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.containerEspecial22}>
+              <View style={styles.SectionStyleEspecial2}>
+                <Text style={styles.InputLabelStyleSubtitle}>
+                  (Company Title)
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.containerEspecial}>
+              <View style={styles.item11}>
+                <View style={styles.SectionStyleEspecial2}>
+                  <Text style={styles.InputLabelStyle}>Local</Text>
+                </View>
+              </View>
+              <View style={styles.item21}>
+                <View style={styles.SectionStyleEspecial1}>
+                  <Text style={styles.InputLabelStyle22}>Sao Paulo - SP</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.containerEspecial}>
+              <View style={styles.item11}>
+                <View style={styles.SectionStyleEspecial2}>
+                  <Text style={styles.InputLabelStyle}>Detalhes</Text>
+                </View>
+              </View>
+              <View style={styles.item21}>
+                <View style={styles.SectionStyleEspecial1}>
+                  <Text style={styles.InputLabelStyle22}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut aliquip ex ea
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.containerEspecial}>
+              <View style={styles.item11}>
+                <View style={styles.SectionStyleEspecial2}>
+                  <Text style={styles.InputLabelStyle}>Requisitos</Text>
+                </View>
+              </View>
+              <View style={styles.item21}>
+                <View style={styles.SectionStyleEspecial1}>
+                  <Text style={styles.InputLabelStyle22}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
-          <View key="2">
+          <View
+            key="2"
+            style={{
+              backgroundColor: '#00000',
+            }}>
             <Text>Second page</Text>
           </View>
         </ViewPager>
@@ -165,12 +235,16 @@ export default class ExperienciaScreen extends Component {
 
 const styles = StyleSheet.create({
   containerEspecial: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
-    height: 70,
-    margin: 10,
+    marginBottom: 10,
+  },
+  containerEspecial22: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    marginBottom: 25,
   },
   viewPager: {
     flex: 1,
@@ -189,8 +263,11 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     margin: 10,
   },
-  item: {
-    width: '50%',
+  item11: {
+    width: '30%',
+  },
+  item21: {
+    width: '70%',
   },
   cardItem: {
     width: '90%',
@@ -228,12 +305,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   SectionStyleEspecial1: {
-    height: 70,
     marginRight: 25,
     marginLeft: 10,
   },
   SectionStyleEspecial2: {
-    height: 70,
     marginLeft: 25,
     marginRight: 10,
   },
@@ -264,7 +339,19 @@ const styles = StyleSheet.create({
   },
   InputLabelStyle: {
     fontWeight: 'bold',
+    fontSize: 14,
+    paddingBottom: 5,
+  },
+  InputLabelStyleTitle: {
+    fontWeight: 'bold',
+    fontSize: 22,
+  },
+  InputLabelStyleSubtitle: {
     fontSize: 16,
+    paddingBottom: 5,
+  },
+  InputLabelStyle22: {
+    fontSize: 14,
     paddingBottom: 5,
   },
   textHoverSlider: {
