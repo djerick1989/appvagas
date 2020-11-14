@@ -15,12 +15,14 @@ import ForgetPassScreen from './Screen/ForgetPassScreen';
 import ChangePassScreen from './Screen/ChangePassScreen';
 import ConfirmCodeScreen from './Screen/ConfirmCodeScreen';
 import ConditionsScreen from './Screen/ConditionsScreen';
+import PolicyScreen from './Screen/PolicyScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
 import ExperienciaScreen from './Screen/NavScreen/ExperienciaScreen';
 import CurriculumScreen from './Screen/NavScreen/CurriculumScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
+import ConfigurationScreen from './Screen/NavScreen/ConfigurationScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
 import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
@@ -74,6 +76,51 @@ const HomeStackScreen = () => (
     />
   </HomeStack.Navigator>
 );
+const ConfigsStack = createStackNavigator();
+const ConfigsStackScreen = () => (
+  <ConfigsStack.Navigator>
+    <ConfigsStack.Screen
+      name="Configs"
+      component={ConfigurationScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Policy"
+      component={PolicyScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="DadosPessoais"
+      component={DadosPessoaisScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Endereco"
+      component={EnderecoScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Objetivo"
+      component={ObjetivoScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Formacao"
+      component={FormacaoScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Experiencia"
+      component={ExperienciaScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsStack.Screen
+      name="Idiom"
+      component={IdiomasScreen}
+      options={{headerShown: false}}
+    />
+  </ConfigsStack.Navigator>
+);
 
 const CurriculumStack = createStackNavigator();
 const CurriculumStackScreen = () => (
@@ -126,7 +173,8 @@ const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      component={HomeStackScreen}
+      // component={HomeStackScreen}
+      component={ConfigurationScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (
@@ -164,7 +212,7 @@ const AppTabsScreen = () => (
     />
     <AppTabs.Screen
       name="Configs"
-      component={HomeStackScreen}
+      component={ConfigsStackScreen}
       options={{
         tabBarLabel: 'Configs',
         tabBarIcon: ({color, size}) => (

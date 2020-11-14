@@ -6,6 +6,7 @@ import {
   View,
   TouchableHighlight,
   KeyboardAvoidingView,
+  Linking,
   ScrollView,
   Image,
 } from 'react-native';
@@ -53,6 +54,16 @@ export default class IdiomasScreen extends Component {
     });
   };
 
+  handleOpenLink = (url) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log("Don't know how to open URI: " + url);
+      }
+    });
+  };
+
   render() {
     return (
       <>
@@ -60,61 +71,49 @@ export default class IdiomasScreen extends Component {
           <Loader loading={this.state.loading} />
           <View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
-              <TouchableHighlight
-                activeOpacity={1}
-                underlayColor={'transparent'}
-                onPress={() => this.onClickImage()}>
-                <View style={{alignItems: 'center', flex: 1}}>
-                  <Image
-                    source={this.state.imageSource}
-                    style={{
-                      width: '100%',
-                      height: 180,
-                      resizeMode: 'contain',
-                      margin: 20,
-                      top: 10,
-                    }}
-                  />
-                </View>
-              </TouchableHighlight>
-              <Text style={styles.LabelStyle}>Nome e Sobrenome</Text>
+              <Text style={styles.LabelStyle}>Configs</Text>
 
               <View style={styles.SectionStyle}>
                 <List.Item
-                  title="Dado Cadastrais"
+                  title="Preferências"
                   onPress={() => this.props.navigation.navigate('Dados')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
-                  title="Dados Pessoais"
+                  title="Termos"
                   onPress={() =>
                     this.props.navigation.navigate('DadosPessoais')
                   }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
-                  title="Endereço"
+                  title="Políticas"
                   onPress={() => this.props.navigation.navigate('Endereco')}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
-                  title="Objetivo Profissional"
-                  onPress={() => this.props.navigation.navigate('Objetivo')}
+                  title="Ajuda"
+                  onPress={() =>
+                    this.handleOpenLink('https://jobconvo.freshdesk.com/')
+                  }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
-                  title="Formação Acadêmica"
-                  onPress={() => this.props.navigation.navigate('Formacao')}
+                  title="Convidar Amgios"
+                  onPress={() =>
+                    this.handleOpenLink(
+                      'https://www.jobconvo.com/pt-br/pricing/',
+                    )
+                  }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
                 <List.Item
-                  title="Experiência Profissional"
-                  onPress={() => this.props.navigation.navigate('Experiencia')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
-                <List.Item
-                  title="Idiomas"
-                  onPress={() => this.props.navigation.navigate('Idiom')}
+                  title="Divulgar Vaga"
+                  onPress={() =>
+                    this.handleOpenLink(
+                      'https://www.jobconvo.com/pt-br/pricing/',
+                    )
+                  }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
               </View>
