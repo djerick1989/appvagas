@@ -258,3 +258,69 @@ export async function getUserEducations() {
       return [true, error];
     });
 }
+
+export async function getUserExperience() {
+  const newUrl = apiUrl + 'user/list/works/' + user_info.id + '/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function postUserExperience(dataInJson) {
+  const newUrl = apiUrl + 'user/add/work/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function patchUserExperience(dataInJson, id) {
+  const newUrl = apiUrl + 'user/work/' + id + '/update/';
+  return fetch(newUrl, {
+    method: 'PUT',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function deleteUserExperience(id) {
+  const newUrl = apiUrl + 'user/remove/work/' + id + '/?';
+  return fetch(newUrl, {
+    method: 'DELETE',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}

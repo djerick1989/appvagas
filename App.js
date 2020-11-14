@@ -18,6 +18,7 @@ import ConditionsScreen from './Screen/ConditionsScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import MapScreen from './Screen/MapScreen';
 import NotificationsScreen from './Screen/NotificationsScreen';
+import ExperienciaScreen from './Screen/NavScreen/ExperienciaScreen';
 import HomeScreen from './Screen/NavScreen/HomeScreen';
 import EnderecoScreen from './Screen/NavScreen/EnderecoScreen';
 import DadosScreen from './Screen/NavScreen/DadosScreen';
@@ -31,7 +32,7 @@ const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen
       name="Home"
-      component={HomeScreen}
+      component={ExperienciaScreen}
       options={{headerShown: false}}
     />
     <HomeStack.Screen
@@ -47,7 +48,7 @@ const AppTabsScreen = () => (
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
-      component={FormacaoScreen}
+      component={ExperienciaScreen}
       options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({color, size}) => (
@@ -58,7 +59,7 @@ const AppTabsScreen = () => (
     {/* DEben estar declaradas todas las paginas */}
     <AppTabs.Screen
       name="Candidaturas"
-      component={ConditionsScreen}
+      component={ExperienciaScreen}
       options={{
         tabBarLabel: 'Candidaturas',
         tabBarIcon: ({color, size}) => (
