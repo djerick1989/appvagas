@@ -10,6 +10,7 @@ import {
   Modal,
   TouchableHighlight,
   KeyboardAvoidingView,
+  Dimensions,
   ScrollView,
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
@@ -17,6 +18,8 @@ import Loader from '../../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text';
 import {getUserJobs} from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
+import LocationIQ from 'react-native-locationiq';
+import {WebView} from 'react-native-webview';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -34,6 +37,10 @@ export default class ExperienciaScreen extends Component {
       modalVisible: false,
       loading: true,
       subarea: null,
+      x: {
+        lastitude: 41.89,
+        longitude: 12.49,
+      },
     };
   }
 
@@ -43,6 +50,32 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs,
       loading: false,
     });
+
+    // Initialize the module (needs to be done only once)
+    // LocationIQ.init('5417ddeaa4502b'); // use a valid API key
+
+    // // LocationIQ.search('Statue of Liberty')
+    // //   .then((json) => {
+    // //     var lat = json[0].lat;
+    // //     var lon = json[0].lon;
+    // //     console.log(lat, lon);
+    // //   })
+    // //   .catch((error) => console.warn(error));
+
+    // LocationIQ.reverse(41.89, 12.49)
+    //   .then((json) => {
+    //     console.log(json);
+    //     var address = json.address;
+    //     console.log(address);
+    //   })
+    //   .catch((error) => console.warn(error));
+
+    // LocationIQ.nearby(41.89, 12.49, 'hospital', 1000)
+    //   .then((json) => {
+    //     var address = json.address;
+    //     console.log(adress);
+    //   })
+    //   .catch((error) => console.warn(error));
   }
 
   transformDate(dateIn) {
@@ -63,11 +96,80 @@ export default class ExperienciaScreen extends Component {
     return realDate;
   }
 
+  vw(percentageWidth) {
+    return Dimensions.get('window').width * (percentageWidth / 100);
+  }
+
+  vh(percentageHeight) {
+    return Dimensions.get('window').height * (percentageHeight / 100);
+  }
+
   updateSearch = (search) => {
     this.setState({search});
   };
 
   render() {
+    const mapbox = `<!DOCTYPE html>
+    <html>
+    <head>
+    <meta charset='utf-8' />
+    <title>Add style control</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.0/mapbox-gl.css' rel='stylesheet' />
+    
+    <script src='https://tiles.locationiq.com/v2/js/liq-styles-ctrl-gl.js?v=0.1.6'></script>
+    <link href='https://tiles.locationiq.com/v2/css/liq-styles-ctrl-gl.css?v=0.1.6' rel='stylesheet' />
+    <style>
+                body { margin:0px; padding:0px; }
+                #map { position:absolute; top:0px; bottom:0px; width:100%; }
+            </style>
+    </head>
+    <body>
+    <div id='map'></div>
+    <script>
+                //Add your LocationIQ Maps Access Token here (not the API token!)
+                locationiq.key = '5417ddeaa4502b';
+                //Define the map and configure the map's theme
+                var map = new mapboxgl.Map({
+                    container: 'map',
+                    attributionControl: false, //need this to show a compact attribution icon (i) instead of the whole text
+                    zoom: 12,
+                    center: [-122.42, 37.779]
+                });
+                
+                //Define layers you want to add to the layer controls; the first element will be the default layer
+                var layerStyles = {
+                    "Streets": "streets/vector",
+                    "Satellite": "earth/raster",
+                    "Hybrid": "hybrid/vector",
+                    "Dark": "dark/vector",
+                    "Light": "light/vector"
+                };
+                
+                map.addControl(new locationiqLayerControl({
+                    key: locationiq.key
+                }), 'top-left');
+    
+            </script>
+    </body>
+    </html>`;
+    // const COLUMNS = 3;
+    // const MARGIN = this.vw(1);
+    // const SPACING = ((COLUMNS + 1) / COLUMNS) * MARGIN;
+
+    // const grid = {
+    //   flex: 1,
+    //   flexWrap: 'wrap',
+    //   flexDirection: 'row',
+    //   justifyContent: 'flex-start',
+    // };
+
+    // const cell = {
+    //   marginLeft: MARGIN,
+    //   marginTop: MARGIN,
+    //   width: this.vw(100) / COLUMNS - SPACING,
+    // };
     return (
       <View style={styles.scrollContainer}>
         <Loader loading={this.state.loading} />
@@ -92,6 +194,14 @@ export default class ExperienciaScreen extends Component {
             style={{
               backgroundColor: '#00000',
             }}>
+            <Text>Mapa</Text>
+            <View style={{width: '100%', height: '70%'}}>
+              <WebView
+                javaScriptEnabled={true}
+                // originWhitelist={['*']}
+                source={{html: mapbox}}
+              />
+            </View>
             <View style={styles.containerEspecial}>
               <View style={styles.SectionStyleEspecial2}>
                 <Text style={styles.InputLabelStyleTitle}>
