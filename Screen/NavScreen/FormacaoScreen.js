@@ -62,7 +62,7 @@ export default class FormacaoScreen extends Component {
       listOfEducations: [],
       lastSalary: 0,
       dataSalary: '',
-      modalVisible: true,
+      modalVisible: false,
       loading: true,
       subarea: null,
     };
