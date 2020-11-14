@@ -75,6 +75,52 @@ const HomeStackScreen = () => (
   </HomeStack.Navigator>
 );
 
+const CurriculumStack = createStackNavigator();
+const CurriculumStackScreen = () => (
+  <CurriculumStack.Navigator>
+    <CurriculumStack.Screen
+      name="Curriculum"
+      component={CurriculumScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Dados"
+      component={DadosScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="DadosPessoais"
+      component={DadosPessoaisScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Endereco"
+      component={EnderecoScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Objetivo"
+      component={ObjetivoScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Formacao"
+      component={FormacaoScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Experiencia"
+      component={ExperienciaScreen}
+      options={{headerShown: false}}
+    />
+    <CurriculumStack.Screen
+      name="Idiom"
+      component={IdiomasScreen}
+      options={{headerShown: false}}
+    />
+  </CurriculumStack.Navigator>
+);
+
 const AppTabs = createBottomTabNavigator();
 const AppTabsScreen = () => (
   <AppTabs.Navigator>
@@ -104,7 +150,7 @@ const AppTabsScreen = () => (
     />
     <AppTabs.Screen
       name="Curriculo"
-      component={CurriculoScreen}
+      component={CurriculumStackScreen}
       options={{
         tabBarLabel: 'Currículo',
         tabBarIcon: ({color, size}) => (

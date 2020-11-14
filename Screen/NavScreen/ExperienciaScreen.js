@@ -32,7 +32,7 @@ export default class ExperienciaScreen extends Component {
       dateStart: '',
       dateFinish: '',
       listOfExperiences: [],
-      modalVisible: true,
+      modalVisible: false,
       loading: true,
       subarea: null,
     };

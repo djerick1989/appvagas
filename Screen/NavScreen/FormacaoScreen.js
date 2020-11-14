@@ -654,6 +654,7 @@ const styles = StyleSheet.create({
   SectionStyleEspecial13: {
     marginLeft: 35,
     marginTop: 15,
+    marginBottom: 15,
     marginRight: 10,
   },
   LabelStyle: {
