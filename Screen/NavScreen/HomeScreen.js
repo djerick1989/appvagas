@@ -45,6 +45,11 @@ export default class ExperienciaScreen extends Component {
   }
 
   async componentDidUpdate() {
+    const [isValid, Jobs] = await getAllJobs();
+    this.setState({
+      listOfJobs: Jobs.results,
+      loading: false,
+    });
     let searchId = '';
     if (this.props.route.params && this.props.route.params.searchId) {
       searchId = this.props.route.params.searchId;
@@ -55,7 +60,6 @@ export default class ExperienciaScreen extends Component {
 
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
-    console.log(Jobs);
     this.setState({
       listOfJobs: Jobs.results,
       loading: false,
@@ -179,7 +183,6 @@ export default class ExperienciaScreen extends Component {
       uid: uidIn,
       status: '1',
     });
-    console.log(a, b);
   };
 
   move = (delta) => {
@@ -195,6 +198,13 @@ export default class ExperienciaScreen extends Component {
         currentPage: goToPage,
       });
     }
+  };
+
+  clickNo = () => {
+    this.go('next');
+    this.setState({
+      listOfJobs: this.state.listOfJobs.splice(0, 1),
+    });
   };
 
   render() {
@@ -224,7 +234,7 @@ export default class ExperienciaScreen extends Component {
           transitionStyle="curl">
           {this.state.listOfJobs.map((element, index) => (
             <View
-              key={index}
+              key={element.id}
               collapsable={false}
               style={{
                 backgroundColor: '#00000',
@@ -351,6 +361,7 @@ export default class ExperienciaScreen extends Component {
                     <View style={styles.btnCenter}>
                       <Text style={styles.InputLabelStyle}>
                         <TouchableOpacity
+                          onPress={() => this.clickNo()}
                           style={{
                             borderWidth: 1,
                             borderColor: 'transparent',
