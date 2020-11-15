@@ -12,6 +12,7 @@ import {
 import Loader from '../../Components/Loader';
 import {patchuserUpdate, patchUserProfile} from '../../helpers/api';
 import {TextInputMask} from 'react-native-masked-text';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class DadosScreen extends Component {
   constructor(props) {
@@ -26,31 +27,39 @@ export default class DadosScreen extends Component {
   }
 
   async componentDidMount() {
-    // TODO Falta conseguir la informacion desde el asyncstorage
-    // this.setState({loading: true});
-    // const [data, user] = await getUserProfile();
-    // this.setState({
-    //   estado: user.state,
-    //   cidade: user.city,
-    //   bairro: user.neighbourhood,
-    //   complemento: user.complement,
-    //   number: user.adddressnumber,
-    //   endereco: user.address,
-    //   userPhon: user.phone1,
-    //   loading: false,
-    // });
+    const firstName = await AsyncStorage.getItem('first_name');
+    const lastName = await AsyncStorage.getItem('last_name');
+    const email = await AsyncStorage.getItem('email');
+    const phone = await AsyncStorage.getItem('username');
+    this.setState({
+      fullName: firstName + ' ' + lastName,
+      email: email,
+      phone: phone,
+    });
   }
 
   async handleSubmitButton() {
     this.setState({loading: true});
-    await patchuserUpdate({
-      email: this.state.email,
-      first_name: this.state.fullName.split(' ')[0],
-      last_name: this.state.fullName.split(' ')[1],
-    });
-    await patchUserProfile({
-      phone1: this.state.phone,
-    });
+    const fullname = this.state.fullName.split(' ');
+    if (fullname[0] && fullname[1]) {
+      await patchuserUpdate({
+        username: this.state.phone,
+        email: this.state.email,
+        first_name: fullname[0],
+        last_name: fullname[1],
+      });
+      await AsyncStorage.setItem('first_name', fullname[0]);
+      await AsyncStorage.setItem('last_name', fullname[1]);
+      await AsyncStorage.setItem('email', this.state.email);
+      await AsyncStorage.setItem('username', this.state.phone);
+    } else {
+      await patchuserUpdate({
+        username: this.state.phone,
+        email: this.state.email,
+      });
+      await AsyncStorage.setItem('email', this.state.email);
+      await AsyncStorage.setItem('username', this.state.phone);
+    }
     this.setState({loading: false});
   }
 
@@ -96,7 +105,6 @@ export default class DadosScreen extends Component {
                     phone: text.replace(/[^0-9]/g, ''),
                   });
                 }}
-                onSubmitEditing={() => this.handleSubmitButton()}
                 placeholder="(11) 98877 5566"
                 placeholderTextColor="#aaaaaa"
                 blurOnSubmit={false}
@@ -114,7 +122,6 @@ export default class DadosScreen extends Component {
                     cpf: text.replace(/[^0-9]/g, ''),
                   });
                 }}
-                onSubmitEditing={() => this.handleSubmitButton()}
                 placeholderTextColor="#aaaaaa"
                 returnKeyType="next"
               />

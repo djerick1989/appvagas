@@ -111,6 +111,10 @@ const LoginScreen = (props) => {
           console.log(responseJson.token.api_key);
           setToken(responseJson.token.api_key);
           AsyncStorage.setItem('userId', '' + responseJson.id);
+          AsyncStorage.setItem('username', '' + responseJson.username);
+          AsyncStorage.setItem('email', '' + responseJson.email);
+          AsyncStorage.setItem('first_name', '' + responseJson.first_name);
+          AsyncStorage.setItem('last_name', '' + responseJson.last_name);
           AsyncStorage.setItem(
             'userToken',
             responseJson.token.api_key,

@@ -5,17 +5,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {
   StyleSheet,
   Text,
-  SafeAreaView,
   View,
-  TextInput,
-  Modal,
-  TouchableHighlight,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
-import {TextInputMask} from 'react-native-masked-text';
 import {getUserJobs, getAllJobs} from '../../helpers/api';
 
 export default class ExperienciaScreen extends Component {

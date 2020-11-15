@@ -4,11 +4,9 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   KeyboardAvoidingView,
   Linking,
   ScrollView,
-  Image,
 } from 'react-native';
 import Loader from '../../Components/Loader';
 import {patchUserProfile} from '../../helpers/api';
