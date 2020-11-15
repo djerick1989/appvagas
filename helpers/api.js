@@ -400,3 +400,19 @@ export async function getAllJobs() {
       return [true, error];
     });
 }
+
+export async function postUserApplyJob(dataInJson) {
+  const newUrl = apiUrl + 'job/apply/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
