@@ -7,6 +7,7 @@ import {
   Text,
   SafeAreaView,
   View,
+  Image,
   TextInput,
   Modal,
   TouchableHighlight,
@@ -171,6 +172,10 @@ export default class ExperienciaScreen extends Component {
         </script>
     </body>
     </html>`;
+    let Image_Http_URL = {
+      uri:
+        'https://s3.amazonaws.com/wordpresspublicsite/wp-content/uploads/2019/08/22145108/JobConvo-logo-degrade.png',
+    };
     return (
       <View style={styles.scrollContainer}>
         <Loader loading={this.state.loading} />
@@ -189,9 +194,173 @@ export default class ExperienciaScreen extends Component {
             value={this.state.search}
           />
         </View>
-        <ViewPager style={styles.viewPager} initialPage={0}>
+        <ViewPager
+          style={styles.viewPager}
+          initialPage={0}
+          transitionStyle="curl">
           <View
             key="1"
+            style={{
+              backgroundColor: '#00000',
+              paddingLeft: 25,
+              paddingRight: 25,
+            }}>
+            <View
+              style={{
+                height: '100%',
+                borderColor: '#686868',
+                borderWidth: 1,
+                borderBottomEndRadius: 25,
+                borderBottomStartRadius: 25,
+              }}>
+              <View style={{width: '100%', height: '40%'}}>
+                <WebView javaScriptEnabled={true} source={{html: mapbox}} />
+              </View>
+              <ScrollView style={styles.scrollContainer}>
+                <View>
+                  <KeyboardAvoidingView enabled style={{flex: 4}}>
+                    <View style={styles.containerEspecial33}>
+                      <View style={styles.SectionStyleEspecial2}>
+                        <Text style={styles.InputLabelStyleTitle}>
+                          Python Developer
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.containerEspecial22}>
+                      <View style={styles.SectionStyleEspecial2}>
+                        <Text style={styles.InputLabelStyleSubtitle}>
+                          (Company Title)
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.containerEspecial}>
+                      <View style={styles.item11}>
+                        <View style={styles.SectionStyleEspecial2}>
+                          <Text style={styles.InputLabelStyle}>Local</Text>
+                        </View>
+                      </View>
+                      <View style={styles.item21}>
+                        <View style={styles.SectionStyleEspecial1}>
+                          <Text style={styles.InputLabelStyle22}>
+                            Sao Paulo - SP
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={styles.containerEspecial}>
+                      <View style={styles.item11}>
+                        <View style={styles.SectionStyleEspecial2}>
+                          <Text style={styles.InputLabelStyle}>Detalhes</Text>
+                        </View>
+                      </View>
+                      <View style={styles.item21}>
+                        <View style={styles.SectionStyleEspecial1}>
+                          <Text style={styles.InputLabelStyle22}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua. Ut enim ad minim veniam, quis
+                            nostrud exercitation ullamco laboris nisi ut aliquip
+                            ex ea
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+
+                    <View style={styles.containerEspecial}>
+                      <View style={styles.item11}>
+                        <View style={styles.SectionStyleEspecial2}>
+                          <Text style={styles.InputLabelStyle}>Requisitos</Text>
+                        </View>
+                      </View>
+                      <View style={styles.item21}>
+                        <View style={styles.SectionStyleEspecial1}>
+                          <Text style={styles.InputLabelStyle22}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit, sed do eiusmod tempor incididunt ut labore et
+                            dolore magna aliqua. Ut enim ad minim veniam
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </KeyboardAvoidingView>
+                </View>
+              </ScrollView>
+              <View style={styles.containerEspecial34}>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle}>
+                      <TouchableOpacity
+                        style={{
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 50,
+                          height: 50,
+                          backgroundColor: '#ff0000',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="close"
+                          size={30}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle22}>
+                      <TouchableOpacity
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#fff',
+                        }}>
+                        <MaterialCommunityIcons
+                          style={{
+                            marginTop: 5,
+                          }}
+                          name="export-variant"
+                          size={40}
+                          color="#6948F4"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle22}>
+                      <TouchableOpacity
+                        style={{
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 50,
+                          height: 50,
+                          backgroundColor: '#26bd26',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="check"
+                          size={30}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            key="2"
             style={{
               backgroundColor: '#00000',
               paddingLeft: 25,
@@ -342,78 +511,7 @@ export default class ExperienciaScreen extends Component {
               </View>
             </View>
           </View>
-          <View
-            key="2"
-            style={{
-              backgroundColor: '#00000',
-            }}>
-            <Text>Second page</Text>
-          </View>
         </ViewPager>
-        {/* <ScrollView style={styles.scrollContainer}>
-          <View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
-              {this.state.listOfJobs.map((element, index) => {
-                if (element.level != 10 && element.level != 4) {
-                  return (
-                    <View style={styles.cardContainer} key={index}>
-                      <View style={styles.cardItem}>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardTitle}>
-                          {element.jobtitle}
-                        </Text>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardSubTitle}>
-                          {element.employer}
-                        </Text>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardType}>
-                          {element.start + ' - ' + element.end}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                }
-              })}
-            </KeyboardAvoidingView>
-          </View>
-        </ScrollView> */}
       </View>
     );
   }
@@ -424,7 +522,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
-    marginTop: 20,
+    paddingTop: 20,
+    borderColor: '#686868',
+    borderTopWidth: 1,
   },
   containerEspecial: {
     flexDirection: 'row',
@@ -502,6 +602,8 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     backgroundColor: '#ffffff',
+    borderColor: '#686868',
+    borderTopWidth: 1,
   },
   SectionStyle: {
     height: 70,
