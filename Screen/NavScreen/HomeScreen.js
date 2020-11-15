@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
-import {getUserJobs} from '../../helpers/api';
+import {getAllJobs} from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
 import {WebView} from 'react-native-webview';
 
@@ -46,7 +46,8 @@ export default class ExperienciaScreen extends Component {
   }
 
   async componentDidMount() {
-    const [isValid, Jobs] = await getUserJobs();
+    const [isValid, Jobs] = await getAllJobs();
+    console.log(Jobs);
     this.setState({
       listOfJobs: Jobs,
       loading: false,
@@ -216,78 +217,110 @@ export default class ExperienciaScreen extends Component {
               <View style={{width: '100%', height: '40%'}}>
                 <WebView javaScriptEnabled={true} source={{html: mapbox}} />
               </View>
-              <ScrollView style={styles.scrollContainer}>
-                <View>
-                  <KeyboardAvoidingView enabled style={{flex: 4}}>
-                    <View style={styles.containerEspecial33}>
-                      <View style={styles.SectionStyleEspecial2}>
-                        <Text style={styles.InputLabelStyleTitle}>
-                          Python Developer
-                        </Text>
-                      </View>
-                    </View>
+              <View style={{flex: 1}}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ScrollView style={styles.scrollContainer}>
+                    <View>
+                      <KeyboardAvoidingView
+                        enabled
+                        style={{flex: 4, marginTop: 30}}>
+                        <View style={styles.containerEspecial33}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyleTitle}>
+                              Python Developer
+                            </Text>
+                          </View>
+                        </View>
 
-                    <View style={styles.containerEspecial22}>
-                      <View style={styles.SectionStyleEspecial2}>
-                        <Text style={styles.InputLabelStyleSubtitle}>
-                          (Company Title)
-                        </Text>
-                      </View>
-                    </View>
+                        <View style={styles.containerEspecial22}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyleSubtitle}>
+                              (Company Title)
+                            </Text>
+                          </View>
+                        </View>
 
-                    <View style={styles.containerEspecial}>
-                      <View style={styles.item11}>
-                        <View style={styles.SectionStyleEspecial2}>
-                          <Text style={styles.InputLabelStyle}>Local</Text>
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>Local</Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Sao Paulo - SP
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                      </View>
-                      <View style={styles.item21}>
-                        <View style={styles.SectionStyleEspecial1}>
-                          <Text style={styles.InputLabelStyle22}>
-                            Sao Paulo - SP
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
 
-                    <View style={styles.containerEspecial}>
-                      <View style={styles.item11}>
-                        <View style={styles.SectionStyleEspecial2}>
-                          <Text style={styles.InputLabelStyle}>Detalhes</Text>
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>
+                                Detalhes
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam, quis nostrud exercitation
+                                ullamco laboris nisi ut aliquip ex ea
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                      </View>
-                      <View style={styles.item21}>
-                        <View style={styles.SectionStyleEspecial1}>
-                          <Text style={styles.InputLabelStyle22}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
 
-                    <View style={styles.containerEspecial}>
-                      <View style={styles.item11}>
-                        <View style={styles.SectionStyleEspecial2}>
-                          <Text style={styles.InputLabelStyle}>Requisitos</Text>
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>
+                                Requisitos
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam
+                              </Text>
+                            </View>
+                          </View>
                         </View>
-                      </View>
-                      <View style={styles.item21}>
-                        <View style={styles.SectionStyleEspecial1}>
-                          <Text style={styles.InputLabelStyle22}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam
-                          </Text>
-                        </View>
-                      </View>
+                      </KeyboardAvoidingView>
                     </View>
-                  </KeyboardAvoidingView>
+                  </ScrollView>
+                  <Image
+                    source={Image_Http_URL}
+                    style={{
+                      height: 50,
+                      position: 'absolute',
+                      resizeMode: 'contain',
+                      borderColor: '#686868',
+                      borderWidth: 1,
+                      width: 200,
+                      backgroundColor: '#FFFFFF',
+                      top: -30,
+                      padding: 5,
+                      borderRadius: 5,
+                    }}
+                  />
                 </View>
-              </ScrollView>
+              </View>
+
               <View style={styles.containerEspecial34}>
                 <View style={styles.item33}>
                   <View style={styles.btnCenter}>
@@ -366,147 +399,188 @@ export default class ExperienciaScreen extends Component {
               paddingLeft: 25,
               paddingRight: 25,
             }}>
-            <View style={{width: '100%', height: '40%'}}>
-              <WebView javaScriptEnabled={true} source={{html: mapbox}} />
-            </View>
-            <ScrollView style={styles.scrollContainer}>
-              <View>
-                <KeyboardAvoidingView enabled style={{flex: 4}}>
-                  <View style={styles.containerEspecial33}>
-                    <View style={styles.SectionStyleEspecial2}>
-                      <Text style={styles.InputLabelStyleTitle}>
-                        Python Developer
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.containerEspecial22}>
-                    <View style={styles.SectionStyleEspecial2}>
-                      <Text style={styles.InputLabelStyleSubtitle}>
-                        (Company Title)
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.containerEspecial}>
-                    <View style={styles.item11}>
-                      <View style={styles.SectionStyleEspecial2}>
-                        <Text style={styles.InputLabelStyle}>Local</Text>
-                      </View>
-                    </View>
-                    <View style={styles.item21}>
-                      <View style={styles.SectionStyleEspecial1}>
-                        <Text style={styles.InputLabelStyle22}>
-                          Sao Paulo - SP
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  <View style={styles.containerEspecial}>
-                    <View style={styles.item11}>
-                      <View style={styles.SectionStyleEspecial2}>
-                        <Text style={styles.InputLabelStyle}>Detalhes</Text>
-                      </View>
-                    </View>
-                    <View style={styles.item21}>
-                      <View style={styles.SectionStyleEspecial1}>
-                        <Text style={styles.InputLabelStyle22}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip
-                          ex ea
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-
-                  <View style={styles.containerEspecial}>
-                    <View style={styles.item11}>
-                      <View style={styles.SectionStyleEspecial2}>
-                        <Text style={styles.InputLabelStyle}>Requisitos</Text>
-                      </View>
-                    </View>
-                    <View style={styles.item21}>
-                      <View style={styles.SectionStyleEspecial1}>
-                        <Text style={styles.InputLabelStyle22}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                </KeyboardAvoidingView>
+            <View
+              style={{
+                height: '100%',
+                borderColor: '#686868',
+                borderWidth: 1,
+                borderBottomEndRadius: 25,
+                borderBottomStartRadius: 25,
+              }}>
+              <View style={{width: '100%', height: '40%'}}>
+                <WebView javaScriptEnabled={true} source={{html: mapbox}} />
               </View>
-            </ScrollView>
-            <View style={styles.containerEspecial34}>
-              <View style={styles.item33}>
-                <View style={styles.btnCenter}>
-                  <Text style={styles.InputLabelStyle}>
-                    <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: 'transparent',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: 50,
-                        height: 50,
-                        backgroundColor: '#ff0000',
-                        borderRadius: 50,
-                      }}>
-                      <MaterialCommunityIcons
-                        name="close"
-                        size={30}
-                        color="#FFFFFF"
-                      />
-                    </TouchableOpacity>
-                  </Text>
+              <View style={{flex: 1}}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ScrollView style={styles.scrollContainer}>
+                    <View>
+                      <KeyboardAvoidingView
+                        enabled
+                        style={{flex: 4, marginTop: 30}}>
+                        <View style={styles.containerEspecial33}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyleTitle}>
+                              Python Developer
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.containerEspecial22}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyleSubtitle}>
+                              (Company Title)
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>Local</Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Sao Paulo - SP
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>
+                                Detalhes
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam, quis nostrud exercitation
+                                ullamco laboris nisi ut aliquip ex ea
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={styles.containerEspecial}>
+                          <View style={styles.item11}>
+                            <View style={styles.SectionStyleEspecial2}>
+                              <Text style={styles.InputLabelStyle}>
+                                Requisitos
+                              </Text>
+                            </View>
+                          </View>
+                          <View style={styles.item21}>
+                            <View style={styles.SectionStyleEspecial1}>
+                              <Text style={styles.InputLabelStyle22}>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      </KeyboardAvoidingView>
+                    </View>
+                  </ScrollView>
+                  <Image
+                    source={Image_Http_URL}
+                    style={{
+                      height: 50,
+                      position: 'absolute',
+                      resizeMode: 'contain',
+                      borderColor: '#686868',
+                      borderWidth: 1,
+                      width: 200,
+                      backgroundColor: '#FFFFFF',
+                      top: -30,
+                      padding: 5,
+                      borderRadius: 5,
+                    }}
+                  />
                 </View>
               </View>
-              <View style={styles.item33}>
-                <View style={styles.btnCenter}>
-                  <Text style={styles.InputLabelStyle22}>
-                    <TouchableOpacity
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: '#fff',
-                      }}>
-                      <MaterialCommunityIcons
+
+              <View style={styles.containerEspecial34}>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle}>
+                      <TouchableOpacity
                         style={{
-                          marginTop: 5,
-                        }}
-                        name="export-variant"
-                        size={40}
-                        color="#6948F4"
-                      />
-                    </TouchableOpacity>
-                  </Text>
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 50,
+                          height: 50,
+                          backgroundColor: '#ff0000',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="close"
+                          size={30}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.item33}>
-                <View style={styles.btnCenter}>
-                  <Text style={styles.InputLabelStyle22}>
-                    <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: 'transparent',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: 50,
-                        height: 50,
-                        backgroundColor: '#26bd26',
-                        borderRadius: 50,
-                      }}>
-                      <MaterialCommunityIcons
-                        name="check"
-                        size={30}
-                        color="#FFFFFF"
-                      />
-                    </TouchableOpacity>
-                  </Text>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle22}>
+                      <TouchableOpacity
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#fff',
+                        }}>
+                        <MaterialCommunityIcons
+                          style={{
+                            marginTop: 5,
+                          }}
+                          name="export-variant"
+                          size={40}
+                          color="#6948F4"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.item33}>
+                  <View style={styles.btnCenter}>
+                    <Text style={styles.InputLabelStyle22}>
+                      <TouchableOpacity
+                        style={{
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 50,
+                          height: 50,
+                          backgroundColor: '#26bd26',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="check"
+                          size={30}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>

@@ -385,3 +385,18 @@ export async function getUserJobs() {
       return [true, error];
     });
 }
+
+export async function getAllJobs() {
+  const newUrl = apiUrl + 'list/jobs/';
+  return fetch(newUrl, {
+    method: 'GET',
+    headers: headers,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
