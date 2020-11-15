@@ -15,10 +15,8 @@ import {
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
-import {TextInputMask} from 'react-native-masked-text';
 import {getUserJobs} from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
-import LocationIQ from 'react-native-locationiq';
 import {WebView} from 'react-native-webview';
 
 export default class ExperienciaScreen extends Component {
@@ -50,32 +48,6 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs,
       loading: false,
     });
-
-    // Initialize the module (needs to be done only once)
-    // LocationIQ.init('5417ddeaa4502b'); // use a valid API key
-
-    // // LocationIQ.search('Statue of Liberty')
-    // //   .then((json) => {
-    // //     var lat = json[0].lat;
-    // //     var lon = json[0].lon;
-    // //     console.log(lat, lon);
-    // //   })
-    // //   .catch((error) => console.warn(error));
-
-    // LocationIQ.reverse(41.89, 12.49)
-    //   .then((json) => {
-    //     console.log(json);
-    //     var address = json.address;
-    //     console.log(address);
-    //   })
-    //   .catch((error) => console.warn(error));
-
-    // LocationIQ.nearby(41.89, 12.49, 'hospital', 1000)
-    //   .then((json) => {
-    //     var address = json.address;
-    //     console.log(adress);
-    //   })
-    //   .catch((error) => console.warn(error));
   }
 
   transformDate(dateIn) {
@@ -197,22 +169,6 @@ export default class ExperienciaScreen extends Component {
         </script>
     </body>
     </html>`;
-    // const COLUMNS = 3;
-    // const MARGIN = this.vw(1);
-    // const SPACING = ((COLUMNS + 1) / COLUMNS) * MARGIN;
-
-    // const grid = {
-    //   flex: 1,
-    //   flexWrap: 'wrap',
-    //   flexDirection: 'row',
-    //   justifyContent: 'flex-start',
-    // };
-
-    // const cell = {
-    //   marginLeft: MARGIN,
-    //   marginTop: MARGIN,
-    //   width: this.vw(100) / COLUMNS - SPACING,
-    // };
     return (
       <View style={styles.scrollContainer}>
         <Loader loading={this.state.loading} />
@@ -237,7 +193,6 @@ export default class ExperienciaScreen extends Component {
             style={{
               backgroundColor: '#00000',
             }}>
-            <Text>Mapa</Text>
             <View style={{width: '100%', height: '40%'}}>
               <WebView
                 javaScriptEnabled={true}
@@ -245,69 +200,78 @@ export default class ExperienciaScreen extends Component {
                 source={{html: mapbox}}
               />
             </View>
-            <View style={styles.containerEspecial}>
-              <View style={styles.SectionStyleEspecial2}>
-                <Text style={styles.InputLabelStyleTitle}>
-                  Python Developer
-                </Text>
-              </View>
-            </View>
+            <ScrollView style={styles.scrollContainer}>
+              <View>
+                <KeyboardAvoidingView enabled style={{flex: 4}}>
+                  <View style={styles.containerEspecial33}>
+                    <View style={styles.SectionStyleEspecial2}>
+                      <Text style={styles.InputLabelStyleTitle}>
+                        Python Developer
+                      </Text>
+                    </View>
+                  </View>
 
-            <View style={styles.containerEspecial22}>
-              <View style={styles.SectionStyleEspecial2}>
-                <Text style={styles.InputLabelStyleSubtitle}>
-                  (Company Title)
-                </Text>
-              </View>
-            </View>
+                  <View style={styles.containerEspecial22}>
+                    <View style={styles.SectionStyleEspecial2}>
+                      <Text style={styles.InputLabelStyleSubtitle}>
+                        (Company Title)
+                      </Text>
+                    </View>
+                  </View>
 
-            <View style={styles.containerEspecial}>
-              <View style={styles.item11}>
-                <View style={styles.SectionStyleEspecial2}>
-                  <Text style={styles.InputLabelStyle}>Local</Text>
-                </View>
-              </View>
-              <View style={styles.item21}>
-                <View style={styles.SectionStyleEspecial1}>
-                  <Text style={styles.InputLabelStyle22}>Sao Paulo - SP</Text>
-                </View>
-              </View>
-            </View>
+                  <View style={styles.containerEspecial}>
+                    <View style={styles.item11}>
+                      <View style={styles.SectionStyleEspecial2}>
+                        <Text style={styles.InputLabelStyle}>Local</Text>
+                      </View>
+                    </View>
+                    <View style={styles.item21}>
+                      <View style={styles.SectionStyleEspecial1}>
+                        <Text style={styles.InputLabelStyle22}>
+                          Sao Paulo - SP
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
 
-            <View style={styles.containerEspecial}>
-              <View style={styles.item11}>
-                <View style={styles.SectionStyleEspecial2}>
-                  <Text style={styles.InputLabelStyle}>Detalhes</Text>
-                </View>
-              </View>
-              <View style={styles.item21}>
-                <View style={styles.SectionStyleEspecial1}>
-                  <Text style={styles.InputLabelStyle22}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea
-                  </Text>
-                </View>
-              </View>
-            </View>
+                  <View style={styles.containerEspecial}>
+                    <View style={styles.item11}>
+                      <View style={styles.SectionStyleEspecial2}>
+                        <Text style={styles.InputLabelStyle}>Detalhes</Text>
+                      </View>
+                    </View>
+                    <View style={styles.item21}>
+                      <View style={styles.SectionStyleEspecial1}>
+                        <Text style={styles.InputLabelStyle22}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit, sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua. Ut enim ad minim veniam, quis
+                          nostrud exercitation ullamco laboris nisi ut aliquip
+                          ex ea
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
 
-            <View style={styles.containerEspecial}>
-              <View style={styles.item11}>
-                <View style={styles.SectionStyleEspecial2}>
-                  <Text style={styles.InputLabelStyle}>Requisitos</Text>
-                </View>
+                  <View style={styles.containerEspecial}>
+                    <View style={styles.item11}>
+                      <View style={styles.SectionStyleEspecial2}>
+                        <Text style={styles.InputLabelStyle}>Requisitos</Text>
+                      </View>
+                    </View>
+                    <View style={styles.item21}>
+                      <View style={styles.SectionStyleEspecial1}>
+                        <Text style={styles.InputLabelStyle22}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit, sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua. Ut enim ad minim veniam
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </KeyboardAvoidingView>
               </View>
-              <View style={styles.item21}>
-                <View style={styles.SectionStyleEspecial1}>
-                  <Text style={styles.InputLabelStyle22}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam
-                  </Text>
-                </View>
-              </View>
-            </View>
+            </ScrollView>
           </View>
           <View
             key="2"
@@ -392,6 +356,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'flex-start',
     marginBottom: 10,
+  },
+  containerEspecial33: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    marginTop: 10,
   },
   containerEspecial22: {
     flexDirection: 'row',
