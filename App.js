@@ -242,14 +242,14 @@ export default () => {
   const [userToken, setToken] = React.useState('');
   const deleteData = async () => {
     try {
-      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('userToken');
     } catch (error) {
       // Error retrieving data
       console.log(error.message);
     }
   };
   const readData = async () => {
-    await AsyncStorage.getItem('token').then((res) => {
+    await AsyncStorage.getItem('userToken').then((res) => {
       setToken(res);
     });
   };
@@ -257,8 +257,8 @@ export default () => {
     setTimeout(() => {
       //   setIsLoading(!isLoading);
       // if (userToken == '')
-      // readData();
-      deleteData();
+      readData();
+      // deleteData();
     }, 500);
   }, []);
 
@@ -271,7 +271,11 @@ export default () => {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-        {userToken == '' ? <AuthStackScreen /> : <AppTabsScreen />}
+        {userToken == '' || userToken == null ? (
+          <AuthStackScreen />
+        ) : (
+          <AppTabsScreen />
+        )}
       </NavigationContainer>
     </SafeAreaView>
   );

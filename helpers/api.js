@@ -1,32 +1,30 @@
+import AsyncStorage from '@react-native-community/async-storage';
+
 const apiUrl = 'https://mobapivagas.jobconvo.com/v1/';
 
-// Cambiar luego por la variable de estado
-const user_info = {
-  id: 68,
-  username: '11989898941',
-  email: '',
-  first_name: 'Fabian',
-  last_name: 'Urrutia',
-  date_joined: '2020-11-09T18:49:56-03:00',
-  is_active: true,
-  last_login: '2020-11-13T03:06:40.303279-03:00',
-  token: {
-    api_key: '63ea9f16d61fa6fd9165575d26f15cfe667984e3',
-  },
-};
+async function getHeaders() {
+  const currentToken = await getToken();
+  return {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: 'Token ' + currentToken,
+  };
+}
+async function getUserId() {
+  return await AsyncStorage.getItem('userId');
+}
 
-// Agregar al call para que no tenga que declarar siempre el header
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  Authorization: 'Token 63ea9f16d61fa6fd9165575d26f15cfe667984e3',
-};
+async function getToken() {
+  return await AsyncStorage.getItem('userToken');
+}
 
 export async function patchuserUpdate(dataInJson) {
-  const newUrl = apiUrl + 'user/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -39,10 +37,12 @@ export async function patchuserUpdate(dataInJson) {
 }
 
 export async function getUserProfile() {
-  const newUrl = apiUrl + 'user/profile/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -54,10 +54,12 @@ export async function getUserProfile() {
 }
 
 export async function patchUserProfile(dataInJson) {
-  const newUrl = apiUrl + 'user/profile/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -70,10 +72,12 @@ export async function patchUserProfile(dataInJson) {
 }
 
 export async function getUserSalary() {
-  const newUrl = apiUrl + 'user/salary/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/salary/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -85,10 +89,12 @@ export async function getUserSalary() {
 }
 
 export async function patchUserSalary(dataInJson) {
-  const newUrl = apiUrl + 'user/salary/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/salary/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -101,10 +107,12 @@ export async function patchUserSalary(dataInJson) {
 }
 
 export async function getUserExp() {
-  const newUrl = apiUrl + 'user/resume/exp/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/resume/exp/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -116,10 +124,12 @@ export async function getUserExp() {
 }
 
 export async function patchUserExp(dataInJson) {
-  const newUrl = apiUrl + 'user/resume/exp/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/resume/exp/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -132,10 +142,12 @@ export async function patchUserExp(dataInJson) {
 }
 
 export async function getUserAreas() {
-  const newUrl = apiUrl + 'user/list/areas/' + user_info.id + '/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/list/areas/' + userId + '/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -147,10 +159,11 @@ export async function getUserAreas() {
 }
 
 export async function postUserAreas(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/add/area/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -163,10 +176,12 @@ export async function postUserAreas(dataInJson) {
 }
 
 export async function getUserDisability() {
-  const newUrl = apiUrl + 'user/disability/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/disability/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -178,10 +193,12 @@ export async function getUserDisability() {
 }
 
 export async function patchUserDisability(dataInJson) {
-  const newUrl = apiUrl + 'user/disability/' + user_info.id + '/update/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/disability/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -194,10 +211,11 @@ export async function patchUserDisability(dataInJson) {
 }
 
 export async function postUserEducation(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/add/education/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -210,10 +228,11 @@ export async function postUserEducation(dataInJson) {
 }
 
 export async function patchUserEducation(dataInJson, id) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/education/' + id + '/update/';
   return fetch(newUrl, {
     method: 'PUT',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
@@ -230,10 +249,11 @@ export async function patchUserEducation(dataInJson, id) {
 }
 
 export async function deleteUserEducation(id) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/remove/education/' + id + '/?';
   return fetch(newUrl, {
     method: 'DELETE',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -245,10 +265,12 @@ export async function deleteUserEducation(id) {
 }
 
 export async function getUserEducations() {
-  const newUrl = apiUrl + 'user/list/educations/' + user_info.id + '/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/list/educations/' + userId + '/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -260,10 +282,12 @@ export async function getUserEducations() {
 }
 
 export async function getUserExperience() {
-  const newUrl = apiUrl + 'user/list/works/' + user_info.id + '/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/list/works/' + userId + '/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -275,10 +299,11 @@ export async function getUserExperience() {
 }
 
 export async function postUserExperience(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/add/work/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -291,10 +316,11 @@ export async function postUserExperience(dataInJson) {
 }
 
 export async function patchUserExperience(dataInJson, id) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/work/' + id + '/update/';
   return fetch(newUrl, {
     method: 'PUT',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
@@ -311,10 +337,11 @@ export async function patchUserExperience(dataInJson, id) {
 }
 
 export async function deleteUserExperience(id) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/remove/work/' + id + '/?';
   return fetch(newUrl, {
     method: 'DELETE',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -326,10 +353,12 @@ export async function deleteUserExperience(id) {
 }
 
 export async function getUserLanguages() {
-  const newUrl = apiUrl + 'user/list/languages/' + user_info.id + '/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/list/languages/' + userId + '/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -341,10 +370,11 @@ export async function getUserLanguages() {
 }
 
 export async function postUserLanguage(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'user/add/language/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -357,10 +387,12 @@ export async function postUserLanguage(dataInJson) {
 }
 
 export async function deleteUser() {
-  const newUrl = apiUrl + 'user/' + user_info.id + '/delete/?';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/' + userId + '/delete/?';
   return fetch(newUrl, {
     method: 'DELETE',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -372,10 +404,12 @@ export async function deleteUser() {
 }
 
 export async function getUserJobs() {
-  const newUrl = apiUrl + 'user/list/jobs/applied/' + user_info.id + '/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/list/jobs/applied/' + userId + '/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -387,10 +421,11 @@ export async function getUserJobs() {
 }
 
 export async function getAllJobs() {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'list/jobs/';
   return fetch(newUrl, {
     method: 'GET',
-    headers: headers,
+    headers: heads,
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -402,10 +437,11 @@ export async function getAllJobs() {
 }
 
 export async function postUserApplyJob(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'job/apply/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => response.json())
@@ -418,10 +454,11 @@ export async function postUserApplyJob(dataInJson) {
 }
 
 export async function postUserRecoverPass(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'rest/password/reset/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
@@ -437,11 +474,12 @@ export async function postUserRecoverPass(dataInJson) {
 }
 
 export async function postUserRecoverCode(dataInJson) {
-  const newUrl =
-    apiUrl + 'rest/password/reset/' + user_info.id + '/confirm/code/';
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'rest/password/reset/' + userId + '/confirm/code/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
@@ -457,10 +495,11 @@ export async function postUserRecoverCode(dataInJson) {
 }
 
 export async function postUserChangePass(dataInJson) {
+  const heads = await getHeaders();
   const newUrl = apiUrl + 'rest/password/reset/MQ/5kk-f3bfad95989e79fc7d51/';
   return fetch(newUrl, {
     method: 'POST',
-    headers: headers,
+    headers: heads,
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {

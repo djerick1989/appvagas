@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   StyleSheet,
@@ -45,6 +46,7 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs,
       loading: false,
     });
+    console.log(await AsyncStorage.getItem('userToken'));
   }
 
   transformDate(dateIn) {
