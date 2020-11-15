@@ -1,115 +1,106 @@
-import React, { Component,useState }from "react";
-import { StyleSheet, Text, View, Image,TouchableOpacity, TextInput,  KeyboardAvoidingView,} from "react-native";
+import React, {Component, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {TextInputMask} from 'react-native-masked-text';
 import Loader from '../Components/Loader';
+import {postUserChangePass} from '../helpers/api';
 
-const ChangePassScreen = props => {
-  let [userPhon, setUserPhon] = useState('');
-  let [loading, setLoading] = useState(false);
+const ChangePassScreen = (props) => {
+  let [passWord1, setPassword] = useState('');
+  let [passWord2, setPassword2] = useState('');
   let [errortext, setErrortext] = useState('');
-//   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+  let [loading, setLoading] = useState(false);
+  //   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
-  const handleSubmitButton = () => {
+  const handleSubmitButton = async () => {
     setErrortext('');
-    if (!userPhon) {
-    //   alert('Please fill Name');
+    if (!passWord1 || !passWord2) {
+      setErrortext('Insert Password');
       return;
+    } else {
+      setErrortext('');
+    }
+    if (passWord1 !== passWord2) {
+      setErrortext('Password not match');
+      return;
+    } else {
+      setErrortext('');
     }
     //Show Loader
     setLoading(true);
-    var dataToSend = {
-      user_number: userPhon,
-    };
-    var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch('https://aboutreact.herokuapp.com/register.php', {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then(response => response.json())
-      .then(responseJson => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
-          console.log('Registration Successful. Please Login to proceed');
-        } else {
-          setErrortext('Registration Unsuccessful');
-        }
-      })
-      .catch(error => {
-        //Hide Loader
-        setLoading(false);
-        console.error(error);
-      });
+    await postUserChangePass({
+      password: passWord1,
+      password_confirm: passWord2,
+    });
+    setLoading(false);
+    props.navigation.navigate('LoginScreen');
   };
 
-    return (
-        <View style={styles.container}>
-            <Loader loading={loading} />
-            <View style={{ alignItems: 'center',flex:1 }}>
-                <Image
-                source={require('../Image/Logo-Pesquisa-Vagas.png')}
-                style={{
-                    width: '60%',
-                    height: 100,
-                    resizeMode: 'contain',
-                    margin: 20,
-                    top:10,
-                    
-                    }}
-                />
-            </View>
-            
-            <KeyboardAvoidingView enabled style={{flex:4,}}>
+  return (
+    <View style={styles.container}>
+      <Loader loading={loading} />
+      <View style={{alignItems: 'center', flex: 1}}>
+        <Image
+          source={require('../Image/Logo-Pesquisa-Vagas.png')}
+          style={{
+            width: '60%',
+            height: 100,
+            resizeMode: 'contain',
+            margin: 20,
+            top: 10,
+          }}
+        />
+      </View>
 
-                <Text style={styles.LabelStyle}>
-                    Recuperar Senha
-                </Text>
-                <View style={styles.SectionStyle}>
-                    <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
-                    <TextInput
-                    style={styles.inputStyle}
-                    keyboardType='phone-pad'
-                    onChangeText={userPhon => setUserPhon(userPhon.replace(/[^0-9]/g, ''))}
-                    // underlineColorAndroid="#FFFFFF"
-                    placeholder="(11) 98877 5566"
-                    placeholderTextColor="#6948F4"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    />
-                </View>
-                {errortext != '' ? (
-                    <Text style={styles.errorTextStyle}> {errortext} </Text>
-                ) : null}
-                <TouchableOpacity
-                    style={styles.buttonStyle}
-                    activeOpacity={0.5}
-                    onPress={handleSubmitButton}>
-                    <Text style={styles.buttonTextStyle}>Recuperar</Text>
-                </TouchableOpacity>
-                
-            </KeyboardAvoidingView>
-            <Text 
-                style={styles.BackStyle}
-                onPress={() => props.navigation.navigate('StartScreen')}
-                >Voltar</Text>
-
+      <KeyboardAvoidingView enabled style={{flex: 4}}>
+        <Text style={styles.LabelStyle}>Cadastrar Nova Senha</Text>
+        <View style={styles.SectionStyle}>
+          <Text style={styles.InputLabelStyle}>Sua Nova Senha</Text>
+          <TextInput
+            style={styles.inputStyle}
+            onChangeText={(password) => setPassword(password)}
+            placeholder="******"
+            placeholderTextColor="#aaaaaa"
+            autoCapitalize="sentences"
+            returnKeyType="next"
+            blurOnSubmit={false}
+          />
         </View>
-    );
-  }
+        <View style={styles.SectionStyle}>
+          <Text style={styles.InputLabelStyle}>Confirmar Nova Senha</Text>
+          <TextInput
+            style={styles.inputStyle}
+            onChangeText={(password) => setPassword2(password)}
+            placeholder="******"
+            placeholderTextColor="#aaaaaa"
+            autoCapitalize="sentences"
+            returnKeyType="next"
+            blurOnSubmit={false}
+          />
+        </View>
+        {errortext != '' ? (
+          <Text style={styles.errorTextStyle}> {errortext} </Text>
+        ) : null}
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          activeOpacity={0.5}
+          onPress={handleSubmitButton}>
+          <Text style={styles.buttonTextStyle}>Confirmar</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+      <Text style={styles.BackStyle} onPress={() => props.navigation.goBack()}>
+        Voltar
+      </Text>
+    </View>
+  );
+};
 
 export default ChangePassScreen;
 const styles = StyleSheet.create({
@@ -119,7 +110,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   SectionStyle: {
-    
     height: 70,
     marginTop: 20,
     marginLeft: 35,
@@ -127,15 +117,15 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   LabelStyle: {
-    fontWeight:'bold',
-    fontSize:25,
+    fontWeight: 'bold',
+    fontSize: 25,
     paddingTop: 70,
     paddingLeft: 30,
     paddingBottom: 30,
-  }, 
+  },
   InputLabelStyle: {
-    fontWeight:'bold',
-    fontSize:16,
+    fontWeight: 'bold',
+    fontSize: 16,
     paddingBottom: 5,
   },
   buttonStyle: {
@@ -151,7 +141,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
-  
+
   buttonTextStyle: {
     color: '#FFFFFF',
     paddingVertical: 8,
@@ -173,15 +163,14 @@ const styles = StyleSheet.create({
   },
 
   BackStyle: {
-      zIndex:0,
-      position:"absolute",
-      color: '#6948F4',
-      fontWeight: "bold",
-      fontSize: 16,
-      textAlign:"center",
-      bottom:20,
-      right:0,
-      left:0,
+    zIndex: 0,
+    position: 'absolute',
+    color: '#6948F4',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
+    bottom: 20,
+    right: 0,
+    left: 0,
   },
-  
 });

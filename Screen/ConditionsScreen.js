@@ -234,7 +234,7 @@ export default class ConditionsScreen extends Component {
         </ScrollView>
         <View style={styles.fabMenuStyle}>
           <Button
-            style={styles.buttonStyle}
+            color="#ffffff"
             title="Concordo"
             onPress={() => this.clickAccept()}
           />
@@ -284,8 +284,8 @@ const styles = StyleSheet.create({
   fabMenuStyle: {
     flexDirection: 'row',
     flex: 0.05,
-    backgroundColor: '#ffffff',
-    height: 20,
+    padding: 10,
+    backgroundColor: '#6948F4',
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

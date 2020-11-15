@@ -143,7 +143,7 @@ export default class PolicyScreen extends Component {
         </ScrollView>
         <View style={styles.fabMenuStyle}>
           <Button
-            style={styles.buttonStyle}
+            color="#ffffff"
             title="Concordo"
             onPress={() => this.clickAccept()}
           />
@@ -177,24 +177,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     alignSelf: 'stretch',
   },
-  buttonStyle: {
-    backgroundColor: '#6948F4',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#6948F4',
-    maxHeight: 40,
-    alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 20,
-    marginBottom: 10,
-  },
   fabMenuStyle: {
     flexDirection: 'row',
     flex: 0.05,
-    backgroundColor: '#ffffff',
-    height: 20,
+    padding: 10,
+    backgroundColor: '#6948F4',
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

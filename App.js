@@ -250,24 +250,14 @@ export default () => {
   };
   const readData = async () => {
     await AsyncStorage.getItem('token').then((res) => {
-      // if (userToken !== null) {
-      //     setToken(res)
-      //   }
-      console.log(res);
       setToken(res);
     });
-
-    // try {
-
-    // } catch (e) {
-    //   alert('Failed to fetch the data from storage')
-    // }
   };
   React.useEffect(() => {
     setTimeout(() => {
       //   setIsLoading(!isLoading);
       // if (userToken == '')
-      // readData()
+      // readData();
       deleteData();
     }, 500);
   }, []);

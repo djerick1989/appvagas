@@ -416,3 +416,61 @@ export async function postUserApplyJob(dataInJson) {
       return [true, error];
     });
 }
+
+export async function postUserRecoverPass(dataInJson) {
+  const newUrl = apiUrl + 'rest/password/reset/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function postUserRecoverCode(dataInJson) {
+  const newUrl =
+    apiUrl + 'rest/password/reset/' + user_info.id + '/confirm/code/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
+export async function postUserChangePass(dataInJson) {
+  const newUrl = apiUrl + 'rest/password/reset/MQ/5kk-f3bfad95989e79fc7d51/';
+  return fetch(newUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
