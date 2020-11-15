@@ -35,13 +35,11 @@ export default class ExperienciaScreen extends Component {
   async componentDidMount() {
     const [isValid, AllJobs] = await getAllJobs();
     const [isValid2, Jobs] = await getUserJobs();
-    console.log(Jobs);
     this.setState({
       allJobs: AllJobs.results,
       listOfJobs: Jobs,
       loading: false,
     });
-    console.log(await AsyncStorage.getItem('userToken'));
   }
 
   transformDate(dateIn) {
@@ -94,19 +92,37 @@ export default class ExperienciaScreen extends Component {
                   return (
                     <View style={styles.cardContainer} key={index}>
                       <View style={styles.cardItem}>
-                        <Text style={styles.CardTitle}>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.id,
+                            })
+                          }
+                          style={styles.CardTitle}>
                           {this.state.allJobs.map((el) =>
                             el.id == element.id ? el.title : null,
                           )}
                         </Text>
-                        <Text style={styles.CardSubTitle}>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.id,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
                           {this.state.allJobs.map((el) =>
                             el.id == element.id
                               ? el.state + '-' + el.country
                               : null,
                           )}
                         </Text>
-                        <Text style={styles.CardType}>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.id,
+                            })
+                          }
+                          style={styles.CardType}>
                           {element.apply_date.substring(
                             0,
                             element.apply_date.indexOf('T'),

@@ -43,6 +43,17 @@ export default class ExperienciaScreen extends Component {
     this.viewPager = React.createRef();
   }
 
+  async componentDidUpdate() {
+    let searchId = '';
+    console.log('hey');
+    if (this.props.route.params && this.props.route.params.searchId) {
+      console.log('hey 2');
+      searchId = this.props.route.params.searchId;
+      console.log('search is ' + searchId);
+      this.go(searchId);
+    }
+  }
+
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     console.log(Jobs);
@@ -50,6 +61,11 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs.results,
       loading: false,
     });
+    let searchId = '';
+    if (this.props.route.params && this.props.route.params.searchId) {
+      searchId = this.props.route.params.searchId;
+      this.go(searchId);
+    }
   }
 
   updateSearch = (search) => {
