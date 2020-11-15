@@ -30,6 +30,7 @@ export default class ExperienciaScreen extends Component {
       cargo: '',
       search: '',
       descripcion: '',
+      currentPage: 0,
       currentID: 0,
       modalIs: 'created',
       dateStart: '',
@@ -39,6 +40,7 @@ export default class ExperienciaScreen extends Component {
       loading: true,
       subarea: null,
     };
+    this.viewPager = React.createRef();
   }
 
   async componentDidMount() {
@@ -155,6 +157,30 @@ export default class ExperienciaScreen extends Component {
     );
   };
 
+  clickOk = async (uidIn) => {
+    this.go('next');
+    const [a, b] = await postUserApplyJob({
+      uid: uidIn,
+      status: '1',
+    });
+    console.log(a, b);
+  };
+
+  move = (delta) => {
+    const page = this.state.page + delta;
+    this.go(page);
+  };
+
+  go = (page) => {
+    if (page == 'next') {
+      const goToPage = this.state.currentPage + 1;
+      this.viewPager.current.setPage(goToPage);
+      this.setState({
+        currentPage: goToPage,
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.scrollContainer}>
@@ -178,10 +204,12 @@ export default class ExperienciaScreen extends Component {
           style={styles.viewPager}
           initialPage={0}
           scrollEnabled={false}
+          ref={this.viewPager}
           transitionStyle="curl">
           {this.state.listOfJobs.map((element, index) => (
             <View
               key={index}
+              collapsable={false}
               style={{
                 backgroundColor: '#00000',
                 paddingLeft: 25,
@@ -363,6 +391,7 @@ export default class ExperienciaScreen extends Component {
                     <View style={styles.btnCenter}>
                       <Text style={styles.InputLabelStyle22}>
                         <TouchableOpacity
+                          onPress={() => this.clickOk(element.uid)}
                           style={{
                             borderWidth: 1,
                             borderColor: 'transparent',
