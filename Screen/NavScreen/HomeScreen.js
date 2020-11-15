@@ -28,6 +28,7 @@ export default class ExperienciaScreen extends Component {
     this.state = {
       empresa: '',
       cargo: '',
+      searchId: 0,
       search: '',
       descripcion: '',
       currentPage: 0,
@@ -45,11 +46,9 @@ export default class ExperienciaScreen extends Component {
 
   async componentDidUpdate() {
     let searchId = '';
-    console.log('hey');
     if (this.props.route.params && this.props.route.params.searchId) {
-      console.log('hey 2');
       searchId = this.props.route.params.searchId;
-      console.log('search is ' + searchId);
+      this.setState({searchId: searchId});
       this.go(searchId);
     }
   }
@@ -64,6 +63,7 @@ export default class ExperienciaScreen extends Component {
     let searchId = '';
     if (this.props.route.params && this.props.route.params.searchId) {
       searchId = this.props.route.params.searchId;
+      this.setState({searchId: searchId});
       this.go(searchId);
     }
   }
@@ -431,22 +431,24 @@ export default class ExperienciaScreen extends Component {
               </View>
             </View>
           ))}
-          <View
-            key="2"
-            style={{
-              paddingLeft: 25,
-              paddingRight: 25,
-            }}>
+          {this.state.listOfJobs.length == 0 || this.state.searchId == 0 ? (
             <View
+              key="99"
               style={{
-                height: '100%',
-                alignSelf: 'center',
+                paddingLeft: 25,
+                paddingRight: 25,
               }}>
-              <Text style={styles.textWhenNone}>
-                volte mais tarde para procurar mais vagas
-              </Text>
+              <View
+                style={{
+                  height: '100%',
+                  alignSelf: 'center',
+                }}>
+                <Text style={styles.textWhenNone}>
+                  volte mais tarde para procurar mais vagas
+                </Text>
+              </View>
             </View>
-          </View>
+          ) : null}
         </ViewPager>
       </View>
     );
