@@ -107,7 +107,7 @@ export default class IdiomasScreen extends Component {
                 <List.Item
                   title="Convidar Amgios"
                   onPress={() => alert('not implemented Yet')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="logout" />}
                 />
                 <List.Item
                   title="Divulgar Vaga"

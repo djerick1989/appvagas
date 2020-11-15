@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
   StyleSheet,
@@ -10,6 +11,7 @@ import {
   Modal,
   TouchableHighlight,
   KeyboardAvoidingView,
+  TouchableOpacity,
   Dimensions,
   ScrollView,
 } from 'react-native';
@@ -192,13 +194,11 @@ export default class ExperienciaScreen extends Component {
             key="1"
             style={{
               backgroundColor: '#00000',
+              paddingLeft: 25,
+              paddingRight: 25,
             }}>
             <View style={{width: '100%', height: '40%'}}>
-              <WebView
-                javaScriptEnabled={true}
-                // originWhitelist={['*']}
-                source={{html: mapbox}}
-              />
+              <WebView javaScriptEnabled={true} source={{html: mapbox}} />
             </View>
             <ScrollView style={styles.scrollContainer}>
               <View>
@@ -272,6 +272,75 @@ export default class ExperienciaScreen extends Component {
                 </KeyboardAvoidingView>
               </View>
             </ScrollView>
+            <View style={styles.containerEspecial34}>
+              <View style={styles.item33}>
+                <View style={styles.btnCenter}>
+                  <Text style={styles.InputLabelStyle}>
+                    <TouchableOpacity
+                      style={{
+                        borderWidth: 1,
+                        borderColor: 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#ff0000',
+                        borderRadius: 50,
+                      }}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={30}
+                        color="#FFFFFF"
+                      />
+                    </TouchableOpacity>
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.item33}>
+                <View style={styles.btnCenter}>
+                  <Text style={styles.InputLabelStyle22}>
+                    <TouchableOpacity
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#fff',
+                      }}>
+                      <MaterialCommunityIcons
+                        style={{
+                          marginTop: 5,
+                        }}
+                        name="export-variant"
+                        size={40}
+                        color="#6948F4"
+                      />
+                    </TouchableOpacity>
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.item33}>
+                <View style={styles.btnCenter}>
+                  <Text style={styles.InputLabelStyle22}>
+                    <TouchableOpacity
+                      style={{
+                        borderWidth: 1,
+                        borderColor: 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#26bd26',
+                        borderRadius: 50,
+                      }}>
+                      <MaterialCommunityIcons
+                        name="check"
+                        size={30}
+                        color="#FFFFFF"
+                      />
+                    </TouchableOpacity>
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
           <View
             key="2"
@@ -351,6 +420,12 @@ export default class ExperienciaScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  containerEspecial34: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    marginTop: 20,
+  },
   containerEspecial: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -371,6 +446,8 @@ const styles = StyleSheet.create({
   },
   viewPager: {
     flex: 1,
+    marginTop: 30,
+    marginBottom: 30,
   },
   cardContainer: {
     // flex: 1,
@@ -388,6 +465,12 @@ const styles = StyleSheet.create({
   },
   item11: {
     width: '30%',
+  },
+  item33: {
+    width: '33%',
+  },
+  btnCenter: {
+    alignSelf: 'center',
   },
   item21: {
     width: '70%',
