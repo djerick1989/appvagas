@@ -120,7 +120,7 @@ export default class PreferencesScreen extends Component {
                     margin: 10,
                   }}
                   activeOpacity={0.5}
-                  onPress={() => this.clickNo()}>
+                  onPress={() => this.setState({modalVisible: false})}>
                   <Text style={styles.WhiteButtonTextStyle}>Agora Não</Text>
                 </TouchableOpacity>
               </View>
