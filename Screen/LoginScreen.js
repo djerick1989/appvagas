@@ -110,6 +110,7 @@ const LoginScreen = (props) => {
         if (responseJson.token) {
           console.log(responseJson.token.api_key);
           setToken(responseJson.token.api_key);
+          AsyncStorage.setItem('useinfo', JSON.stringify(responseJson));
           AsyncStorage.setItem(
             'userToken',
             responseJson.token.api_key,
@@ -119,8 +120,8 @@ const LoginScreen = (props) => {
             ),
           );
 
-          signIn(responseJson.token.api_key);
-          // props.navigation.navigate('AppTabsScreen');
+          //signIn(responseJson.token.api_key);
+          props.navigation.navigate('JumpToThis');
         } else {
           setErrortext('Login Failed');
         }

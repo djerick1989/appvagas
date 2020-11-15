@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -230,6 +230,11 @@ const AuthStackScreen = () => (
       component={NotificationsScreen}
       options={{headerShown: false}}
     />
+    <AuthStack.Screen
+      name="JumpToThis"
+      component={AppTabsScreen}
+      options={{headerShown: false}}
+    />
   </AuthStack.Navigator>
 );
 
@@ -276,7 +281,7 @@ export default () => {
   return (
     <SafeAreaView style={styles.container}>
       <NavigationContainer>
-        {userToken !== '' ? <AuthStackScreen /> : <AppTabsScreen />}
+        {userToken == '' ? <AuthStackScreen /> : <AppTabsScreen />}
       </NavigationContainer>
     </SafeAreaView>
   );
