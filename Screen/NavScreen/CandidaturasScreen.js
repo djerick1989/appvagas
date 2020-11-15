@@ -15,7 +15,7 @@ import {
 import {SearchBar} from 'react-native-elements';
 import Loader from '../../Components/Loader';
 import {TextInputMask} from 'react-native-masked-text';
-import {getUserJobs} from '../../helpers/api';
+import {getUserJobs, getAllJobs} from '../../helpers/api';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -37,8 +37,11 @@ export default class ExperienciaScreen extends Component {
   }
 
   async componentDidMount() {
-    const [isValid, Jobs] = await getUserJobs();
+    const [isValid, AllJobs] = await getAllJobs();
+    const [isValid2, Jobs] = await getUserJobs();
+    console.log(Jobs);
     this.setState({
+      allJobs: AllJobs.results,
       listOfJobs: Jobs,
       loading: false,
     });
@@ -94,53 +97,23 @@ export default class ExperienciaScreen extends Component {
                   return (
                     <View style={styles.cardContainer} key={index}>
                       <View style={styles.cardItem}>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardTitle}>
-                          {element.jobtitle}
+                        <Text style={styles.CardTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.id == element.id ? el.title : null,
+                          )}
                         </Text>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardSubTitle}>
-                          {element.employer}
+                        <Text style={styles.CardSubTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.id == element.id
+                              ? el.state + '-' + el.country
+                              : null,
+                          )}
                         </Text>
-                        <Text
-                          onPress={() =>
-                            this.setState({
-                              modalVisible: true,
-                              modalIs: 'update',
-                              empresa: element.employer,
-                              cargo: element.jobtitle,
-                              descripcion: element.detail,
-                              dateStart: this.retransformDate(element.start),
-                              dateFinish: this.retransformDate(element.end),
-                              currentID: element.id,
-                            })
-                          }
-                          style={styles.CardType}>
-                          {element.start + ' - ' + element.end}
+                        <Text style={styles.CardType}>
+                          {element.apply_date.substring(
+                            0,
+                            element.apply_date.indexOf('T'),
+                          )}
                         </Text>
                       </View>
                     </View>
