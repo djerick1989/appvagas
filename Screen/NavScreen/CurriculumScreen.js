@@ -14,18 +14,23 @@ import Loader from '../../Components/Loader';
 import {patchUserProfile} from '../../helpers/api';
 import {List} from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class IdiomasScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
+      fullName: 'Nome e Sobrenome',
       imageSource: require('../../Image/avatar.png'),
     };
   }
 
   async componentDidMount() {
+    const firstName = await AsyncStorage.getItem('first_name');
+    const lastName = await AsyncStorage.getItem('last_name');
     this.setState({
+      fullName: firstName + ' ' + lastName,
       loading: false,
     });
   }
@@ -77,7 +82,7 @@ export default class IdiomasScreen extends Component {
                   />
                 </View>
               </TouchableHighlight>
-              <Text style={styles.LabelStyle}>Nome e Sobrenome</Text>
+              <Text style={styles.LabelStyle}>{this.state.fullName}</Text>
 
               <View style={styles.SectionStyle}>
                 <List.Item
@@ -181,7 +186,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   SectionStyle: {
-    height: 70,
     marginTop: 40,
     marginLeft: 15,
     marginRight: 15,

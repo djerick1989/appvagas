@@ -233,11 +233,19 @@ export default class ConditionsScreen extends Component {
           </View>
         </ScrollView>
         <View style={styles.fabMenuStyle}>
-          <Button
-            color="#ffffff"
-            title="Concordo"
+          <TouchableOpacity
             onPress={() => this.clickAccept()}
-          />
+            style={{
+              borderWidth: 1,
+              borderColor: 'transparent',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 25,
+              width: '100%',
+              backgroundColor: '#6948F4',
+            }}>
+            <Text style={{color: '#FFFFFF'}}>Concordo</Text>
+          </TouchableOpacity>
         </View>
       </>
     );

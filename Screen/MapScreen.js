@@ -70,7 +70,7 @@ export default class MapScreen extends Component {
               width: '100%',
               height: viewportHeight * 0.55,
               resizeMode: 'contain',
-              top: 40,
+              top: 10,
             }}
           />
         </View>
@@ -92,7 +92,8 @@ export default class MapScreen extends Component {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignSelf: 'center',
-            paddingBottom: 50,
+            paddingBottom: 30,
+            paddingTop: 10,
           }}>
           <TouchableOpacity
             style={{
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
     maxWidth: 340,
     color: 'black',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 16,
     alignItems: 'center',
   },
   SectionStyle: {

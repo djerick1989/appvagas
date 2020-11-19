@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   SectionStyle: {
-    height: 70,
     marginTop: 40,
     marginLeft: 15,
     marginRight: 15,

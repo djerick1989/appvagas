@@ -42,7 +42,7 @@ export default class RegiterScreen extends Component {
       isValidExperienceInfo: false,
       hasClickEducation: false,
       hasExperience: null,
-      hasWorking: null,
+      hasWorking: true,
       isValidJob: false,
       modalVisible: false,
       allowNotification: props.route.params.allowNotification,

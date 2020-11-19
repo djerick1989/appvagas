@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   SectionStyle: {
-    height: 70,
     marginTop: 40,
     marginLeft: 15,
     marginRight: 15,

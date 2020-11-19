@@ -30,6 +30,9 @@ export default class SlideScreen extends Component {
       ],
       ActiveSlide: SLIDER_1_FIRST_ITEM,
     };
+    props.navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+    });
   }
   _renderItem = ({item}) => {
     return (

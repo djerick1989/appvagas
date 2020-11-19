@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, ScrollView, Button} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
 
 export default class PolicyScreen extends Component {
   constructor(props) {
@@ -142,11 +149,19 @@ export default class PolicyScreen extends Component {
           </View>
         </ScrollView>
         <View style={styles.fabMenuStyle}>
-          <Button
-            color="#ffffff"
-            title="Concordo"
+          <TouchableOpacity
             onPress={() => this.clickAccept()}
-          />
+            style={{
+              borderWidth: 1,
+              borderColor: 'transparent',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 25,
+              width: '100%',
+              backgroundColor: '#6948F4',
+            }}>
+            <Text style={{color: '#FFFFFF'}}>Concordo</Text>
+          </TouchableOpacity>
         </View>
       </>
     );

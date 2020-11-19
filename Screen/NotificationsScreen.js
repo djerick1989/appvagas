@@ -50,7 +50,7 @@ export default class NotificationsScreen extends Component {
               width: '100%',
               height: viewportHeight * 0.55,
               resizeMode: 'contain',
-              top: 40,
+              top: 10,
             }}
           />
         </View>
