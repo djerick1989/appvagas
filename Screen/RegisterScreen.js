@@ -1083,7 +1083,7 @@ export default class RegiterScreen extends Component {
               : null}
 
             {this.state.hasClickEducation ? (
-              <KeyboardAvoidingView enabled>
+              <KeyboardAvoidingView enabled style={{paddingBottom: 150}}>
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
                   <DropDownPicker
                     items={this.state.listNivels}
@@ -1295,396 +1295,408 @@ export default class RegiterScreen extends Component {
             console.log('Modal has been closed.');
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
-            <View style={{flex: 5, justifyContent: 'flex-start'}}>
-              <Text style={styles.LabelStyle}>
-                Escolha a área que mais lhe interessar.
-              </Text>
-              <Text style={styles.LabelStyles}>
-                Posteriormente vocé poderá adicionar mais áreas.
-              </Text>
-              <DropDownPicker
-                items={DropdownItems.items1}
-                defaultValue={this.state.item1}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible1}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible1: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                zIndex={15}
-                onClose={() =>
-                  this.setState({
-                    isVisible1: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item1: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[0].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items2}
-                defaultValue={this.state.item2}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible2}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible2: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                zIndex={14}
-                onClose={() =>
-                  this.setState({
-                    isVisible2: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item2: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[1].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items3}
-                defaultValue={this.state.item3}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible3}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible3: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                zIndex={13}
-                onClose={() =>
-                  this.setState({
-                    isVisible3: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item3: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[2].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items4}
-                defaultValue={this.state.item4}
-                containerStyle={{height: 40}}
-                zIndex={12}
-                isVisible={this.state.isVisible4}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible4: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible4: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item4: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[3].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                items={DropdownItems.items5}
-                zIndex={11}
-                defaultValue={this.state.item5}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible5}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible5: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible5: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item5: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[4].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={10}
-                items={DropdownItems.items6}
-                defaultValue={this.state.item6}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible6}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible6: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible6: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item6: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[5].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={9}
-                items={DropdownItems.items7}
-                defaultValue={this.state.item7}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible7}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible7: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible7: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item7: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[6].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={8}
-                items={DropdownItems.items8}
-                defaultValue={this.state.item8}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible8}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible8: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible8: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item8: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[7].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={7}
-                items={DropdownItems.items9}
-                defaultValue={this.state.item9}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible9}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible9: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible9: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item9: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[8].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={6}
-                items={DropdownItems.items10}
-                defaultValue={this.state.item10}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible10}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible10: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible10: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item10: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[9].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={5}
-                items={DropdownItems.items11}
-                defaultValue={this.state.item11}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible11}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible11: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible11: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item11: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[10].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-              <DropDownPicker
-                zIndex={4}
-                items={DropdownItems.items12}
-                defaultValue={this.state.item12}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisible12}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisible12: true,
-                    isOneDropdownActive: true,
-                  })
-                }
-                onClose={() =>
-                  this.setState({
-                    isVisible12: false,
-                    isOneDropdownActive: false,
-                  })
-                }
-                onChangeItem={(item) =>
-                  this.changValue({
-                    item12: item.value,
-                    subarea: item.value,
-                  })
-                }
-                placeholder={DropdownItems.mainarea[11].title}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
-            </View>
-            {!this.state.isOneDropdownActive ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                  alignItems: 'stretch',
-                }}>
+            <ScrollView>
+              <View style={{flex: 5, justifyContent: 'flex-start'}}>
+                <Text style={styles.LabelStyle}>
+                  Escolha a área que mais lhe interessar.
+                </Text>
+                <Text style={styles.LabelStyles}>
+                  Posteriormente vocé poderá adicionar mais áreas.
+                </Text>
+                <DropDownPicker
+                  items={DropdownItems.items1}
+                  defaultValue={this.state.item1}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible1}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible1: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  zIndex={15}
+                  onClose={() =>
+                    this.setState({
+                      isVisible1: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item1: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[0].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  items={DropdownItems.items2}
+                  defaultValue={this.state.item2}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible2}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible2: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  zIndex={14}
+                  onClose={() =>
+                    this.setState({
+                      isVisible2: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item2: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[1].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  items={DropdownItems.items3}
+                  defaultValue={this.state.item3}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible3}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible3: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  zIndex={13}
+                  onClose={() =>
+                    this.setState({
+                      isVisible3: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item3: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[2].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  items={DropdownItems.items4}
+                  defaultValue={this.state.item4}
+                  containerStyle={{height: 40}}
+                  zIndex={12}
+                  isVisible={this.state.isVisible4}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible4: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible4: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item4: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[3].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  items={DropdownItems.items5}
+                  zIndex={11}
+                  defaultValue={this.state.item5}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible5}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible5: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible5: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item5: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[4].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={10}
+                  items={DropdownItems.items6}
+                  defaultValue={this.state.item6}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible6}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible6: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible6: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item6: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[5].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={9}
+                  items={DropdownItems.items7}
+                  defaultValue={this.state.item7}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible7}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible7: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible7: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item7: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[6].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={8}
+                  items={DropdownItems.items8}
+                  defaultValue={this.state.item8}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible8}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible8: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible8: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item8: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[7].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={7}
+                  items={DropdownItems.items9}
+                  defaultValue={this.state.item9}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible9}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible9: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible9: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item9: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[8].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={6}
+                  items={DropdownItems.items10}
+                  defaultValue={this.state.item10}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible10}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible10: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible10: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item10: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[9].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={5}
+                  items={DropdownItems.items11}
+                  defaultValue={this.state.item11}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible11}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible11: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible11: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item11: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[10].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+                <DropDownPicker
+                  zIndex={4}
+                  items={DropdownItems.items12}
+                  defaultValue={this.state.item12}
+                  containerStyle={{height: 40}}
+                  isVisible={this.state.isVisible12}
+                  onOpen={() =>
+                    this.changeVisibility({
+                      isVisible12: true,
+                      isOneDropdownActive: true,
+                    })
+                  }
+                  onClose={() =>
+                    this.setState({
+                      isVisible12: false,
+                      isOneDropdownActive: false,
+                    })
+                  }
+                  onChangeItem={(item) =>
+                    this.changValue({
+                      item12: item.value,
+                      subarea: item.value,
+                    })
+                  }
+                  placeholder={DropdownItems.mainarea[11].title}
+                  labelStyle={styles.dLabelStyle}
+                  itemStyle={styles.dItemStyle}
+                  placeholderStyle={styles.dPlaceholderStyle}
+                  dropDownStyle={styles.dStyle}
+                />
+              </View>
+              {this.state.isOneDropdownActive ? (
                 <View
                   style={{
-                    backgroundColor: '#6948F4',
-                    alignItems: 'center',
-                    padding: 20,
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    alignItems: 'stretch',
+                    paddingTop: 260,
+                  }}
+                />
+              ) : null}
+              {!this.state.isOneDropdownActive ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    alignItems: 'stretch',
                   }}>
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.clickOkJob();
+                  <View
+                    style={{
+                      backgroundColor: '#6948F4',
+                      alignItems: 'center',
+                      padding: 20,
                     }}>
-                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
-                  </TouchableHighlight>
+                    <TouchableHighlight
+                      onPress={() => {
+                        this.clickOkJob();
+                      }}>
+                      <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                    </TouchableHighlight>
+                  </View>
                 </View>
-              </View>
-            ) : null}
+              ) : null}
+            </ScrollView>
           </SafeAreaView>
         </Modal>
       </ScrollView>
@@ -1843,9 +1855,10 @@ const styles = StyleSheet.create({
     borderColor: '#6948F4',
     height: 40,
     alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 35,
-    marginRight: 35,
+    borderRadius: 10,
+    marginLeft: 25,
+    marginRight: 25,
+    fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
   },
