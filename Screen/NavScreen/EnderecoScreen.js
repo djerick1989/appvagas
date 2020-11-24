@@ -21,6 +21,7 @@ export default class EnderecoScreen extends Component {
       bairro: '',
       complemento: '',
       number: '',
+      zipcode: '',
       endereco: '',
       userPhon: '',
       loading: true,
@@ -31,9 +32,11 @@ export default class EnderecoScreen extends Component {
     this.setState({loading: true});
     const [data, user] = await getUserProfile();
 
+    console.log(user);
     this.setState({
       estado: user.state,
       cidade: user.city,
+      zipcode: user.zipcode,
       bairro: user.neighbourhood,
       complemento: user.complement,
       number: user.adddressnumber,
@@ -49,6 +52,7 @@ export default class EnderecoScreen extends Component {
     delete dataInJson.loading;
     // aqui llamo al update
     await patchUserProfile({
+      zipcode: this.state.zipcode,
       state: this.state.estado,
       city: this.state.cidade,
       neighbourhood: this.state.bairro,
@@ -58,6 +62,7 @@ export default class EnderecoScreen extends Component {
       phone1: this.state.userPhon,
     });
     this.setState({loading: false});
+    alert('Updated');
   }
 
   render() {
@@ -78,11 +83,10 @@ export default class EnderecoScreen extends Component {
               <Text style={styles.InputLabelStyle}>CEP</Text>
               <TextInput
                 style={styles.inputStyle}
-                type={'cel-phone'}
-                value={this.state.userPhon}
-                onChangeText={(text) => this.setState({userPhon: text})}
-                placeholder="30130-000"
+                value={this.state.zipcode}
+                onChangeText={(text) => this.setState({zipcode: text})}
                 placeholderTextColor="#aaaaaa"
+                autoCapitalize="sentences"
                 returnKeyType="next"
                 blurOnSubmit={false}
               />

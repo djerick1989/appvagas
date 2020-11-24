@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import Loader from '../../Components/Loader';
-import {patchUserProfile} from '../../helpers/api';
+import {patchUserProfile, getUserProfile} from '../../helpers/api';
 import {List} from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -33,12 +33,20 @@ export default class IdiomasScreen extends Component {
       fullName: firstName + ' ' + lastName,
       loading: false,
     });
+    const [c, d] = await getUserProfile();
+    console.log(d);
+    if (d.photo) {
+      this.setState({imageSource: {uri: d.photo}});
+    }
   }
 
   updateImageOnProfile = async (urlImage) => {
-    await patchUserProfile({
-      photo: urlImage,
+    const [a, b] = await patchUserProfile({
+      photo: 'data:image/png;base64,' + urlImage,
     });
+    if (a == true) {
+      this.setState({imageSource: {uri: b.photo}});
+    }
     this.setState({loading: false});
   };
 
@@ -50,11 +58,7 @@ export default class IdiomasScreen extends Component {
       maxWidth: 200,
     };
     ImagePicker.launchCamera(options, (response) => {
-      console.log('imagen tomada');
-      // Agregar logica de la subida de imagen
-      console.log(response);
-      // al tener la url de la imagen subida
-      //this.updateImageOnProfile(urlImage);
+      this.updateImageOnProfile(response.data);
     });
   };
 
@@ -73,9 +77,12 @@ export default class IdiomasScreen extends Component {
                   <Image
                     source={this.state.imageSource}
                     style={{
-                      width: '100%',
+                      width: 150,
                       height: 150,
-                      resizeMode: 'contain',
+                      borderRadius: 150 / 2,
+                      overflow: "hidden",
+                      borderWidth: 3,
+                      borderColor: "transparent",
                       margin: 20,
                       top: 10,
                     }}

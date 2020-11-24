@@ -15,6 +15,7 @@ import {
 import Loader from '../../Components/Loader';
 import {deleteUser} from '../../helpers/api';
 import {List} from 'react-native-paper';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class PreferencesScreen extends Component {
   constructor(props) {
@@ -34,8 +35,17 @@ export default class PreferencesScreen extends Component {
 
   async deleteAccount() {
     this.setState({modalVisible: false});
-    // TODO SE requiere desconectar de la cuenta al login
-    // await deleteUser();
+    await deleteUser();
+    AsyncStorage.removeItem('userId');
+    AsyncStorage.removeItem('username');
+    AsyncStorage.removeItem('email');
+    AsyncStorage.removeItem('first_name');
+    AsyncStorage.removeItem('last_name');
+    AsyncStorage.removeItem('userToken');
+    AsyncStorage.removeItem('cpf');
+    await AsyncStorage.removeItem('userToken').then(() => {
+      alert('Cuenta eliminada');
+    });
   }
 
   render() {

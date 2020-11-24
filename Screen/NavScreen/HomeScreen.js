@@ -42,6 +42,9 @@ export default class ExperienciaScreen extends Component {
       subarea: null,
     };
     this.viewPager = React.createRef();
+    props.navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+    });
   }
 
   async componentDidUpdate() {

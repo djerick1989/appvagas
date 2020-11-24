@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  ScrollView,
   TouchableWithoutFeedback,
   Modal,
   TouchableHighlight,
@@ -15,12 +14,14 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import {ScrollView} from 'react-native-gesture-handler';
 import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
 import DropdownItems from '../Components/DropdownItems';
+import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {TextInputMask} from 'react-native-masked-text';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default class RegiterScreen extends Component {
   constructor(props) {
@@ -37,12 +38,13 @@ export default class RegiterScreen extends Component {
       isValidCity: false,
       isValidState: false,
       isValidCountry: false,
+      isValidInstitution: false,
       isValidExperience: false,
       showLoading: false,
       isValidExperienceInfo: false,
       hasClickEducation: false,
       hasExperience: null,
-      hasWorking: true,
+      hasWorking: null,
       isValidJob: false,
       modalVisible: false,
       allowNotification: props.route.params.allowNotification,
@@ -79,6 +81,7 @@ export default class RegiterScreen extends Component {
       itemStatus: '',
       areaSelected: '',
       listNivels: [
+        {label: 'Nivel', value: -1},
         {label: 'Até 5º ano do Ensino Fundamental', value: 0},
         {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
         {label: 'Ensino Fundamental', value: 2},
@@ -111,14 +114,14 @@ export default class RegiterScreen extends Component {
       isVisible11: false,
       isVisible12: false,
       isValidNivel: false,
-      isValidStatus: null,
+      isValidStatus: false,
       isValidInicio: null,
       dismissed: false,
       isOneDropdownActive: false,
       show: true,
       mode: 'date',
-      date: new Date(),
-      dateConcluido: new Date(),
+      date: '',
+      dateConcluido: '',
       allAreas: [],
       subarea: null,
     };
@@ -133,42 +136,14 @@ export default class RegiterScreen extends Component {
     });
   };
 
-  onChangeConcluido = (event, selectedDate) => {
-    const currentDate = selectedDate || this.state.date;
-    fetch(
-      'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-        this.state.user_info.id +
-        '/update/',
-      {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Token ' + this.state.user_info.token.api_key,
-        },
-        body: JSON.stringify({
-          level: this.state.itemNivel,
-          title: this.state.Formation,
-          school: this.state.Institution,
-          status: this.state.status,
-          start: this.state.date,
-          end: this.state.dateConcluido,
-        }),
-      },
-    )
-      .then((response) => response.json())
-      .then(() => {
-        this.setState({
-          dateConcluido: currentDate,
-          isValidConcluido: true,
-          show: Platform.OS === 'ios' ? true : false,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        Alert.alert('server error');
-      });
-  };
+  transformDate(dateIn) {
+    const date = dateIn.split('/');
+    let realDate = '';
+    if (date[0] && date[1] && date[2]) {
+      realDate = date[2] + '-' + date[1] + '-' + date[0];
+    }
+    return realDate;
+  }
 
   showMode = (currentMode) => {
     this.setState({
@@ -186,6 +161,18 @@ export default class RegiterScreen extends Component {
   };
 
   componentDidMount() {}
+
+  sendToApp() {
+    const user_info = this.state.user_info;
+    AsyncStorage.setItem('userId', '' + user_info.id);
+    AsyncStorage.setItem('username', '' + user_info.username);
+    AsyncStorage.setItem('email', '' + this.state.Email);
+    AsyncStorage.setItem('first_name', '' + user_info.first_name);
+    AsyncStorage.setItem('last_name', '' + user_info.last_name);
+    AsyncStorage.setItem('userToken', user_info.token.api_key);
+    AsyncStorage.setItem('cpf', this.state.CPF);
+    this.props.navigation.navigate('JumpToThis');
+  }
 
   renderChatBox(
     item,
@@ -216,9 +203,6 @@ export default class RegiterScreen extends Component {
   handleSubmitText = (keyToSearch, value = false) => {
     switch (keyToSearch) {
       case 'userName':
-        //bypass
-        // this.setState({isCorrectUser: true});
-
         if (this.state.UserName.indexOf(' ') > 0) {
           const userName = this.state.UserName;
           const firstSpace = userName.indexOf(' ');
@@ -230,16 +214,11 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'phone':
-        //bypass
-        // this.setState({isValidPhone: true});
         if (this.state.PhonNumber.length === 11) {
           this.setState({isValidPhone: true});
         }
         break;
       case 'password':
-        // //bypass
-        // this.setState({isValidPassword: true});
-
         if (this.state.Password.length >= 4) {
           this.setState({showLoading: true});
           fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
@@ -307,12 +286,6 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'cpf':
-        //bypass
-        // this.setState({isValidCpf: true});
-        // if (!this.state.CPF) {
-        //   return;
-        // }
-
         this.setState({showLoading: true});
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
@@ -361,7 +334,30 @@ export default class RegiterScreen extends Component {
           Alert.alert('Inválido Email');
           return;
         } else {
-          this.setState({isValidEmail: true});
+          fetch(
+            'https://mobapivagas.jobconvo.com/v1/user/' +
+              this.state.user_info.id +
+              '/update/',
+            {
+              method: 'PATCH',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Token ' + this.state.user_info.token.api_key,
+              },
+              body: JSON.stringify({
+                email: this.state.Email,
+              }),
+            },
+          )
+            .then((response) => response.json())
+            .then(() => {
+              this.setState({isValidEmail: true});
+            })
+            .catch((error) => {
+              console.error(error);
+              Alert.alert('server error');
+            });
         }
         break;
       case 'Cep':
@@ -380,44 +376,30 @@ export default class RegiterScreen extends Component {
         this.setState({isValidState: true});
         break;
       case 'Country':
-        // //bypass
-        // this.setState({isValidCountry: true});
-        // return;
-
         this.setState({showLoading: true});
-        fetch('https://mobapivagas.jobconvo.com/v1/user/profile/1/update/', {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Token ' + this.state.user_info.token.api_key,
+        fetch(
+          'https://mobapivagas.jobconvo.com/v1/user/profile/' +
+            this.state.user_info.id +
+            '/update/',
+          {
+            method: 'PATCH',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Token ' + this.state.user_info.token.api_key,
+            },
+            body: JSON.stringify({
+              zipcode: this.state.Cep,
+              state: this.state.State,
+              city: this.state.City,
+              neighbourhood: this.state.Neiboughood,
+              complement: null,
+              adddressnumber: null,
+              address: this.state.Address,
+              phone1: this.state.PhonNumber,
+            }),
           },
-          body: JSON.stringify({
-            cpf: this.state.CPF,
-            user: this.state.user_info.id,
-            photo: '',
-            email2: null,
-            born_sex: null,
-            birthday: null,
-            country_code: 'Brasil',
-            area_code: '11',
-            phone1: this.state.PhonNumber,
-            phone2: null,
-            address: this.state.Address,
-            adddressnumber: null,
-            complement: null,
-            neighbourhood: this.state.Neiboughood,
-            state: this.state.State,
-            city: this.state.City,
-            country: this.state.Country,
-            zipcode: this.state.Zipcode,
-            latitude: null,
-            longitude: null,
-            social_status: null,
-            user_language: 'pt-br',
-            last_access: null,
-          }),
-        })
+        )
           .then((response) => response.json())
           .then(() => {
             this.setState({showLoading: false, isValidCountry: true});
@@ -466,10 +448,6 @@ export default class RegiterScreen extends Component {
         this.setState({isValidExperience: true});
         break;
       case 'InfoExp':
-        // // Bypass
-        // this.setState({isValidExperienceInfo: true});
-        // return;
-
         this.setState({showLoading: true});
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
@@ -513,11 +491,6 @@ export default class RegiterScreen extends Component {
         });
         break;
       case 'LastSaldo':
-        // this.setState({
-        //   isValidLastSaldo: true,
-        // });
-        // break;
-
         this.setState({showLoading: true});
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
@@ -544,6 +517,50 @@ export default class RegiterScreen extends Component {
             console.error(error);
             Alert.alert('server error');
           });
+        break;
+      case 'dateInicio':
+        if (this.state.date.length == 10) {
+          this.setState({
+            isValidInicio: true,
+          });
+        }
+        break;
+      case 'dateConcluido':
+        if (this.state.dateConcluido.length == 10) {
+          let realDate = this.transformDate(this.state.date);
+          let realDate2 = this.transformDate(this.state.dateConcluido);
+          fetch(
+            'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+              this.state.user_info.id +
+              '/update/',
+            {
+              method: 'PATCH',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Token ' + this.state.user_info.token.api_key,
+              },
+              body: JSON.stringify({
+                level: this.state.itemNivel,
+                title: this.state.Formation,
+                school: this.state.Institution,
+                status: this.state.status,
+                start: realDate,
+                end: realDate2,
+              }),
+            },
+          )
+            .then((response) => response.json())
+            .then(() => {
+              this.setState({
+                isValidConcluido: true,
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+              Alert.alert('server error');
+            });
+        }
         break;
       case 'hasWorking':
         if (value === false) {
@@ -624,7 +641,7 @@ export default class RegiterScreen extends Component {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        // Authorization: 'Token ' + this.state.user_info.token.api_key,
+        Authorization: 'Token ' + this.state.user_info.token.api_key,
       },
       body: JSON.stringify({
         area: this.state.subarea,
@@ -778,15 +795,15 @@ export default class RegiterScreen extends Component {
             {this.renderChatBox('Olá, muito bem vindo!', 500, true)}
             {this.renderChatBox(
               'Sou o Pesquisa Vagas e estou aqui para ajuda-lo a conseguir um novo trabalho. Vamos lá?',
-              1500,
+              2500,
             )}
             {this.renderChatBox(
               'Muito bem, que tal começar se apresentando?',
-              3000,
+              3800,
             )}
-            {this.renderChatBox('Como você se chama?', 4500)}
+            {this.renderChatBox('Como você se chama?', 4900)}
             {this.inputWithKeyBoard(
-              5500,
+              6500,
               (val) => this.setState({UserName: val}),
               () => this.handleSubmitText('userName'),
               'NOME E SOBRENOME',
@@ -1083,37 +1100,34 @@ export default class RegiterScreen extends Component {
               : null}
 
             {this.state.hasClickEducation ? (
-              <KeyboardAvoidingView enabled style={{paddingBottom: 150}}>
-                <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <DropDownPicker
-                    items={this.state.listNivels}
-                    defaultValue={this.state.itemNivel}
-                    containerStyle={{height: 40}}
-                    isVisible={this.state.isVisibleThisOne}
-                    onOpen={() =>
-                      this.changeVisibility({
-                        isVisibleThisOne: true,
-                      })
-                    }
-                    zIndex={15}
-                    onClose={() =>
-                      this.setState({
-                        isVisibleThisOne: false,
-                      })
-                    }
-                    onChangeItem={(item) => {
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStylePicker}>
+                  <Picker
+                    selectedValue={this.state.itemNivel}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                    }}
+                    enabled={!this.state.isValidNivel}
+                    onValueChange={(itemValue, itemIndex) => {
+                      if (itemValue == -1) {
+                        return;
+                      }
                       this.changValue({
-                        itemNivel: item.value,
+                        itemNivel: itemValue,
                         isValidNivel: true,
                       });
-                    }}
-                    disabled={this.state.isValidNivel}
-                    placeholder={'Nivel'}
-                    labelStyle={styles.dLabelStyle}
-                    itemStyle={styles.dItemStyle}
-                    placeholderStyle={styles.dPlaceholderStyle}
-                    dropDownStyle={styles.dStyle}
-                  />
+                    }}>
+                    {this.state.listNivels.map((el, index) => {
+                      return (
+                        <Picker.Item
+                          key={el.label + index}
+                          label={el.label}
+                          value={el.value}
+                        />
+                      );
+                    })}
+                  </Picker>
                 </FadeInView>
               </KeyboardAvoidingView>
             ) : null}
@@ -1140,58 +1154,56 @@ export default class RegiterScreen extends Component {
 
             {this.state.isValidInstitution ? (
               <KeyboardAvoidingView enabled>
-                <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <DropDownPicker
-                    items={this.state.listStatus}
-                    defaultValue={this.state.itemStatus}
-                    containerStyle={{height: 40}}
-                    isVisible={this.state.isVisibleThisOneToo}
-                    onOpen={() =>
-                      this.changeVisibility({
-                        isVisibleThisOneToo: true,
-                      })
-                    }
-                    zIndex={15}
-                    onClose={() =>
-                      this.setState({
-                        isVisibleThisOneToo: false,
-                      })
-                    }
-                    onChangeItem={(item) => {
+                <FadeInView duration={1200} style={styles.InputBoxStylePicker}>
+                  <Picker
+                    selectedValue={this.state.itemStatus}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                    }}
+                    enabled={!this.state.isValidStatus}
+                    onValueChange={(itemValue, itemIndex) => {
                       this.changValue({
-                        itemStatus: item.value,
+                        itemStatus: itemValue,
                         isValidStatus: true,
                       });
-                    }}
-                    disabled={this.state.isValidStatus}
-                    placeholder={'Status'}
-                    labelStyle={styles.dLabelStyle}
-                    itemStyle={styles.dItemStyle}
-                    placeholderStyle={styles.dPlaceholderStyle}
-                    dropDownStyle={styles.dStyle}
-                  />
+                    }}>
+                    {this.state.listStatus.map((el, index) => {
+                      return (
+                        <Picker.Item
+                          key={el.label + index}
+                          label={el.label}
+                          value={el.value}
+                        />
+                      );
+                    })}
+                  </Picker>
                 </FadeInView>
               </KeyboardAvoidingView>
             ) : null}
 
-            {this.state.isValidStatus != null
+            {this.state.isValidStatus == true
               ? this.renderChatBox('insira o Inicio', 750)
               : null}
 
-            {this.state.isValidStatus != null ? (
+            {this.state.isValidStatus == true ? (
               <KeyboardAvoidingView enabled>
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <View>
-                    {this.state.show && (
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={this.state.date}
-                        mode="date"
-                        display="default"
-                        onChange={this.onChange}
-                      />
-                    )}
-                  </View>
+                  <TextInputMask
+                    style={styles.inputStyle}
+                    type={'datetime'}
+                    options={{
+                      format: 'DD/MM/YYYY',
+                    }}
+                    placeholder="30/10/1990"
+                    value={this.state.date}
+                    onSubmitEditing={() => this.handleSubmitText('dateInicio')}
+                    onChangeText={(text) => {
+                      this.setState({
+                        date: text,
+                      });
+                    }}
+                  />
                 </FadeInView>
               </KeyboardAvoidingView>
             ) : null}
@@ -1203,17 +1215,28 @@ export default class RegiterScreen extends Component {
             {this.state.isValidInicio != null ? (
               <KeyboardAvoidingView enabled>
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <View>
-                    {this.state.show && (
-                      <DateTimePicker
-                        testID="dateTimePicker"
-                        value={this.state.dateConcluido}
-                        mode="date"
-                        display="default"
-                        onChange={this.onChangeConcluido}
-                      />
-                    )}
-                  </View>
+                  <TextInputMask
+                    style={styles.inputStyle}
+                    type={'datetime'}
+                    options={{
+                      format: 'DD/MM/YYYY',
+                    }}
+                    placeholder="30/10/1990"
+                    value={this.state.dateConcluido}
+                    onSubmitEditing={() =>
+                      this.handleSubmitText('dateConcluido')
+                    }
+                    onChangeText={(text) => {
+                      if (text.length == 10) {
+                        this.setState({
+                          isValidConcluido: true,
+                        });
+                      }
+                      this.setState({
+                        dateConcluido: text,
+                      });
+                    }}
+                  />
                 </FadeInView>
               </KeyboardAvoidingView>
             ) : null}
@@ -1278,7 +1301,7 @@ export default class RegiterScreen extends Component {
                   }}>
                   <TouchableHighlight
                     onPress={() => {
-                      alert('Usuario registrado con exito');
+                      this.sendToApp();
                     }}>
                     <Text style={{color: '#FFFFFF'}}>VER VAGAS</Text>
                   </TouchableHighlight>
@@ -1827,6 +1850,15 @@ const styles = StyleSheet.create({
     height: 100,
   },
   InputBoxStyle: {
+    width: '70%',
+    marginBottom: 15,
+    alignSelf: 'flex-end',
+    height: 40,
+  },
+  InputBoxStylePicker: {
+    borderColor: '#6948F4',
+    borderWidth: 1,
+    borderRadius: 5,
     width: '70%',
     marginBottom: 15,
     alignSelf: 'flex-end',

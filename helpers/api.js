@@ -18,6 +18,24 @@ async function getToken() {
   return await AsyncStorage.getItem('userToken');
 }
 
+export async function patchuserCPFUpdate(dataInJson) {
+  const heads = await getHeaders();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/cpf/' + userId + '/update/';
+  return fetch(newUrl, {
+    method: 'PATCH',
+    headers: heads,
+    body: JSON.stringify(dataInJson),
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
 export async function patchuserUpdate(dataInJson) {
   const heads = await getHeaders();
   const userId = await getUserId();
@@ -39,6 +57,8 @@ export async function patchuserUpdate(dataInJson) {
 export async function getUserProfile() {
   const heads = await getHeaders();
   const userId = await getUserId();
+  console.log(userId);
+  console.log(heads);
   const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
@@ -56,7 +76,7 @@ export async function getUserProfile() {
 export async function patchUserProfile(dataInJson) {
   const heads = await getHeaders();
   const userId = await getUserId();
-  const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
+  const newUrl = apiUrl + 'user/profile/' + userId + '/update/'; 
   return fetch(newUrl, {
     method: 'PATCH',
     headers: heads,
@@ -396,6 +416,7 @@ export async function deleteUser() {
   })
     .then((response) => response.json())
     .then((responseJson) => {
+      console.log(responseJson);
       return [true, responseJson];
     })
     .catch((error) => {

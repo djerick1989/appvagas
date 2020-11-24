@@ -115,16 +115,30 @@ const LoginScreen = (props) => {
           AsyncStorage.setItem('email', '' + responseJson.email);
           AsyncStorage.setItem('first_name', '' + responseJson.first_name);
           AsyncStorage.setItem('last_name', '' + responseJson.last_name);
-          AsyncStorage.setItem(
-            'userToken',
-            responseJson.token.api_key,
-          ).then(() =>
-            AsyncStorage.getItem('userToken').then((result) =>
-              console.log(result),
-            ),
+          AsyncStorage.setItem('userToken', responseJson.token.api_key).then(
+            () => {
+              AsyncStorage.getItem('userToken').then((result) =>
+                console.log(result),
+              );
+              fetch(
+                'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
+                  responseJson.id +
+                  '/update/',
+                {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type':
+                      'application/x-www-form-urlencoded;charset=UTF-8',
+                  },
+                },
+              )
+                .then((response) => response.json())
+                .then((response) => {
+                  AsyncStorage.setItem('cpf', response.cpf);
+                  props.navigation.navigate('JumpToThis');
+                });
+            },
           );
-
-          props.navigation.navigate('JumpToThis');
         } else {
           setErrortext('Login Failed');
         }

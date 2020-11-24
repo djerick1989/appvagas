@@ -20,6 +20,7 @@
     "@react-native-community/netinfo": "^5.9.7",
     "@react-native-community/slider": "^3.0.3",
     "@react-native-community/viewpager": "^4.2.0",
+    "@react-native-picker/picker": "^1.9.2",
     "@react-navigation/bottom-tabs": "^5.10.6",
     "@react-navigation/drawer": "^5.10.6",
     "@react-navigation/native": "^5.8.6",

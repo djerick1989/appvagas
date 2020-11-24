@@ -6,10 +6,13 @@ import {
   Text,
   SafeAreaView,
   View,
+  TouchableWithoutFeedback,
   TextInput,
   Modal,
   TouchableHighlight,
   KeyboardAvoidingView,
+  Keyboard,
+  Platform,
   ScrollView,
 } from 'react-native';
 import Loader from '../../Components/Loader';
@@ -45,7 +48,21 @@ export default class ExperienciaScreen extends Component {
       listOfExperiences: Experiences,
       loading: false,
     });
+    Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
   }
+
+  _keyboardDidShow = () => {
+    this.setState({
+      isVisibleThisOneToo: true,
+    });
+  };
+
+  _keyboardDidHide = () => {
+    this.setState({
+      isVisibleThisOneToo: false,
+    });
+  };
 
   transformDate(dateIn) {
     const date = dateIn.split('/');
@@ -252,129 +269,139 @@ export default class ExperienciaScreen extends Component {
           animationType={'slide'}
           transparent={false}
           visible={this.state.modalVisible}>
-          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
-            <View style={{flex: 5, justifyContent: 'flex-start'}}>
-              <View
-                style={{
-                  paddingBottom: 40,
-                  flexDirection: 'row',
-                  display: 'flex',
-                }}>
-                <Text
-                  style={styles.BackStyle2}
-                  onPress={() => this.setState({modalVisible: false})}>
-                  Voltar
-                </Text>
-                {this.state.modalIs !== 'created' ? (
-                  <Text
-                    style={styles.BackStyle3}
-                    onPress={() => this.deleteThisOne()}>
-                    Excluir
-                  </Text>
-                ) : null}
-              </View>
-              <KeyboardAvoidingView enabled style={{flex: 4}}>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Cargo</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.cargo}
-                    onChangeText={(text) => this.setState({cargo: text})}
-                    placeholderTextColor="#aaaaaa"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Empresa</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.empresa}
-                    onChangeText={(text) => this.setState({empresa: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-                <View style={styles.containerEspecial}>
-                  <View style={styles.item}>
-                    <View style={styles.SectionStyleEspecial2}>
-                      <Text style={styles.InputLabelStyle}>Data de Inicio</Text>
-                      <TextInputMask
-                        style={styles.inputStyle}
-                        type={'datetime'}
-                        options={{
-                          format: 'DD/MM/YYYY',
-                        }}
-                        placeholder="30/10/1990"
-                        value={this.state.dateStart}
-                        onChangeText={(text) => {
-                          this.setState({
-                            dateStart: text,
-                          });
-                        }}
-                      />
-                    </View>
-                  </View>
-                  <View style={styles.item}>
-                    <View style={styles.SectionStyleEspecial1}>
-                      <Text style={styles.InputLabelStyle}>
-                        Data de Término
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : null}
+            style={{flex: 10}}>
+            <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+              <ScrollView style={{padding: 0, margin: 0}}>
+                <>
+                  <View style={{flex: 5, justifyContent: 'flex-start'}}>
+                    <View
+                      style={{
+                        paddingBottom: 40,
+                        flexDirection: 'row',
+                        display: 'flex',
+                      }}>
+                      <Text
+                        style={styles.BackStyle2}
+                        onPress={() => this.setState({modalVisible: false})}>
+                        Voltar
                       </Text>
-                      <TextInputMask
+                      {this.state.modalIs !== 'created' ? (
+                        <Text
+                          style={styles.BackStyle3}
+                          onPress={() => this.deleteThisOne()}>
+                          Excluir
+                        </Text>
+                      ) : null}
+                    </View>
+                    <View style={styles.SectionStyle}>
+                      <Text style={styles.InputLabelStyle}>Cargo</Text>
+                      <TextInput
                         style={styles.inputStyle}
-                        type={'datetime'}
-                        options={{
-                          format: 'DD/MM/YYYY',
-                        }}
-                        placeholder="30/10/1990"
-                        value={this.state.dateFinish}
-                        onChangeText={(text) => {
-                          this.setState({
-                            dateFinish: text,
-                          });
-                        }}
+                        value={this.state.cargo}
+                        onChangeText={(text) => this.setState({cargo: text})}
+                        placeholderTextColor="#aaaaaa"
+                        returnKeyType="next"
+                        blurOnSubmit={false}
+                      />
+                    </View>
+                    <View style={styles.SectionStyle}>
+                      <Text style={styles.InputLabelStyle}>Empresa</Text>
+                      <TextInput
+                        style={styles.inputStyle}
+                        value={this.state.empresa}
+                        onChangeText={(text) => this.setState({empresa: text})}
+                        placeholderTextColor="#aaaaaa"
+                        autoCapitalize="sentences"
+                        returnKeyType="next"
+                        blurOnSubmit={false}
+                      />
+                    </View>
+                    <View style={styles.containerEspecial}>
+                      <View style={styles.item}>
+                        <View style={styles.SectionStyleEspecial2}>
+                          <Text style={styles.InputLabelStyle}>
+                            Data de Inicio
+                          </Text>
+                          <TextInputMask
+                            style={styles.inputStyle}
+                            type={'datetime'}
+                            options={{
+                              format: 'DD/MM/YYYY',
+                            }}
+                            placeholder="30/10/1990"
+                            value={this.state.dateStart}
+                            onChangeText={(text) => {
+                              this.setState({
+                                dateStart: text,
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
+                      <View style={styles.item}>
+                        <View style={styles.SectionStyleEspecial1}>
+                          <Text style={styles.InputLabelStyle}>
+                            Data de Término
+                          </Text>
+                          <TextInputMask
+                            style={styles.inputStyle}
+                            type={'datetime'}
+                            options={{
+                              format: 'DD/MM/YYYY',
+                            }}
+                            placeholder="30/10/1990"
+                            value={this.state.dateFinish}
+                            onChangeText={(text) => {
+                              this.setState({
+                                dateFinish: text,
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                    <View style={styles.SectionStyle}>
+                      <Text style={styles.InputLabelStyle}>Descrição</Text>
+                      <TextInput
+                        style={styles.inputStyle}
+                        value={this.state.descripcion}
+                        onChangeText={(text) =>
+                          this.setState({descripcion: text})
+                        }
+                        placeholderTextColor="#aaaaaa"
+                        returnKeyType="next"
+                        blurOnSubmit={false}
                       />
                     </View>
                   </View>
-                </View>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Descrição</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.descripcion}
-                    onChangeText={(text) => this.setState({descripcion: text})}
-                    placeholderTextColor="#aaaaaa"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-              </KeyboardAvoidingView>
-            </View>
-            {!this.state.isVisibleThisOneToo ? (
+                </>
+              </ScrollView>
+            </SafeAreaView>
+          </KeyboardAvoidingView>
+          {!this.state.isVisibleThisOneToo ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                alignItems: 'stretch'
+              }}>
               <View
                 style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                  alignItems: 'stretch',
+                  backgroundColor: '#6948F4',
+                  alignItems: 'center',
+                  padding: 20,
                 }}>
-                <View
-                  style={{
-                    backgroundColor: '#6948F4',
-                    alignItems: 'center',
-                    padding: 20,
+                <TouchableHighlight
+                  onPress={() => {
+                    this.clickAddOrEdit();
                   }}>
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.clickAddOrEdit();
-                    }}>
-                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
-                  </TouchableHighlight>
-                </View>
+                  <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                </TouchableHighlight>
               </View>
-            ) : null}
-          </SafeAreaView>
+            </View>
+          ) : null}
         </Modal>
       </>
     );

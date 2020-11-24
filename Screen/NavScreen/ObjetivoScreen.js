@@ -121,6 +121,7 @@ export default class ObjetivoScreen extends Component {
       }
     }
     this.setState({listOfNewAreas: [], loading: false});
+    alert('Updated');
   }
 
   render() {

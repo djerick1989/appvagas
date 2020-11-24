@@ -65,6 +65,11 @@ const ConfigsStackScreen = () => (
       component={MapScreen}
       options={{headerShown: false}}
     />
+    <ConfigsStack.Screen
+      name="JumpBack"
+      component={AuthStackScreen}
+      options={{headerShown: false}}
+    />
   </ConfigsStack.Navigator>
 );
 

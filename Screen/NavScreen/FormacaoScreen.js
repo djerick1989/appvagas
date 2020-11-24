@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Loader from '../../Components/Loader';
+import {Picker} from '@react-native-picker/picker';
 import {TextInputMask} from 'react-native-masked-text';
 import {
   patchUserExp,
@@ -428,139 +429,136 @@ export default class FormacaoScreen extends Component {
                 </View>
                 <View style={styles.SectionStyle}>
                   <Text style={styles.InputLabelStyle}>Nivel</Text>
-                  <DropDownPicker
-                    items={this.state.listNivels}
-                    defaultValue={this.state.itemNivel}
-                    containerStyle={{height: 40}}
-                    isVisible={this.state.isVisibleThisOne}
-                    onOpen={() =>
-                      this.changeVisibility({
-                        isVisibleThisOne: true,
-                      })
-                    }
-                    zIndex={15}
-                    onClose={() =>
-                      this.setState({
-                        isVisibleThisOne: false,
-                      })
-                    }
-                    onChangeItem={(item) => {
-                      this.changValue({
-                        itemNivel: item.value,
-                      });
-                    }}
-                    placeholder={'Seleccionar'}
-                    labelStyle={styles.dLabelStyle}
-                    itemStyle={styles.dItemStyle}
-                    placeholderStyle={styles.dPlaceholderStyle}
-                    dropDownStyle={styles.dStyle}
-                  />
+                  <View style={styles.InputBoxStylePicker}>
+                    <Picker
+                      selectedValue={this.state.itemNivel}
+                      style={{
+                        height: 40,
+                        width: '100%',
+                      }}
+                      enabled={!this.state.isValidNivel}
+                      onValueChange={(itemValue, itemIndex) => {
+                        if (itemValue == -1) {
+                          return;
+                        }
+                        this.changValue({
+                          itemNivel: itemValue,
+                          isValidNivel: true,
+                        });
+                      }}>
+                      {this.state.listNivels.map((el, index) => {
+                        return (
+                          <Picker.Item
+                            key={el.label + index}
+                            label={el.label}
+                            value={el.value}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </View>
                 </View>
                 {!this.state.isVisibleThisOne ? (
                   <>
                     <View style={styles.SectionStyle}>
                       <Text style={styles.InputLabelStyle}>Status</Text>
-                      <DropDownPicker
-                        items={this.state.listStatus}
-                        defaultValue={this.state.itemStatus}
-                        containerStyle={{height: 40}}
-                        isVisible={this.state.isVisibleThisOneToo}
-                        onOpen={() =>
-                          this.changeVisibility({
-                            isVisibleThisOneToo: true,
-                          })
-                        }
-                        zIndex={15}
-                        onClose={() =>
-                          this.setState({
-                            isVisibleThisOneToo: false,
-                          })
-                        }
-                        onChangeItem={(item) => {
-                          this.changValue({
-                            itemStatus: item.value,
-                          });
-                        }}
-                        placeholder={'Seleccionar'}
-                        labelStyle={styles.dLabelStyle}
-                        itemStyle={styles.dItemStyle}
-                        placeholderStyle={styles.dPlaceholderStyle}
-                        dropDownStyle={styles.dStyle}
-                      />
+                      <View style={styles.InputBoxStylePicker}>
+                        <Picker
+                          selectedValue={this.state.itemStatus}
+                          style={{
+                            height: 40,
+                            width: '100%',
+                          }}
+                          enabled={!this.state.isValidNivel}
+                          onValueChange={(itemValue, itemIndex) => {
+                            if (itemValue == -1) {
+                              return;
+                            }
+                            this.changValue({
+                              itemStatus: itemValue,
+                            });
+                          }}>
+                          {this.state.listStatus.map((el, index) => {
+                            return (
+                              <Picker.Item
+                                key={el.label + index}
+                                label={el.label}
+                                value={el.value}
+                              />
+                            );
+                          })}
+                        </Picker>
+                      </View>
                     </View>
 
-                    {!this.state.isVisibleThisOneToo ? (
-                      <View style={styles.containerEspecial}>
-                        <View style={styles.item}>
-                          <View style={styles.SectionStyleEspecial2}>
-                            <Text style={styles.InputLabelStyle}>
-                              Data de Inicio
-                            </Text>
-                            <TextInputMask
-                              style={styles.inputStyle}
-                              type={'datetime'}
-                              options={{
-                                format: 'DD/MM/YYYY',
-                              }}
-                              placeholder="30/10/1990"
-                              value={this.state.dateStart}
-                              onChangeText={(text) => {
-                                this.setState({
-                                  dateStart: text,
-                                });
-                              }}
-                            />
-                          </View>
-                        </View>
-                        <View style={styles.item}>
-                          <View style={styles.SectionStyleEspecial1}>
-                            <Text style={styles.InputLabelStyle}>
-                              Data de Término
-                            </Text>
-                            <TextInputMask
-                              style={styles.inputStyle}
-                              type={'datetime'}
-                              options={{
-                                format: 'DD/MM/YYYY',
-                              }}
-                              placeholder="30/10/1990"
-                              value={this.state.dateFinish}
-                              onChangeText={(text) => {
-                                this.setState({
-                                  dateFinish: text,
-                                });
-                              }}
-                            />
-                          </View>
+                    <View style={styles.containerEspecial}>
+                      <View style={styles.item}>
+                        <View style={styles.SectionStyleEspecial2}>
+                          <Text style={styles.InputLabelStyle}>
+                            Data de Inicio
+                          </Text>
+                          <TextInputMask
+                            style={styles.inputStyle}
+                            type={'datetime'}
+                            options={{
+                              format: 'DD/MM/YYYY',
+                            }}
+                            placeholder="30/10/1990"
+                            value={this.state.dateStart}
+                            onChangeText={(text) => {
+                              this.setState({
+                                dateStart: text,
+                              });
+                            }}
+                          />
                         </View>
                       </View>
-                    ) : null}
+                      <View style={styles.item}>
+                        <View style={styles.SectionStyleEspecial1}>
+                          <Text style={styles.InputLabelStyle}>
+                            Data de Término
+                          </Text>
+                          <TextInputMask
+                            style={styles.inputStyle}
+                            type={'datetime'}
+                            options={{
+                              format: 'DD/MM/YYYY',
+                            }}
+                            placeholder="30/10/1990"
+                            value={this.state.dateFinish}
+                            onChangeText={(text) => {
+                              this.setState({
+                                dateFinish: text,
+                              });
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </View>
                   </>
                 ) : null}
               </KeyboardAvoidingView>
             </View>
-            {!this.state.isVisibleThisOneToo ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                alignItems: 'stretch',
+              }}>
               <View
                 style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                  alignItems: 'stretch',
+                  backgroundColor: '#6948F4',
+                  alignItems: 'center',
+                  padding: 20,
                 }}>
-                <View
-                  style={{
-                    backgroundColor: '#6948F4',
-                    alignItems: 'center',
-                    padding: 20,
+                <TouchableHighlight
+                  onPress={() => {
+                    this.clickAddOrEdit();
                   }}>
-                  <TouchableHighlight
-                    onPress={() => {
-                      this.clickAddOrEdit();
-                    }}>
-                    <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
-                  </TouchableHighlight>
-                </View>
+                  <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                </TouchableHighlight>
               </View>
-            ) : null}
+            </View>
           </SafeAreaView>
         </Modal>
       </>
@@ -694,6 +692,15 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
     minHeight: 300,
   },
+  InputBoxStylePicker: {
+    borderColor: '#6948F4',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: '100%',
+    marginBottom: 15,
+    alignSelf: 'flex-end',
+    height: 40,
+  },
   subarea: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -811,7 +818,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     fontSize: 12,
     paddingTop: 30,
-    paddingLeft: 250,
+    paddingLeft: 200,
   },
 
   BackStyle22: {

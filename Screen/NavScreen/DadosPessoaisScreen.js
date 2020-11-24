@@ -19,6 +19,7 @@ import {
 import {TextInputMask} from 'react-native-masked-text';
 import DropDownPicker from 'react-native-dropdown-picker';
 import RadioButtonRN from 'radio-buttons-react-native';
+import {Picker} from '@react-native-picker/picker';
 
 const data = [
   {
@@ -40,7 +41,7 @@ export default class DadosPessoaisScreen extends Component {
     this.state = {
       dt: '',
       sex: 0,
-      itemStatusCivil: '',
+      itemStatusCivil: 3,
       itemPCD: 0,
       isVisibleThisOne: false,
       isVisibleThisOneToo: false,
@@ -92,10 +93,19 @@ export default class DadosPessoaisScreen extends Component {
     } else {
       realDate = null;
     }
+    let isc = parseInt(user.social_status);
+    if (user.social_status == null) {
+      isc = 3;
+    }
+    let ubs = parseInt(user.born_sex);
+    if (user.born_sex == null) {
+      ubs = 1;
+    }
+
     this.setState({
       dt: realDate,
-      sex: parseInt(user.born_sex) ?? '',
-      itemStatusCivil: parseInt(user.social_status) ?? '',
+      sex: ubs,
+      itemStatusCivil: isc,
       itemPCD: disability.disability,
       loading: false,
     });
@@ -128,6 +138,7 @@ export default class DadosPessoaisScreen extends Component {
       disability: this.state.itemPCD,
     });
     this.setState({loading: false});
+    alert('Updated');
   }
 
   render() {
@@ -173,33 +184,29 @@ export default class DadosPessoaisScreen extends Component {
             />
             <View style={styles.SectionStyle}>
               <Text style={styles.InputLabelStyle}>Estado Civil</Text>
-              <DropDownPicker
-                items={this.state.listStatusCivil}
-                defaultValue={this.state.itemStatusCivil}
-                containerStyle={{height: 40}}
-                isVisible={this.state.isVisibleThisOne}
-                onOpen={() =>
-                  this.changeVisibility({
-                    isVisibleThisOne: true,
-                  })
-                }
-                zIndex={15}
-                onClose={() =>
-                  this.setState({
-                    isVisibleThisOne: false,
-                  })
-                }
-                onChangeItem={(item) => {
-                  this.changValue({
-                    itemStatusCivil: item.value,
-                  });
-                }}
-                placeholder={'Seleccionar'}
-                labelStyle={styles.dLabelStyle}
-                itemStyle={styles.dItemStyle}
-                placeholderStyle={styles.dPlaceholderStyle}
-                dropDownStyle={styles.dStyle}
-              />
+              <View style={styles.InputBoxStylePicker}>
+                <Picker
+                  selectedValue={this.state.itemStatusCivil}
+                  style={{
+                    height: 40,
+                    width: '100%',
+                  }}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.changValue({
+                      itemStatusCivil: itemValue,
+                    });
+                  }}>
+                  {this.state.listStatusCivil.map((el, index) => {
+                    return (
+                      <Picker.Item
+                        key={el.label + index}
+                        label={el.label}
+                        value={el.value}
+                      />
+                    );
+                  })}
+                </Picker>
+              </View>
             </View>
             {!this.state.isVisibleThisOne ? (
               <>
@@ -207,33 +214,30 @@ export default class DadosPessoaisScreen extends Component {
                   <Text style={styles.InputLabelStyle}>
                     PCD (Pessoa com Deficiéncia)
                   </Text>
-                  <DropDownPicker
-                    items={this.state.listPCD}
-                    defaultValue={this.state.itemPCD}
-                    containerStyle={{height: 40}}
-                    isVisible={this.state.isVisibleThisOneToo}
-                    onOpen={() =>
-                      this.changeVisibility({
-                        isVisibleThisOneToo: true,
-                      })
-                    }
-                    zIndex={15}
-                    onClose={() =>
-                      this.setState({
-                        isVisibleThisOneToo: false,
-                      })
-                    }
-                    onChangeItem={(item) => {
-                      this.changValue({
-                        itemPCD: item.value,
-                      });
-                    }}
-                    placeholder={'Seleccionar'}
-                    labelStyle={styles.dLabelStyle}
-                    itemStyle={styles.dItemStyle}
-                    placeholderStyle={styles.dPlaceholderStyle}
-                    dropDownStyle={styles.dStyle}
-                  />
+
+                  <View style={styles.InputBoxStylePicker}>
+                    <Picker
+                      selectedValue={this.state.itemPCD}
+                      style={{
+                        height: 40,
+                        width: '100%',
+                      }}
+                      onValueChange={(itemValue, itemIndex) => {
+                        this.changValue({
+                          itemPCD: itemValue,
+                        });
+                      }}>
+                      {this.state.listPCD.map((el, index) => {
+                        return (
+                          <Picker.Item
+                            key={el.label + index}
+                            label={el.label}
+                            value={el.value}
+                          />
+                        );
+                      })}
+                    </Picker>
+                  </View>
                 </View>
 
                 {!this.state.isVisibleThisOneToo ? (
@@ -325,6 +329,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  InputBoxStylePicker: {
+    borderColor: '#6948F4',
+    borderWidth: 1,
+    borderRadius: 5,
+    width: '100%',
+    marginBottom: 15,
+    alignSelf: 'flex-end',
+    height: 40,
+  },
   buttonTextStyle: {
     color: '#FFFFFF',
     paddingVertical: 8,

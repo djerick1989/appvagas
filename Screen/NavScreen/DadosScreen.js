@@ -10,7 +10,11 @@ import {
   ScrollView,
 } from 'react-native';
 import Loader from '../../Components/Loader';
-import {patchuserUpdate, patchUserProfile} from '../../helpers/api';
+import {
+  patchuserUpdate,
+  patchUserProfile,
+  patchuserCPFUpdate,
+} from '../../helpers/api';
 import {TextInputMask} from 'react-native-masked-text';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -31,10 +35,12 @@ export default class DadosScreen extends Component {
     const lastName = await AsyncStorage.getItem('last_name');
     const email = await AsyncStorage.getItem('email');
     const phone = await AsyncStorage.getItem('username');
+    const cpf = await AsyncStorage.getItem('cpf');
     this.setState({
       fullName: firstName + ' ' + lastName,
       email: email,
       phone: phone,
+      cpf: cpf,
     });
   }
 
@@ -48,19 +54,27 @@ export default class DadosScreen extends Component {
         first_name: fullname[0],
         last_name: fullname[1],
       });
+      await patchuserCPFUpdate({
+        cpf: this.state.cpf,
+      });
       await AsyncStorage.setItem('first_name', fullname[0]);
       await AsyncStorage.setItem('last_name', fullname[1]);
       await AsyncStorage.setItem('email', this.state.email);
+      await AsyncStorage.setItem('cpf', this.state.cpf);
       await AsyncStorage.setItem('username', this.state.phone);
     } else {
       await patchuserUpdate({
         username: this.state.phone,
         email: this.state.email,
       });
+      await patchuserCPFUpdate({
+        cpf: this.state.cpf,
+      });
       await AsyncStorage.setItem('email', this.state.email);
       await AsyncStorage.setItem('username', this.state.phone);
     }
     this.setState({loading: false});
+    alert('Updated');
   }
 
   render() {

@@ -29,9 +29,11 @@ export default class IdiomasScreen extends Component {
   }
 
   updateImageOnProfile = async (urlImage) => {
-    await patchUserProfile({
+    const [a, b] = await patchUserProfile({
       photo: urlImage,
     });
+    console.log(a);
+    console.log(b);
     this.setState({loading: false});
   };
 
@@ -45,10 +47,11 @@ export default class IdiomasScreen extends Component {
     };
     ImagePicker.launchCamera(options, (response) => {
       console.log('imagen tomada');
+      console.log('vamos aqui');
       // Agregar logica de la subida de imagen
-      console.log(response);
+      // console.log(response);
       // al tener la url de la imagen subida
-      //this.updateImageOnProfile(urlImage);
+      this.updateImageOnProfile(response.data);
     });
   };
 
