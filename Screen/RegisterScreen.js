@@ -529,27 +529,22 @@ export default class RegiterScreen extends Component {
         if (this.state.dateConcluido.length == 10) {
           let realDate = this.transformDate(this.state.date);
           let realDate2 = this.transformDate(this.state.dateConcluido);
-          fetch(
-            'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-              this.state.user_info.id +
-              '/update/',
-            {
-              method: 'PATCH',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Token ' + this.state.user_info.token.api_key,
-              },
-              body: JSON.stringify({
-                level: this.state.itemNivel,
-                title: this.state.Formation,
-                school: this.state.Institution,
-                status: this.state.status,
-                start: realDate,
-                end: realDate2,
-              }),
+          fetch('https://mobapivagas.jobconvo.com/v1/user/add/education/', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Token ' + this.state.user_info.token.api_key,
             },
-          )
+            body: JSON.stringify({
+              level: this.state.itemNivel,
+              title: this.state.Formation,
+              school: this.state.Institution,
+              status: this.state.status,
+              start: realDate,
+              end: realDate2,
+            }),
+          })
             .then((response) => response.json())
             .then(() => {
               this.setState({
