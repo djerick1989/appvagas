@@ -9,12 +9,9 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import Loader from '../../Components/Loader';
-import {
-  patchuserUpdate,
-  patchUserProfile,
-  patchuserCPFUpdate,
-} from '../../helpers/api';
+import Spinner from 'react-native-loading-spinner-overlay';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import {patchuserUpdate, patchuserCPFUpdate} from '../../helpers/api';
 import {TextInputMask} from 'react-native-masked-text';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -26,7 +23,8 @@ export default class DadosScreen extends Component {
       email: '',
       fullName: '',
       phone: '',
-      loading: false,
+      showAlert: false,
+      spinner: true,
     };
   }
 
@@ -41,11 +39,12 @@ export default class DadosScreen extends Component {
       email: email,
       phone: phone,
       cpf: cpf,
+      spinner: false,
     });
   }
 
   async handleSubmitButton() {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     const fullname = this.state.fullName.split(' ');
     if (fullname[0] && fullname[1]) {
       await patchuserUpdate({
@@ -73,96 +72,111 @@ export default class DadosScreen extends Component {
       await AsyncStorage.setItem('email', this.state.email);
       await AsyncStorage.setItem('username', this.state.phone);
     }
-    this.setState({loading: false});
-    alert('Updated');
+    this.setState({spinner: false, showAlert: true});
   }
 
   render() {
     return (
-      <ScrollView style={styles.scrollContainer}>
-        <Loader loading={this.state.loading} />
-        <View>
+      <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Sucesso"
+          message="Atualizado com sucesso"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
+        <ScrollView style={styles.scrollContainer}>
           <View>
-            <Text
-              style={styles.BackStyle2}
-              onPress={() => this.props.navigation.goBack()}>
-              Voltar
-            </Text>
-          </View>
-          <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <Text style={styles.LabelStyle}>Dados Cadastrais</Text>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Nome Completo</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.fullName}
-                onChangeText={(text) => this.setState({fullName: text})}
-                placeholder="NOME E SOBRENOME"
-                placeholderTextColor="#aaaaaa"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
+            <View>
+              <Text
+                style={styles.BackStyle2}
+                onPress={() => this.props.navigation.goBack()}>
+                Voltar
+              </Text>
             </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
-              <TextInputMask
-                style={styles.inputStyle}
-                type={'cel-phone'}
-                options={{
-                  maskType: 'BRL',
-                  withDDD: true,
-                  dddMask: '(99) ',
-                }}
-                value={this.state.phone}
-                onChangeText={(text) => {
-                  this.setState({
-                    phone: text.replace(/[^0-9]/g, ''),
-                  });
-                }}
-                placeholder="(11) 98877 5566"
-                placeholderTextColor="#aaaaaa"
-                blurOnSubmit={false}
-                ref={(ref) => (this.phoneField = ref)}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>CPF</Text>
-              <TextInputMask
-                style={styles.inputStyle}
-                type={'cpf'}
-                value={this.state.cpf}
-                onChangeText={(text) => {
-                  this.setState({
-                    cpf: text.replace(/[^0-9]/g, ''),
-                  });
-                }}
-                placeholderTextColor="#aaaaaa"
-                returnKeyType="next"
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Email</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.email}
-                onChangeText={(text) => this.setState({email: text})}
-                placeholderTextColor="#aaaaaa"
-                placeholder="INSERIR EMAIL"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
+            <KeyboardAvoidingView enabled style={{flex: 4}}>
+              <Text style={styles.LabelStyle}>Dados Cadastrais</Text>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Nome Completo</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.fullName}
+                  onChangeText={(text) => this.setState({fullName: text})}
+                  placeholder="NOME E SOBRENOME"
+                  placeholderTextColor="#aaaaaa"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
+                <TextInputMask
+                  style={styles.inputStyle}
+                  type={'cel-phone'}
+                  options={{
+                    maskType: 'BRL',
+                    withDDD: true,
+                    dddMask: '(99) ',
+                  }}
+                  value={this.state.phone}
+                  onChangeText={(text) => {
+                    this.setState({
+                      phone: text.replace(/[^0-9]/g, ''),
+                    });
+                  }}
+                  placeholder="(11) 98877 5566"
+                  placeholderTextColor="#aaaaaa"
+                  blurOnSubmit={false}
+                  ref={(ref) => (this.phoneField = ref)}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>CPF</Text>
+                <TextInputMask
+                  style={styles.inputStyle}
+                  type={'cpf'}
+                  value={this.state.cpf}
+                  onChangeText={(text) => {
+                    this.setState({
+                      cpf: text.replace(/[^0-9]/g, ''),
+                    });
+                  }}
+                  placeholderTextColor="#aaaaaa"
+                  returnKeyType="next"
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Email</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.email}
+                  onChangeText={(text) => this.setState({email: text})}
+                  placeholderTextColor="#aaaaaa"
+                  placeholder="INSERIR EMAIL"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
 
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => this.handleSubmitButton()}>
-              <Text style={styles.buttonTextStyle}>Confirmar</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={() => this.handleSubmitButton()}>
+                <Text style={styles.buttonTextStyle}>Confirmar</Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -215,6 +229,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     paddingBottom: 5,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   buttonStyle: {
     backgroundColor: '#6948F4',
