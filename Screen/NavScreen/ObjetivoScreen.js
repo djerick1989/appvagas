@@ -12,9 +12,10 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownItems from '../../Components/DropdownItems';
-import Loader from '../../Components/Loader';
+import AwesomeAlert from 'react-native-awesome-alerts';
 import Slider from '@react-native-community/slider';
 import {
   getUserAreas,
@@ -38,7 +39,8 @@ export default class ObjetivoScreen extends Component {
       lastSalary: 0,
       dataSalary: '',
       modalVisible: false,
-      loading: true,
+      showAlert: false,
+      spinner: true,
       subarea: null,
     };
   }
@@ -47,16 +49,22 @@ export default class ObjetivoScreen extends Component {
     const [isValid, areas] = await getUserAreas();
     const [isValid2, exp] = await getUserExp();
     const [isValid3, salary] = await getUserSalary();
-    this.setState({
-      listOfAreas: areas,
-      dataExp: exp,
-      dataSalary: salary,
-      currentSalary: salary.current_salary ?? 0,
-      lastSalary: salary.last_salary ?? 0,
-      prof: exp.career_objective,
-      yearsExp: '' + exp.years_of_experience,
-      loading: false,
-    });
+    this.setState(
+      {
+        listOfAreas: areas,
+        dataExp: exp,
+        dataSalary: salary,
+        currentSalary: salary.current_salary ?? 0,
+        lastSalary: salary.last_salary ?? 0,
+        prof: exp.career_objective,
+        yearsExp: '' + exp.years_of_experience,
+      },
+      () => {
+        this.setState({
+          spinner: !this.state.spinner,
+        });
+      },
+    );
   }
 
   clickOkJob = () => {
@@ -88,6 +96,7 @@ export default class ObjetivoScreen extends Component {
   changValue(state) {
     this.setState({
       subarea: null,
+      showAlert: false,
       item1: null,
       item2: null,
       item3: null,
@@ -105,7 +114,7 @@ export default class ObjetivoScreen extends Component {
   }
 
   async handleSubmitButton() {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     await patchUserSalary({
       last_salary: this.state.lastSalary,
       current_salary: this.state.currentSalary,
@@ -120,15 +129,28 @@ export default class ObjetivoScreen extends Component {
         console.log(a, b);
       }
     }
-    this.setState({listOfNewAreas: [], loading: false});
-    alert('Updated');
+    this.setState({listOfNewAreas: [], spinner: false, showAlert: true});
   }
 
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Sucesso"
+          message="Atualizado com sucesso"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <View>
               <Text
@@ -787,6 +809,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     marginTop: 10,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   buttonTextStyleArea: {
     color: '#FFFFFF',
