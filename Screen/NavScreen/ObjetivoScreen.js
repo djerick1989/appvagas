@@ -12,10 +12,10 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DropdownItems from '../../Components/DropdownItems';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Spinner from 'react-native-loading-spinner-overlay';
 import Slider from '@react-native-community/slider';
 import {
   getUserAreas,

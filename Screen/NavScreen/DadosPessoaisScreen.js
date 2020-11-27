@@ -5,11 +5,9 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import Loader from '../../Components/Loader';
 import {
   getUserProfile,
   patchUserProfile,
@@ -17,9 +15,10 @@ import {
   patchUserDisability,
 } from '../../helpers/api';
 import {TextInputMask} from 'react-native-masked-text';
-import DropDownPicker from 'react-native-dropdown-picker';
 import RadioButtonRN from 'radio-buttons-react-native';
 import {Picker} from '@react-native-picker/picker';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const data = [
   {
@@ -45,6 +44,7 @@ export default class DadosPessoaisScreen extends Component {
       itemPCD: 0,
       isVisibleThisOne: false,
       isVisibleThisOneToo: false,
+      showErrorAlert: false,
       listPCD: [
         {label: 'NÃO', value: 0},
         {label: 'Amputação', value: 1},
@@ -78,14 +78,20 @@ export default class DadosPessoaisScreen extends Component {
         {label: 'Casado', value: 2},
         {label: 'Outro', value: 3},
       ],
-      loading: false,
+      spinner: false,
     };
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     const [isValid, user] = await getUserProfile();
+    if (!isValid) {
+      console.log('Error in getUserProfile');
+    }
     const [isValid1, disability] = await getUserDisability();
+    if (!isValid1) {
+      console.log('Error in getUserDisability');
+    }
     const date = user.birthday ? user.birthday.split('-') : null;
     let realDate = null;
     if (date && date[2] && date[1] && date[0]) {
@@ -107,7 +113,7 @@ export default class DadosPessoaisScreen extends Component {
       sex: ubs,
       itemStatusCivil: isc,
       itemPCD: disability.disability,
-      loading: false,
+      spinner: false,
     });
   }
 
@@ -123,11 +129,18 @@ export default class DadosPessoaisScreen extends Component {
   }
 
   async handleSubmitButton() {
-    this.setState({loading: true});
-    const date = this.state.dt.split('/');
+    this.setState({spinner: true});
+    let date = '';
     let realDate = '';
-    if (date[0] && date[1] && date[2]) {
-      realDate = date[2] + '-' + date[1] + '-' + date[0];
+    if (this.state.dt) {
+      date = this.state.dt.split('/');
+      let realDate = '';
+      if (date[0] && date[1] && date[2]) {
+        realDate = date[2] + '-' + date[1] + '-' + date[0];
+      } else {
+        this.setState({showErrorAlert: true, showAler: false});
+        return;
+      }
     }
     await patchUserProfile({
       birthday: realDate,
@@ -137,129 +150,158 @@ export default class DadosPessoaisScreen extends Component {
     await patchUserDisability({
       disability: this.state.itemPCD,
     });
-    this.setState({loading: false});
-    alert('Updated');
+    this.setState({spinner: false, showAlert: true});
   }
 
   render() {
     return (
-      <ScrollView style={styles.scrollContainer}>
-        <Loader loading={this.state.loading} />
-        <View>
+      <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Sucesso"
+          message="Atualizado com sucesso"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
+        <AwesomeAlert
+          show={this.state.showErrorAlert}
+          showProgress={false}
+          title="Error"
+          message="Data errada inserida"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          confirmText="Vou corrigir"
+          confirmButtonColor="#DD6B55"
+          onConfirmPressed={() => {
+            this.setState({showErrorAlert: false, spinner: false});
+          }}
+        />
+        <ScrollView style={styles.scrollContainer}>
           <View>
-            <Text
-              style={styles.BackStyle2}
-              onPress={() => this.props.navigation.goBack()}>
-              Voltar
-            </Text>
-          </View>
-          <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <Text style={styles.LabelStyle}>Dados Pessoais</Text>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Data de Nascimento</Text>
-              <TextInputMask
-                style={styles.inputStyle}
-                type={'datetime'}
-                options={{
-                  format: 'DD/MM/YYYY',
-                }}
-                placeholder="30/10/1990"
-                value={this.state.dt}
-                onChangeText={(text) => {
-                  this.setState({
-                    dt: text,
-                  });
-                }}
-              />
+            <View>
+              <Text
+                style={styles.BackStyle2}
+                onPress={() => this.props.navigation.goBack()}>
+                Voltar
+              </Text>
             </View>
-            <View style={styles.SectionStyleOnlyText}>
-              <Text style={styles.InputLabelStyle}>Sexo</Text>
-            </View>
-            <RadioButtonRN
-              data={data}
-              initial={this.state.sex}
-              activeColor="#6948F4"
-              selectedBtn={(e) => this.setState({sex: e.value})}
-              style={styles.radioButonstyle}
-            />
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Estado Civil</Text>
-              <View style={styles.InputBoxStylePicker}>
-                <Picker
-                  selectedValue={this.state.itemStatusCivil}
-                  style={{
-                    height: 40,
-                    width: '100%',
+            <KeyboardAvoidingView enabled style={{flex: 4}}>
+              <Text style={styles.LabelStyle}>Dados Pessoais</Text>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Data de Nascimento</Text>
+                <TextInputMask
+                  style={styles.inputStyle}
+                  type={'datetime'}
+                  options={{
+                    format: 'DD/MM/YYYY',
                   }}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.changValue({
-                      itemStatusCivil: itemValue,
+                  placeholder="30/10/1990"
+                  value={this.state.dt}
+                  onChangeText={(text) => {
+                    this.setState({
+                      dt: text,
                     });
-                  }}>
-                  {this.state.listStatusCivil.map((el, index) => {
-                    return (
-                      <Picker.Item
-                        key={el.label + index}
-                        label={el.label}
-                        value={el.value}
-                      />
-                    );
-                  })}
-                </Picker>
+                  }}
+                />
               </View>
-            </View>
-            {!this.state.isVisibleThisOne ? (
-              <>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>
-                    PCD (Pessoa com Deficiéncia)
-                  </Text>
-
-                  <View style={styles.InputBoxStylePicker}>
-                    <Picker
-                      selectedValue={this.state.itemPCD}
-                      style={{
-                        height: 40,
-                        width: '100%',
-                      }}
-                      onValueChange={(itemValue, itemIndex) => {
-                        this.changValue({
-                          itemPCD: itemValue,
-                        });
-                      }}>
-                      {this.state.listPCD.map((el, index) => {
-                        return (
-                          <Picker.Item
-                            key={el.label + index}
-                            label={el.label}
-                            value={el.value}
-                          />
-                        );
-                      })}
-                    </Picker>
-                  </View>
+              <View style={styles.SectionStyleOnlyText}>
+                <Text style={styles.InputLabelStyle}>Sexo</Text>
+              </View>
+              <RadioButtonRN
+                data={data}
+                initial={this.state.sex}
+                activeColor="#6948F4"
+                selectedBtn={(e) => this.setState({sex: e.value})}
+                style={styles.radioButonstyle}
+              />
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Estado Civil</Text>
+                <View style={styles.InputBoxStylePicker}>
+                  <Picker
+                    selectedValue={this.state.itemStatusCivil}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                    }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.changValue({
+                        itemStatusCivil: itemValue,
+                      });
+                    }}>
+                    {this.state.listStatusCivil.map((el, index) => {
+                      return (
+                        <Picker.Item
+                          key={el.label + index}
+                          label={el.label}
+                          value={el.value}
+                        />
+                      );
+                    })}
+                  </Picker>
                 </View>
+              </View>
+              {!this.state.isVisibleThisOne ? (
+                <>
+                  <View style={styles.SectionStyle}>
+                    <Text style={styles.InputLabelStyle}>
+                      PCD (Pessoa com Deficiéncia)
+                    </Text>
 
-                {!this.state.isVisibleThisOneToo ? (
-                  <TouchableOpacity
-                    style={styles.buttonStyle}
-                    activeOpacity={0.5}
-                    onPress={() => this.handleSubmitButton()}>
-                    <Text style={styles.buttonTextStyle}>Confirmar</Text>
-                  </TouchableOpacity>
-                ) : null}
-              </>
-            ) : null}
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+                    <View style={styles.InputBoxStylePicker}>
+                      <Picker
+                        selectedValue={this.state.itemPCD}
+                        style={{
+                          height: 40,
+                          width: '100%',
+                        }}
+                        onValueChange={(itemValue, itemIndex) => {
+                          this.changValue({
+                            itemPCD: itemValue,
+                          });
+                        }}>
+                        {this.state.listPCD.map((el, index) => {
+                          return (
+                            <Picker.Item
+                              key={el.label + index}
+                              label={el.label}
+                              value={el.value}
+                            />
+                          );
+                        })}
+                      </Picker>
+                    </View>
+                  </View>
+
+                  {!this.state.isVisibleThisOneToo ? (
+                    <TouchableOpacity
+                      style={styles.buttonStyle}
+                      activeOpacity={0.5}
+                      onPress={() => this.handleSubmitButton()}>
+                      <Text style={styles.buttonTextStyle}>Confirmar</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </>
+              ) : null}
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </>
     );
   }
 }
 
 const styles = StyleSheet.create({
   containerEspecial: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
@@ -329,6 +371,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  spinnerTextStyle: {
+    color: '#FFFFFF',
+  },
   InputBoxStylePicker: {
     borderColor: '#6948F4',
     borderWidth: 1,
