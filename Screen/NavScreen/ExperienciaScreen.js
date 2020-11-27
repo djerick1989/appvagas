@@ -6,7 +6,6 @@ import {
   Text,
   SafeAreaView,
   View,
-  TouchableWithoutFeedback,
   TextInput,
   Modal,
   TouchableHighlight,
@@ -15,7 +14,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import Loader from '../../Components/Loader';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {TextInputMask} from 'react-native-masked-text';
 import {
   patchUserExperience,
@@ -37,16 +36,19 @@ export default class ExperienciaScreen extends Component {
       dateFinish: '',
       listOfExperiences: [],
       modalVisible: false,
-      loading: true,
+      spinner: true,
       subarea: null,
     };
   }
 
   async componentDidMount() {
     const [isValid, Experiences] = await getUserExperience();
+    if (!isValid) {
+      console.log('Error in getUserExperience');
+    }
     this.setState({
       listOfExperiences: Experiences,
-      loading: false,
+      spinner: false,
     });
     Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
@@ -83,7 +85,7 @@ export default class ExperienciaScreen extends Component {
   }
 
   clickAddOrEdit = async () => {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     let realDate = this.transformDate(this.state.dateStart);
     let realDate2 = this.transformDate(this.state.dateFinish);
     if (this.state.modalIs == 'created') {
@@ -107,20 +109,23 @@ export default class ExperienciaScreen extends Component {
       );
     }
     const [isValid, Experiences] = await getUserExperience();
+    if (!isValid) {
+      console.log('Error in getIserExperience');
+    }
     this.setState({
-      loading: false,
+      spinner: false,
       modalVisible: false,
       listOfExperiences: Experiences,
     });
   };
 
   deleteThisOne = async () => {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     const [a, b] = await deleteUserExperience(this.state.currentID);
     console.log(a, b);
     const [isValid, Experiences] = await getUserExperience();
     this.setState({
-      loading: false,
+      spinner: false,
       modalVisible: false,
       listOfExperiences: Experiences,
     });
@@ -166,8 +171,12 @@ export default class ExperienciaScreen extends Component {
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <View>
               <Text
@@ -385,7 +394,7 @@ export default class ExperienciaScreen extends Component {
               style={{
                 flex: 1,
                 justifyContent: 'flex-end',
-                alignItems: 'stretch'
+                alignItems: 'stretch',
               }}>
               <View
                 style={{
@@ -478,6 +487,9 @@ const styles = StyleSheet.create({
     height: 70,
     marginLeft: 25,
     marginRight: 10,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   SectionStyleEspecial11: {
     marginRight: 25,
