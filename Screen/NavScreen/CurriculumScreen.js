@@ -9,8 +9,9 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Image,
+  Platform,
 } from 'react-native';
-import {patchUserProfile, getUserProfile} from '../../helpers/api';
+import {patchUserProfile, getUserProfile, uploadPhoto} from '../../helpers/api';
 import {List} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-picker';
@@ -23,31 +24,54 @@ export default class IdiomasScreen extends Component {
       spinner: true,
       fullName: 'Nome e Sobrenome',
       imageSource: require('../../Image/avatar.png'),
+      phone1: '',
     };
   }
 
   async componentDidMount() {
     const firstName = await AsyncStorage.getItem('first_name');
     const lastName = await AsyncStorage.getItem('last_name');
+    const [c, d] = await getUserProfile();
     this.setState({
       fullName: firstName + ' ' + lastName,
+      phone1: d.phone1,
       spinner: false,
     });
-    const [c, d] = await getUserProfile();
-    console.log(d);
     if (d.photo) {
       this.setState({imageSource: {uri: d.photo}});
     }
   }
 
   updateImageOnProfile = async (urlImage) => {
-    const [a, b] = await patchUserProfile({
-      photo: 'data:image/png;base64,' + urlImage,
+    this.setState({spinner: true});
+    const dataIn = this.createFormData(urlImage, {
+      area_code: '11',
+      phone1: this.state.phone1,
     });
-    if (a == true) {
+    const [a, b] = await uploadPhoto(dataIn);
+    if (b.photo) {
       this.setState({imageSource: {uri: b.photo}});
     }
     this.setState({spinner: false});
+  };
+
+  createFormData = (photo, body) => {
+    const data = new FormData();
+
+    data.append('photo', {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === 'android'
+          ? photo.uri
+          : photo.uri.replace('file://', ''),
+    });
+
+    Object.keys(body).forEach((key) => {
+      data.append(key, body[key]);
+    });
+
+    return data;
   };
 
   onClickImage = () => {
@@ -58,7 +82,7 @@ export default class IdiomasScreen extends Component {
       maxWidth: 200,
     };
     ImagePicker.launchCamera(options, (response) => {
-      this.updateImageOnProfile(response.data);
+      this.updateImageOnProfile(response);
     });
   };
 
@@ -84,9 +108,9 @@ export default class IdiomasScreen extends Component {
                       width: 150,
                       height: 150,
                       borderRadius: 150 / 2,
-                      overflow: "hidden",
+                      overflow: 'hidden',
                       borderWidth: 3,
-                      borderColor: "transparent",
+                      borderColor: 'transparent',
                       margin: 20,
                       top: 10,
                     }}

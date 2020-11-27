@@ -10,6 +10,15 @@ async function getHeaders() {
     Authorization: 'Token ' + currentToken,
   };
 }
+
+async function getHeadersUpload() {
+  const currentToken = await getToken();
+  return {
+    'Content-Type': 'multipart/form-data;',
+    Authorization: 'Token ' + currentToken,
+  };
+}
+
 async function getUserId() {
   return await AsyncStorage.getItem('userId');
 }
@@ -57,8 +66,6 @@ export async function patchuserUpdate(dataInJson) {
 export async function getUserProfile() {
   const heads = await getHeaders();
   const userId = await getUserId();
-  console.log(userId);
-  console.log(heads);
   const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'GET',
@@ -73,10 +80,28 @@ export async function getUserProfile() {
     });
 }
 
+export async function uploadPhoto(body) {
+  const heads = await getHeadersUpload();
+  const userId = await getUserId();
+  const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
+  return fetch(newUrl, {
+    method: 'PUT',
+    headers: heads,
+    body: body,
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return [true, responseJson];
+    })
+    .catch((error) => {
+      return [true, error];
+    });
+}
+
 export async function patchUserProfile(dataInJson) {
   const heads = await getHeaders();
   const userId = await getUserId();
-  const newUrl = apiUrl + 'user/profile/' + userId + '/update/'; 
+  const newUrl = apiUrl + 'user/profile/' + userId + '/update/';
   return fetch(newUrl, {
     method: 'PATCH',
     headers: heads,
@@ -256,11 +281,9 @@ export async function patchUserEducation(dataInJson, id) {
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseJson) => {
-      console.log(responseJson);
       return [true, responseJson];
     })
     .catch((error) => {
@@ -344,11 +367,9 @@ export async function patchUserExperience(dataInJson, id) {
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseJson) => {
-      console.log(responseJson);
       return [true, responseJson];
     })
     .catch((error) => {
@@ -416,7 +437,6 @@ export async function deleteUser() {
   })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson);
       return [true, responseJson];
     })
     .catch((error) => {
@@ -483,7 +503,6 @@ export async function postUserRecoverPass(dataInJson) {
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseJson) => {
@@ -504,7 +523,6 @@ export async function postUserRecoverCode(dataInJson) {
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseJson) => {
@@ -524,7 +542,6 @@ export async function postUserChangePass(dataInJson) {
     body: JSON.stringify(dataInJson),
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseJson) => {
