@@ -15,9 +15,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {Picker} from '@react-native-picker/picker';
 import {TextInputMask} from 'react-native-masked-text';
 import {
-  patchUserExp,
-  postUserAreas,
-  patchUserSalary,
   postUserEducation,
   patchUserEducation,
   getUserEducations,
@@ -348,163 +345,164 @@ export default class FormacaoScreen extends Component {
           transparent={false}
           visible={this.state.modalVisible}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
-            <View style={{flex: 5, justifyContent: 'flex-start'}}>
-              <View
-                style={{
-                  paddingBottom: 40,
-                  flexDirection: 'row',
-                  display: 'flex',
-                }}>
-                <Text
-                  style={styles.BackStyle2}
-                  onPress={() => this.setState({modalVisible: false})}>
-                  Voltar
-                </Text>
-                {this.state.modalIs !== 'created' ? (
+            <ScrollView style={styles.scrollContainer}>
+              <View style={{flex: 5, justifyContent: 'flex-start'}}>
+                <View
+                  style={{
+                    paddingBottom: 40,
+                    flexDirection: 'row',
+                    display: 'flex',
+                  }}>
                   <Text
-                    style={styles.BackStyle3}
-                    onPress={() => this.deleteThisOne()}>
-                    Excluir
+                    style={styles.BackStyle2}
+                    onPress={() => this.setState({modalVisible: false})}>
+                    Voltar
                   </Text>
-                ) : null}
-              </View>
-              <KeyboardAvoidingView enabled style={{flex: 4}}>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Nome da Escola</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.nameEscola}
-                    onChangeText={(text) => this.setState({nameEscola: text})}
-                    placeholderTextColor="#aaaaaa"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
+                  {this.state.modalIs !== 'created' ? (
+                    <Text
+                      style={styles.BackStyle3}
+                      onPress={() => this.deleteThisOne()}>
+                      Excluir
+                    </Text>
+                  ) : null}
                 </View>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Nome do Curso</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.nameCurso}
-                    onChangeText={(text) => this.setState({nameCurso: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-                <View style={styles.SectionStyle}>
-                  <Text style={styles.InputLabelStyle}>Nivel</Text>
-                  <View style={styles.InputBoxStylePicker}>
-                    <Picker
-                      selectedValue={this.state.itemNivel}
-                      style={{
-                        height: 40,
-                        width: '100%',
-                      }}
-                      onValueChange={(itemValue, itemIndex) => {
-                        if (itemValue == -1) {
-                          return;
-                        }
-                        this.changValue({
-                          itemNivel: itemValue,
-                          isValidNivel: true,
-                        });
-                      }}>
-                      {this.state.listNivels.map((el, index) => {
-                        return (
-                          <Picker.Item
-                            key={el.label + index}
-                            label={el.label}
-                            value={el.value}
-                          />
-                        );
-                      })}
-                    </Picker>
+                <KeyboardAvoidingView enabled style={{flex: 4}}>
+                  <View style={styles.SectionStyle}>
+                    <Text style={styles.InputLabelStyle}>Nome da Escola</Text>
+                    <TextInput
+                      style={styles.inputStyle}
+                      value={this.state.nameEscola}
+                      onChangeText={(text) => this.setState({nameEscola: text})}
+                      placeholderTextColor="#aaaaaa"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                    />
                   </View>
-                </View>
-                {!this.state.isVisibleThisOne ? (
-                  <>
-                    <View style={styles.SectionStyle}>
-                      <Text style={styles.InputLabelStyle}>Status</Text>
-                      <View style={styles.InputBoxStylePicker}>
-                        <Picker
-                          selectedValue={this.state.itemStatus}
-                          style={{
-                            height: 40,
-                            width: '100%',
-                          }}
-                          onValueChange={(itemValue, itemIndex) => {
-                            if (itemValue == -1) {
-                              return;
-                            }
-                            this.changValue({
-                              itemStatus: itemValue,
-                            });
-                          }}>
-                          {this.state.listStatus.map((el, index) => {
-                            return (
-                              <Picker.Item
-                                key={el.label + index}
-                                label={el.label}
-                                value={el.value}
-                              />
-                            );
-                          })}
-                        </Picker>
-                      </View>
+                  <View style={styles.SectionStyle}>
+                    <Text style={styles.InputLabelStyle}>Nome do Curso</Text>
+                    <TextInput
+                      style={styles.inputStyle}
+                      value={this.state.nameCurso}
+                      onChangeText={(text) => this.setState({nameCurso: text})}
+                      placeholderTextColor="#aaaaaa"
+                      autoCapitalize="sentences"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                    />
+                  </View>
+                  <View style={styles.SectionStyle}>
+                    <Text style={styles.InputLabelStyle}>Nivel</Text>
+                    <View style={styles.InputBoxStylePicker}>
+                      <Picker
+                        selectedValue={this.state.itemNivel}
+                        style={{
+                          height: 40,
+                          width: '100%',
+                        }}
+                        onValueChange={(itemValue, itemIndex) => {
+                          if (itemValue == -1) {
+                            return;
+                          }
+                          this.changValue({
+                            itemNivel: itemValue,
+                            isValidNivel: true,
+                          });
+                        }}>
+                        {this.state.listNivels.map((el, index) => {
+                          return (
+                            <Picker.Item
+                              key={el.label + index}
+                              label={el.label}
+                              value={el.value}
+                            />
+                          );
+                        })}
+                      </Picker>
                     </View>
+                  </View>
+                  {!this.state.isVisibleThisOne ? (
+                    <>
+                      <View style={styles.SectionStyle}>
+                        <Text style={styles.InputLabelStyle}>Status</Text>
+                        <View style={styles.InputBoxStylePicker}>
+                          <Picker
+                            selectedValue={this.state.itemStatus}
+                            style={{
+                              height: 40,
+                              width: '100%',
+                            }}
+                            onValueChange={(itemValue, itemIndex) => {
+                              if (itemValue == -1) {
+                                return;
+                              }
+                              this.changValue({
+                                itemStatus: itemValue,
+                              });
+                            }}>
+                            {this.state.listStatus.map((el, index) => {
+                              return (
+                                <Picker.Item
+                                  key={el.label + index}
+                                  label={el.label}
+                                  value={el.value}
+                                />
+                              );
+                            })}
+                          </Picker>
+                        </View>
+                      </View>
 
-                    <View style={styles.containerEspecial}>
-                      <View style={styles.item}>
-                        <View style={styles.SectionStyleEspecial2}>
-                          <Text style={styles.InputLabelStyle}>
-                            Data de Inicio
-                          </Text>
-                          <TextInputMask
-                            style={styles.inputStyle}
-                            type={'datetime'}
-                            options={{
-                              format: 'DD/MM/YYYY',
-                            }}
-                            placeholder="30/10/1990"
-                            value={this.state.dateStart}
-                            onChangeText={(text) => {
-                              this.setState({
-                                dateStart: text,
-                              });
-                            }}
-                          />
+                      <View style={styles.containerEspecial}>
+                        <View style={styles.item}>
+                          <View style={styles.SectionStyleEspecial2}>
+                            <Text style={styles.InputLabelStyle}>
+                              Data de Inicio
+                            </Text>
+                            <TextInputMask
+                              style={styles.inputStyle}
+                              type={'datetime'}
+                              options={{
+                                format: 'DD/MM/YYYY',
+                              }}
+                              placeholder="30/10/1990"
+                              value={this.state.dateStart}
+                              onChangeText={(text) => {
+                                this.setState({
+                                  dateStart: text,
+                                });
+                              }}
+                            />
+                          </View>
+                        </View>
+                        <View style={styles.item}>
+                          <View style={styles.SectionStyleEspecial1}>
+                            <Text style={styles.InputLabelStyle}>
+                              Data de Término
+                            </Text>
+                            <TextInputMask
+                              style={styles.inputStyle}
+                              type={'datetime'}
+                              options={{
+                                format: 'DD/MM/YYYY',
+                              }}
+                              placeholder="30/10/1990"
+                              value={this.state.dateFinish}
+                              onChangeText={(text) => {
+                                this.setState({
+                                  dateFinish: text,
+                                });
+                              }}
+                            />
+                          </View>
                         </View>
                       </View>
-                      <View style={styles.item}>
-                        <View style={styles.SectionStyleEspecial1}>
-                          <Text style={styles.InputLabelStyle}>
-                            Data de Término
-                          </Text>
-                          <TextInputMask
-                            style={styles.inputStyle}
-                            type={'datetime'}
-                            options={{
-                              format: 'DD/MM/YYYY',
-                            }}
-                            placeholder="30/10/1990"
-                            value={this.state.dateFinish}
-                            onChangeText={(text) => {
-                              this.setState({
-                                dateFinish: text,
-                              });
-                            }}
-                          />
-                        </View>
-                      </View>
-                    </View>
-                  </>
-                ) : null}
-              </KeyboardAvoidingView>
-            </View>
+                    </>
+                  ) : null}
+                </KeyboardAvoidingView>
+              </View>
+            </ScrollView>
             <View
               style={{
-                flex: 1,
                 justifyContent: 'flex-end',
                 alignItems: 'stretch',
               }}>
@@ -531,22 +529,22 @@ export default class FormacaoScreen extends Component {
 
 const styles = StyleSheet.create({
   containerEspecial: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
     height: 70,
     margin: 10,
   },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
+  },
   cardContainer: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
     margin: 10,
   },
   containerEspecial2: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
