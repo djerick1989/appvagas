@@ -8,10 +8,10 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Loader from '../../Components/Loader';
 import {Picker} from '@react-native-picker/picker';
 import {postUserLanguage, getUserLanguages} from '../../helpers/api';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class IdiomasScreen extends Component {
   constructor(props) {
@@ -40,16 +40,20 @@ export default class IdiomasScreen extends Component {
       itemLevel: '',
       itemIdiom: '',
       listOfLanguages: [],
-      loading: true,
+      showAlert: false,
+      spinner: true,
       subarea: null,
     };
   }
 
   async componentDidMount() {
     const [isValid, Languages] = await getUserLanguages();
+    if (!isValid) {
+      console.log('error getUserLanguages');
+    }
     this.setState({
       listOfLanguages: Languages,
-      loading: false,
+      spinner: false,
     });
   }
 
@@ -57,7 +61,7 @@ export default class IdiomasScreen extends Component {
     if (this.state.itemLevel == '' || this.state.itemIdiom == '') {
       return;
     }
-    this.setState({loading: true});
+    this.setState({spinner: true});
     await postUserLanguage({
       idiom: this.state.itemIdiom,
       level: this.state.itemLevel,
@@ -67,28 +71,10 @@ export default class IdiomasScreen extends Component {
     console.log(Languages);
     this.setState({
       listOfLanguages: Languages,
-      loading: false,
+      spinner: false,
+      showAlert: true,
     });
-    alert('updated');
   };
-
-  changeVisibility(state) {
-    this.setState({
-      isVisible1: false,
-      isVisible2: false,
-      isVisible3: false,
-      isVisible4: false,
-      isVisible5: false,
-      isVisible6: false,
-      isVisible7: false,
-      isVisible8: false,
-      isVisible9: false,
-      isVisible10: false,
-      isVisible11: false,
-      isVisible12: false,
-      ...state,
-    });
-  }
 
   changValue(state) {
     this.setState({
@@ -112,12 +98,26 @@ export default class IdiomasScreen extends Component {
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Sucesso"
+          message="Atualizado com sucesso"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <View>
               <Text
-                style={styles.BackStyle2}
+                style={styles.BackStyle}
                 onPress={() => this.props.navigation.goBack()}>
                 Voltar
               </Text>
@@ -219,23 +219,7 @@ export default class IdiomasScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  containerEspecial: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    height: 70,
-    margin: 10,
-  },
   cardContainer: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    margin: 10,
-  },
-  containerEspecial2: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
@@ -272,6 +256,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
   },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
+  },
   SectionStyle: {
     height: 70,
     marginTop: 20,
@@ -283,23 +270,6 @@ const styles = StyleSheet.create({
     height: 70,
     marginRight: 25,
     marginLeft: 10,
-  },
-  SectionStyleEspecial2: {
-    height: 70,
-    marginLeft: 25,
-    marginRight: 10,
-  },
-  SectionStyleEspecial11: {
-    marginRight: 25,
-    marginLeft: 10,
-  },
-  SectionStyleEspecial12: {
-    marginLeft: 25,
-    marginRight: 10,
-  },
-  SectionStyleEspecial122: {
-    marginLeft: 30,
-    marginTop: 30,
   },
   SectionStyleEspecial13: {
     marginLeft: 35,
@@ -327,32 +297,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingBottom: 5,
   },
-  textHoverSlider: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    color: '#6948F4',
-  },
-  InputLabelStyleArea: {
-    alignSelf: 'flex-end',
-  },
-  dLabelStyle: {
-    fontWeight: 'bold',
-    textAlign: 'left',
-    color: '#6948F4',
-  },
-  dItemStyle: {
-    justifyContent: 'flex-start',
-  },
-  dPlaceholderStyle: {
-    textAlign: 'left',
-    color: 'black',
-    fontWeight: '200',
-  },
-  dStyle: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    minHeight: 300,
-  },
   subarea: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -360,70 +304,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#6948F4',
     borderRadius: 25,
     margin: 5,
-  },
-  buttonStyle: {
-    backgroundColor: '#6948F4',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#6948F4',
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  buttonStyleArea: {
-    backgroundColor: '#6948F4',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#6948F4',
-    height: 30,
-    alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
-  },
-  buttonTextStyleArea: {
-    color: '#FFFFFF',
-    paddingVertical: 8,
-    fontSize: 14,
-    padding: 15,
-  },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 8,
-    fontSize: 18,
-  },
-  LabelStyle1: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    paddingTop: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  LabelStyles1: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 30,
-  },
-  inputStyle: {
-    flex: 1,
-    color: '#6948F4',
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderWidth: 1,
-    borderRadius: 15,
-    borderColor: '#6948F4',
-  },
-  errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
   },
   CardTitle: {
     fontWeight: 'bold',
@@ -439,45 +319,10 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     color: '#00000096',
   },
-  CardType: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    paddingTop: 30,
-    paddingLeft: 10,
-    color: '#6948f4b3',
-  },
   BackStyle: {
     color: '#6948F4',
     fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'center',
-    bottom: 20,
-    right: 0,
-    left: 0,
-  },
-
-  BackStyle2: {
-    color: '#6948F4',
-    fontWeight: 'bold',
     alignSelf: 'flex-start',
-    fontSize: 16,
-    paddingTop: 30,
-    paddingLeft: 35,
-  },
-  BackStyle3: {
-    color: '#ff0000c7',
-    fontWeight: 'bold',
-    alignSelf: 'flex-end',
-    fontSize: 12,
-    paddingTop: 30,
-    paddingLeft: 250,
-  },
-
-  BackStyle22: {
-    backgroundColor: '#6948F4',
-    color: '#FFFFFF',
-    margin: 20,
-    fontWeight: 'bold',
     fontSize: 16,
     paddingTop: 30,
     paddingLeft: 35,

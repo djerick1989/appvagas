@@ -49,6 +49,13 @@ export default class ObjetivoScreen extends Component {
     const [isValid, areas] = await getUserAreas();
     const [isValid2, exp] = await getUserExp();
     const [isValid3, salary] = await getUserSalary();
+    if (!isValid || !isValid2 || !isValid3) {
+      console.log('Error consiguiendo informacion de Objetivo Screen');
+    }
+    this.updateCurrentInformation(areas, exp, salary);
+  }
+
+  updateCurrentInformation(areas, exp, salary) {
     this.setState(
       {
         listOfAreas: areas,
@@ -680,7 +687,6 @@ export default class ObjetivoScreen extends Component {
 
 const styles = StyleSheet.create({
   containerEspecial: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
@@ -688,7 +694,6 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   containerEspecial2: {
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',

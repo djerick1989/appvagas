@@ -493,7 +493,7 @@ export default class RegiterScreen extends Component {
       case 'LastSaldo':
         this.setState({showLoading: true});
         fetch(
-          'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
+          'https://mobapivagas.jobconvo.com/v1/user/salary/' +
             this.state.user_info.id +
             '/update/',
           {
@@ -504,8 +504,8 @@ export default class RegiterScreen extends Component {
               Authorization: 'Token ' + this.state.user_info.token.api_key,
             },
             body: JSON.stringify({
-              last_salary: this.state.FirstSaldo,
-              current_salary: this.state.LastSaldo,
+              last_salary: this.state.LastSaldo,
+              current_salary: this.state.FirstSaldo,
             }),
           },
         )

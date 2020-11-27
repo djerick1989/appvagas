@@ -11,8 +11,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import Loader from '../../Components/Loader';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {Picker} from '@react-native-picker/picker';
 import {TextInputMask} from 'react-native-masked-text';
 import {
@@ -56,6 +55,7 @@ export default class FormacaoScreen extends Component {
       itemStatus: '',
       yearsExp: '',
       dateStart: '',
+      spinner: true,
       dateFinish: '',
       prof: '',
       currentSalary: 0,
@@ -64,26 +64,20 @@ export default class FormacaoScreen extends Component {
       lastSalary: 0,
       dataSalary: '',
       modalVisible: false,
-      loading: true,
       subarea: null,
     };
   }
 
   async componentDidMount() {
     const [isValid, educations] = await getUserEducations();
+    if (!isValid) {
+      console.log('Error getUserEducations');
+    }
     this.setState({
       listOfEducations: educations,
-      loading: false,
+      spinner: false,
     });
   }
-
-  clickOkJob = () => {
-    this.state.listOfNewAreas.push({area: this.state.subarea});
-    this.state.listOfAreas.push({area: this.state.subarea});
-    this.setState({
-      modalVisible: false,
-    });
-  };
 
   transformDate(dateIn) {
     const date = dateIn.split('/');
@@ -104,7 +98,7 @@ export default class FormacaoScreen extends Component {
   }
 
   clickAddOrEdit = async () => {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     let realDate = this.transformDate(this.state.dateStart);
     let realDate2 = this.transformDate(this.state.dateFinish);
     if (this.state.modalIs == 'created') {
@@ -130,8 +124,11 @@ export default class FormacaoScreen extends Component {
       );
     }
     const [isValid, educations] = await getUserEducations();
+    if (!isValid) {
+      console.log('error catching data');
+    }
     this.setState({
-      loading: false,
+      spinner: false,
       modalVisible: false,
       listOfEducations: educations,
     });
@@ -148,24 +145,6 @@ export default class FormacaoScreen extends Component {
       listOfEducations: educations,
     });
   };
-
-  changeVisibility(state) {
-    this.setState({
-      isVisible1: false,
-      isVisible2: false,
-      isVisible3: false,
-      isVisible4: false,
-      isVisible5: false,
-      isVisible6: false,
-      isVisible7: false,
-      isVisible8: false,
-      isVisible9: false,
-      isVisible10: false,
-      isVisible11: false,
-      isVisible12: false,
-      ...state,
-    });
-  }
 
   changValue(state) {
     this.setState({
@@ -186,29 +165,15 @@ export default class FormacaoScreen extends Component {
     });
   }
 
-  async handleSubmitButton() {
-    this.setState({loading: true});
-    await patchUserSalary({
-      last_salary: this.state.lastSalary,
-      current_salary: this.state.currentSalary,
-    });
-    await patchUserExp({
-      years_of_experience: this.state.yearsExp,
-      career_objective: this.state.prof,
-    });
-    if (this.state.listOfNewAreas.length) {
-      for (let index = 0; index < this.state.listOfNewAreas.length; index++) {
-        await postUserAreas(this.state.listOfNewAreas[index]);
-      }
-    }
-    this.setState({listOfNewAreas: [], loading: false});
-  }
-
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <View>
               <Text
@@ -436,7 +401,6 @@ export default class FormacaoScreen extends Component {
                         height: 40,
                         width: '100%',
                       }}
-                      enabled={!this.state.isValidNivel}
                       onValueChange={(itemValue, itemIndex) => {
                         if (itemValue == -1) {
                           return;
@@ -469,7 +433,6 @@ export default class FormacaoScreen extends Component {
                             height: 40,
                             width: '100%',
                           }}
-                          enabled={!this.state.isValidNivel}
                           onValueChange={(itemValue, itemIndex) => {
                             if (itemValue == -1) {
                               return;
