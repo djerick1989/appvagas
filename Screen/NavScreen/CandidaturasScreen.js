@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   StyleSheet,
@@ -10,8 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
-import Loader from '../../Components/Loader';
 import {getUserJobs, getAllJobs} from '../../helpers/api';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -27,18 +26,24 @@ export default class ExperienciaScreen extends Component {
       dateFinish: '',
       listOfJobs: [],
       modalVisible: false,
-      loading: true,
+      spinner: true,
       subarea: null,
     };
   }
 
   async componentDidMount() {
     const [isValid, AllJobs] = await getAllJobs();
+    if (!isValid) {
+      console.log('Error getting getAllJobs');
+    }
     const [isValid2, Jobs] = await getUserJobs();
+    if (!isValid2) {
+      console.log('Error getting getUserJobs');
+    }
     this.setState({
       allJobs: AllJobs.results,
       listOfJobs: Jobs,
-      loading: false,
+      spinner: false,
     });
   }
 
@@ -67,8 +72,12 @@ export default class ExperienciaScreen extends Component {
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <View>
               <SearchBar
@@ -215,6 +224,9 @@ const styles = StyleSheet.create({
   SectionStyleEspecial11: {
     marginRight: 25,
     marginLeft: 10,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   SectionStyleEspecial12: {
     marginLeft: 25,
