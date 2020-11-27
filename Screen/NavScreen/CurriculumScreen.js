@@ -10,9 +10,9 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import Loader from '../../Components/Loader';
 import {patchUserProfile, getUserProfile} from '../../helpers/api';
 import {List} from 'react-native-paper';
+import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -20,7 +20,7 @@ export default class IdiomasScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      spinner: true,
       fullName: 'Nome e Sobrenome',
       imageSource: require('../../Image/avatar.png'),
     };
@@ -31,7 +31,7 @@ export default class IdiomasScreen extends Component {
     const lastName = await AsyncStorage.getItem('last_name');
     this.setState({
       fullName: firstName + ' ' + lastName,
-      loading: false,
+      spinner: false,
     });
     const [c, d] = await getUserProfile();
     console.log(d);
@@ -47,7 +47,7 @@ export default class IdiomasScreen extends Component {
     if (a == true) {
       this.setState({imageSource: {uri: b.photo}});
     }
-    this.setState({loading: false});
+    this.setState({spinner: false});
   };
 
   onClickImage = () => {
@@ -65,8 +65,12 @@ export default class IdiomasScreen extends Component {
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
               <TouchableHighlight
@@ -215,6 +219,9 @@ const styles = StyleSheet.create({
   SectionStyleEspecial12: {
     marginLeft: 25,
     marginRight: 10,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   SectionStyleEspecial122: {
     marginLeft: 30,

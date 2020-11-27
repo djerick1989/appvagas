@@ -8,52 +8,23 @@ import {
   Linking,
   ScrollView,
 } from 'react-native';
-import Loader from '../../Components/Loader';
-import {patchUserProfile} from '../../helpers/api';
 import {List} from 'react-native-paper';
-import ImagePicker from 'react-native-image-picker';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class IdiomasScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      spinner: true,
       imageSource: require('../../Image/avatar.png'),
     };
   }
 
   async componentDidMount() {
     this.setState({
-      loading: false,
+      spinner: false,
     });
   }
-
-  updateImageOnProfile = async (urlImage) => {
-    const [a, b] = await patchUserProfile({
-      photo: urlImage,
-    });
-    console.log(a);
-    console.log(b);
-    this.setState({loading: false});
-  };
-
-  onClickImage = () => {
-    console.log('image press');
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 200,
-      maxWidth: 200,
-    };
-    ImagePicker.launchCamera(options, (response) => {
-      console.log('imagen tomada');
-      console.log('vamos aqui');
-      // Agregar logica de la subida de imagen
-      // console.log(response);
-      // al tener la url de la imagen subida
-      this.updateImageOnProfile(response.data);
-    });
-  };
 
   handleOpenLink = (url) => {
     Linking.canOpenURL(url).then((supported) => {
@@ -68,8 +39,12 @@ export default class IdiomasScreen extends Component {
   render() {
     return (
       <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <ScrollView style={styles.scrollContainer}>
-          <Loader loading={this.state.loading} />
           <View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
               <Text style={styles.LabelStyle}>Configs</Text>
@@ -163,6 +138,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: '#6948F4',
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
   item2: {
     width: '90%',
