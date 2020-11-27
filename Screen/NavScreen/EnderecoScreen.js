@@ -9,8 +9,9 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import Loader from '../../Components/Loader';
 import {getUserProfile, patchUserProfile} from '../../helpers/api';
+import AwesomeAlert from 'react-native-awesome-alerts';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class EnderecoScreen extends Component {
   constructor(props) {
@@ -24,15 +25,17 @@ export default class EnderecoScreen extends Component {
       zipcode: '',
       endereco: '',
       userPhon: '',
-      loading: true,
+      spinner: true,
+      showAlert: false,
     };
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     const [data, user] = await getUserProfile();
-
-    console.log(user);
+    if (!data) {
+      console.log('error getUserProfile');
+    }
     this.setState({
       estado: user.state,
       cidade: user.city,
@@ -42,12 +45,12 @@ export default class EnderecoScreen extends Component {
       number: user.adddressnumber,
       endereco: user.address,
       userPhon: user.phone1,
-      loading: false,
+      spinner: false,
     });
   }
 
   async handleSubmitButton() {
-    this.setState({loading: true});
+    this.setState({spinner: true});
     const dataInJson = this.state;
     delete dataInJson.loading;
     // aqui llamo al update
@@ -61,124 +64,141 @@ export default class EnderecoScreen extends Component {
       address: this.state.endereco,
       phone1: this.state.userPhon,
     });
-    this.setState({loading: false});
-    alert('Updated');
+    this.setState({spinner: false, showAlert: true});
   }
 
   render() {
     return (
-      <ScrollView style={styles.scrollContainer}>
-        <Loader loading={this.state.loading} />
-        <View>
+      <>
+        <Spinner
+          visible={this.state.spinner}
+          textContent={'Carregando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Sucesso"
+          message="Atualizado com sucesso"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={false}
+        />
+        <ScrollView style={styles.scrollContainer}>
           <View>
-            <Text
-              style={styles.BackStyle2}
-              onPress={() => this.props.navigation.goBack()}>
-              Voltar
-            </Text>
-          </View>
-          <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <Text style={styles.LabelStyle}>Endereço</Text>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>CEP</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.zipcode}
-                onChangeText={(text) => this.setState({zipcode: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
+            <View>
+              <Text
+                style={styles.BackStyle2}
+                onPress={() => this.props.navigation.goBack()}>
+                Voltar
+              </Text>
             </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Endereço</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.endereco}
-                onChangeText={(text) => this.setState({endereco: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.containerEspecial}>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial2}>
-                  <Text style={styles.InputLabelStyle}>Nº</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.number}
-                    onChangeText={(text) => this.setState({number: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
+            <KeyboardAvoidingView enabled style={{flex: 4}}>
+              <Text style={styles.LabelStyle}>Endereço</Text>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>CEP</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.zipcode}
+                  onChangeText={(text) => this.setState({zipcode: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Endereço</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.endereco}
+                  onChangeText={(text) => this.setState({endereco: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.containerEspecial}>
+                <View style={styles.item}>
+                  <View style={styles.SectionStyleEspecial2}>
+                    <Text style={styles.InputLabelStyle}>Nº</Text>
+                    <TextInput
+                      style={styles.inputStyle}
+                      value={this.state.number}
+                      onChangeText={(text) => this.setState({number: text})}
+                      placeholderTextColor="#aaaaaa"
+                      autoCapitalize="sentences"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                    />
+                  </View>
+                </View>
+                <View style={styles.item}>
+                  <View style={styles.SectionStyleEspecial1}>
+                    <Text style={styles.InputLabelStyle}>Complemento</Text>
+                    <TextInput
+                      style={styles.inputStyle}
+                      value={this.state.complemento}
+                      onChangeText={(text) =>
+                        this.setState({complemento: text})
+                      }
+                      placeholderTextColor="#aaaaaa"
+                      autoCapitalize="sentences"
+                      returnKeyType="next"
+                      blurOnSubmit={false}
+                    />
+                  </View>
                 </View>
               </View>
-              <View style={styles.item}>
-                <View style={styles.SectionStyleEspecial1}>
-                  <Text style={styles.InputLabelStyle}>Complemento</Text>
-                  <TextInput
-                    style={styles.inputStyle}
-                    value={this.state.complemento}
-                    onChangeText={(text) => this.setState({complemento: text})}
-                    placeholderTextColor="#aaaaaa"
-                    autoCapitalize="sentences"
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                  />
-                </View>
-              </View>
-            </View>
 
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Bairro</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.bairro}
-                onChangeText={(text) => this.setState({bairro: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Cidade</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.cidade}
-                onChangeText={(text) => this.setState({cidade: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <View style={styles.SectionStyle}>
-              <Text style={styles.InputLabelStyle}>Estado</Text>
-              <TextInput
-                style={styles.inputStyle}
-                value={this.state.estado}
-                onChangeText={(text) => this.setState({estado: text})}
-                placeholderTextColor="#aaaaaa"
-                autoCapitalize="sentences"
-                returnKeyType="next"
-                blurOnSubmit={false}
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => this.handleSubmitButton()}>
-              <Text style={styles.buttonTextStyle}>Confirmar</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Bairro</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.bairro}
+                  onChangeText={(text) => this.setState({bairro: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Cidade</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.cidade}
+                  onChangeText={(text) => this.setState({cidade: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <View style={styles.SectionStyle}>
+                <Text style={styles.InputLabelStyle}>Estado</Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  value={this.state.estado}
+                  onChangeText={(text) => this.setState({estado: text})}
+                  placeholderTextColor="#aaaaaa"
+                  autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={() => this.handleSubmitButton()}>
+                <Text style={styles.buttonTextStyle}>Confirmar</Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -264,6 +284,9 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     fontSize: 14,
+  },
+  spinnerTextStyle: {
+    color: '#FFFFFF',
   },
 
   BackStyle: {
