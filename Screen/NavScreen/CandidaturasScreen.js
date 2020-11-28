@@ -76,21 +76,28 @@ export default class ExperienciaScreen extends Component {
 
   updateSearch = (search) => {
     this.setState({search});
-    const listFinded = this.state.listOfJobs.find(
+    const listFinded = this.state.listOfJobs.filter(
       (el) =>
-        (el.area && el.area.includes(search)) ||
-        (el.benefits && el.benefits.includes(search)) ||
-        (el.city && el.city.includes(search)) ||
-        (el.company_name && el.company_name.includes(search)) ||
-        (el.country && el.country.includes(search)) ||
-        (el.description && el.description.includes(search)) ||
-        (el.latitude && el.latitude.includes(search)) ||
-        (el.requirements && el.requirements.includes(search)) ||
-        (el.salary && el.salary.includes(search)) ||
-        (el.state && el.state.includes(search)) ||
-        (el.title && el.title.includes(search)),
+        (el.area && el.area.toLowerCase().includes(search.toLowerCase())) ||
+        (el.benefits &&
+          el.benefits.toLowerCase().includes(search.toLowerCase())) ||
+        (el.city && el.city.toLowerCase().includes(search.toLowerCase())) ||
+        (el.company_name &&
+          el.company_name.toLowerCase().includes(search.toLowerCase())) ||
+        (el.country &&
+          el.country.toLowerCase().includes(search.toLowerCase())) ||
+        (el.description &&
+          el.description.toLowerCase().includes(search.toLowerCase())) ||
+        (el.latitude &&
+          el.latitude.toLowerCase().includes(search.toLowerCase())) ||
+        (el.requirements &&
+          el.requirements.toLowerCase().includes(search.toLowerCase())) ||
+        (el.salary && el.salary.toLowerCase().includes(search.toLowerCase())) ||
+        (el.state && el.state.toLowerCase().includes(search.toLowerCase())) ||
+        (el.title && el.title.toLowerCase().includes(search.toLowerCase())),
     );
-    console.log(listFinded);
+    // console.log(listFinded);
+    this.setState({listOfSearchJobs: listFinded});
   };
 
   render() {
