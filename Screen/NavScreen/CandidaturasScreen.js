@@ -104,23 +104,23 @@ export default class ExperienciaScreen extends Component {
                         <Text
                           onPress={() =>
                             this.props.navigation.navigate('Home', {
-                              searchId: element.id,
+                              searchId: element.job,
                             })
                           }
                           style={styles.CardTitle}>
                           {this.state.allJobs.map((el) =>
-                            el.id == element.id ? el.title : null,
+                            el.uid == element.job ? el.title : null,
                           )}
                         </Text>
                         <Text
                           onPress={() =>
                             this.props.navigation.navigate('Home', {
-                              searchId: element.id,
+                              searchId: element.job,
                             })
                           }
                           style={styles.CardSubTitle}>
                           {this.state.allJobs.map((el) =>
-                            el.id == element.id
+                            el.uid == element.job
                               ? el.state + '-' + el.country
                               : null,
                           )}

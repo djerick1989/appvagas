@@ -40,6 +40,7 @@ export default class ExperienciaScreen extends Component {
       modalVisible: false,
       showNoMore: false,
       spinner: true,
+      firstOpen: true,
       subarea: null,
     };
     this.viewPager = React.createRef();
@@ -48,40 +49,33 @@ export default class ExperienciaScreen extends Component {
     });
   }
 
-  // async componentDidUpdate(prevState, prevProps) {
-  //   const [isValid, Jobs] = await getAllJobs();
-  //   if (!isValid) {
-  //     console.log('error en getAllJobs');
-  //   }
-  //   console.log(Jobs);
-  //   this.setState({
-  //     listOfJobs: Jobs.results,
-  //     spinner: false,
-  //   });
-  //   let searchId = '';
-  //   if (this.props.route.params && this.props.route.params.searchId) {
-  //     searchId = this.props.route.params.searchId;
-  //     this.setState({searchId: searchId});
-  //     this.go(searchId);
-  //   }
-  // }
+  async componentDidUpdate(prevState, prevProps) {
+    let searchId = '';
+    if (this.props.route.params && this.props.route.params.searchId) {
+      console.log(this.props.route.params.searchId);
+      const jobToSearch = this.state.listOfJobs.find(
+        (element) => element.uid == this.props.route.params.searchId,
+      );
+      console.log(jobToSearch);
+      if (this.state.searchId !== jobToSearch.id) {
+        this.setState({searchId: jobToSearch.id});
+        console.log(jobToSearch);
+        this.go(jobToSearch.id);
+      }
+    }
+  }
 
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     if (!isValid) {
       console.log('error en getAllJobs');
     }
+    console.log(Jobs);
     this.setState({
       listOfJobs: Jobs.results,
+      firstOpen: true,
       spinner: false,
     });
-    console.log(Jobs);
-    let searchId = '';
-    if (this.props.route.params && this.props.route.params.searchId) {
-      searchId = this.props.route.params.searchId;
-      this.setState({searchId: searchId});
-      this.go(searchId);
-    }
   }
 
   updateSearch = (search) => {
@@ -210,14 +204,18 @@ export default class ExperienciaScreen extends Component {
       this.setState({
         currentPage: goToPage,
       });
+    } else {
+      console.log('aqio');
+      this.viewPager.current.setPage(page - 1);
+      this.setState({
+        currentPage: page,
+      });
     }
+    console.log(page);
   };
 
   clickNo = () => {
     this.go('next');
-    this.setState({
-      listOfJobs: this.state.listOfJobs.splice(0, 1),
-    });
   };
 
   render() {
@@ -250,220 +248,221 @@ export default class ExperienciaScreen extends Component {
             scrollEnabled={false}
             ref={this.viewPager}
             transitionStyle="curl">
-            {this.state.listOfJobs.map((element, index) => (
-              <View
-                key={element.id}
-                collapsable={false}
-                style={{
-                  backgroundColor: '#00000',
-                  paddingLeft: 25,
-                  paddingRight: 25,
-                }}>
+            {this.state.listOfJobs.length > this.state.currentPage ? (
+              this.state.listOfJobs.map((element, index) => (
                 <View
+                  key={element.id}
+                  collapsable={false}
                   style={{
-                    height: '100%',
-                    borderColor: '#686868',
-                    borderWidth: 1,
-                    borderBottomEndRadius: 25,
-                    borderBottomStartRadius: 25,
+                    backgroundColor: '#00000',
+                    paddingLeft: 25,
+                    paddingRight: 25,
                   }}>
-                  <View style={{width: '100%', height: '40%'}}>
-                    <WebView
-                      javaScriptEnabled={true}
-                      source={{
-                        html: this.getMapbox(
-                          element.latitude,
-                          element.longitude,
-                        ),
-                      }}
-                    />
-                  </View>
-                  <View style={{flex: 1}}>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <ScrollView style={styles.scrollContainer}>
-                        <View>
-                          <KeyboardAvoidingView
-                            enabled
-                            style={{flex: 4, marginTop: 30}}>
-                            <View style={styles.containerEspecial33}>
-                              <View style={styles.SectionStyleEspecial2}>
-                                <Text style={styles.InputLabelStyleTitle}>
-                                  {element.title}
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View style={styles.containerEspecial22}>
-                              <View style={styles.SectionStyleEspecial2}>
-                                <Text style={styles.InputLabelStyleSubtitle}>
-                                  ({element.company_name})
-                                </Text>
-                              </View>
-                            </View>
-
-                            <View style={styles.containerEspecial}>
-                              <View style={styles.item11}>
-                                <View style={styles.SectionStyleEspecial2}>
-                                  <Text style={styles.InputLabelStyle}>
-                                    Local
-                                  </Text>
-                                </View>
-                              </View>
-                              <View style={styles.item21}>
-                                <View style={styles.SectionStyleEspecial1}>
-                                  <Text style={styles.InputLabelStyle22}>
-                                    {element.state} - {element.country}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-
-                            <View style={styles.containerEspecial}>
-                              <View style={styles.item11}>
-                                <View style={styles.SectionStyleEspecial2}>
-                                  <Text style={styles.InputLabelStyle}>
-                                    Detalhes
-                                  </Text>
-                                </View>
-                              </View>
-                              <View style={styles.item21}>
-                                <View style={styles.SectionStyleEspecial1}>
-                                  <Text style={styles.InputLabelStyle22}>
-                                    {element.description}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-
-                            <View style={styles.containerEspecial}>
-                              <View style={styles.item11}>
-                                <View style={styles.SectionStyleEspecial2}>
-                                  <Text style={styles.InputLabelStyle}>
-                                    Requisitos
-                                  </Text>
-                                </View>
-                              </View>
-                              <View style={styles.item21}>
-                                <View style={styles.SectionStyleEspecial1}>
-                                  <Text style={styles.InputLabelStyle22}>
-                                    {element.requirements}
-                                  </Text>
-                                </View>
-                              </View>
-                            </View>
-                          </KeyboardAvoidingView>
-                        </View>
-                      </ScrollView>
-                      <Image
-                        source={{uri: element.logo}}
-                        style={{
-                          height: 50,
-                          position: 'absolute',
-                          resizeMode: 'contain',
-                          borderColor: '#686868',
-                          borderWidth: 1,
-                          width: 200,
-                          backgroundColor: '#FFFFFF',
-                          top: -30,
-                          padding: 5,
-                          borderRadius: 5,
+                  <View
+                    style={{
+                      height: '100%',
+                      borderColor: '#686868',
+                      borderWidth: 1,
+                      borderBottomEndRadius: 25,
+                      borderBottomStartRadius: 25,
+                    }}>
+                    <View style={{width: '100%', height: '40%'}}>
+                      <WebView
+                        javaScriptEnabled={true}
+                        source={{
+                          html: this.getMapbox(
+                            element.latitude,
+                            element.longitude,
+                          ),
                         }}
                       />
                     </View>
-                  </View>
+                    <View style={{flex: 1}}>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <ScrollView style={styles.scrollContainer}>
+                          <View>
+                            <KeyboardAvoidingView
+                              enabled
+                              style={{flex: 4, marginTop: 30}}>
+                              <View style={styles.containerEspecial33}>
+                                <View style={styles.SectionStyleEspecial2}>
+                                  <Text style={styles.InputLabelStyleTitle}>
+                                    {element.title}
+                                  </Text>
+                                </View>
+                              </View>
 
-                  <View style={styles.containerEspecial34}>
-                    <View style={styles.item33}>
-                      <View style={styles.btnCenter}>
-                        <Text style={styles.InputLabelStyle}>
-                          <TouchableOpacity
-                            onPress={() => this.clickNo()}
-                            style={{
-                              borderWidth: 1,
-                              borderColor: 'transparent',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: 50,
-                              height: 50,
-                              backgroundColor: '#ff0000',
-                              borderRadius: 50,
-                            }}>
-                            <MaterialCommunityIcons
-                              name="close"
-                              size={30}
-                              color="#FFFFFF"
-                            />
-                          </TouchableOpacity>
-                        </Text>
+                              <View style={styles.containerEspecial22}>
+                                <View style={styles.SectionStyleEspecial2}>
+                                  <Text style={styles.InputLabelStyleSubtitle}>
+                                    ({element.company_name})
+                                  </Text>
+                                </View>
+                              </View>
+
+                              <View style={styles.containerEspecial}>
+                                <View style={styles.item11}>
+                                  <View style={styles.SectionStyleEspecial2}>
+                                    <Text style={styles.InputLabelStyle}>
+                                      Local
+                                    </Text>
+                                  </View>
+                                </View>
+                                <View style={styles.item21}>
+                                  <View style={styles.SectionStyleEspecial1}>
+                                    <Text style={styles.InputLabelStyle22}>
+                                      {element.state} - {element.country}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </View>
+
+                              <View style={styles.containerEspecial}>
+                                <View style={styles.item11}>
+                                  <View style={styles.SectionStyleEspecial2}>
+                                    <Text style={styles.InputLabelStyle}>
+                                      Detalhes
+                                    </Text>
+                                  </View>
+                                </View>
+                                <View style={styles.item21}>
+                                  <View style={styles.SectionStyleEspecial1}>
+                                    <Text style={styles.InputLabelStyle22}>
+                                      {element.description}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </View>
+
+                              <View style={styles.containerEspecial}>
+                                <View style={styles.item11}>
+                                  <View style={styles.SectionStyleEspecial2}>
+                                    <Text style={styles.InputLabelStyle}>
+                                      Requisitos
+                                    </Text>
+                                  </View>
+                                </View>
+                                <View style={styles.item21}>
+                                  <View style={styles.SectionStyleEspecial1}>
+                                    <Text style={styles.InputLabelStyle22}>
+                                      {element.requirements}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </KeyboardAvoidingView>
+                          </View>
+                        </ScrollView>
+                        <Image
+                          source={{uri: element.logo}}
+                          style={{
+                            height: 50,
+                            position: 'absolute',
+                            resizeMode: 'contain',
+                            borderColor: '#686868',
+                            borderWidth: 1,
+                            width: 200,
+                            backgroundColor: '#FFFFFF',
+                            top: -30,
+                            padding: 5,
+                            borderRadius: 5,
+                          }}
+                        />
                       </View>
                     </View>
-                    <View style={styles.item33}>
-                      <View style={styles.btnCenter}>
-                        <Text style={styles.InputLabelStyle22}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              Share.open({
-                                title: element.title,
-                                message: element.description,
-                              })
-                                .then((res) => {
-                                  console.log(res);
-                                })
-                                .catch((err) => {
-                                  err && console.log(err);
-                                })
-                            }
-                            style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: '#fff',
-                            }}>
-                            <MaterialCommunityIcons
+
+                    <View style={styles.containerEspecial34}>
+                      <View style={styles.item33}>
+                        <View style={styles.btnCenter}>
+                          <Text style={styles.InputLabelStyle}>
+                            <TouchableOpacity
+                              onPress={() => this.clickNo()}
                               style={{
-                                marginTop: 5,
-                              }}
-                              name="export-variant"
-                              size={40}
-                              color="#6948F4"
-                            />
-                          </TouchableOpacity>
-                        </Text>
+                                borderWidth: 1,
+                                borderColor: 'transparent',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 50,
+                                height: 50,
+                                backgroundColor: '#ff0000',
+                                borderRadius: 50,
+                              }}>
+                              <MaterialCommunityIcons
+                                name="close"
+                                size={30}
+                                color="#FFFFFF"
+                              />
+                            </TouchableOpacity>
+                          </Text>
+                        </View>
                       </View>
-                    </View>
-                    <View style={styles.item33}>
-                      <View style={styles.btnCenter}>
-                        <Text style={styles.InputLabelStyle22}>
-                          <TouchableOpacity
-                            onPress={() => this.clickOk(element.uid)}
-                            style={{
-                              borderWidth: 1,
-                              borderColor: 'transparent',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: 50,
-                              height: 50,
-                              backgroundColor: '#26bd26',
-                              borderRadius: 50,
-                            }}>
-                            <MaterialCommunityIcons
-                              name="check"
-                              size={30}
-                              color="#FFFFFF"
-                            />
-                          </TouchableOpacity>
-                        </Text>
+                      <View style={styles.item33}>
+                        <View style={styles.btnCenter}>
+                          <Text style={styles.InputLabelStyle22}>
+                            <TouchableOpacity
+                              onPress={() =>
+                                Share.open({
+                                  title: element.title,
+                                  message: element.description,
+                                })
+                                  .then((res) => {
+                                    console.log(res);
+                                  })
+                                  .catch((err) => {
+                                    err && console.log(err);
+                                  })
+                              }
+                              style={{
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: '#fff',
+                              }}>
+                              <MaterialCommunityIcons
+                                style={{
+                                  marginTop: 5,
+                                }}
+                                name="export-variant"
+                                size={40}
+                                color="#6948F4"
+                              />
+                            </TouchableOpacity>
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.item33}>
+                        <View style={styles.btnCenter}>
+                          <Text style={styles.InputLabelStyle22}>
+                            <TouchableOpacity
+                              onPress={() => this.clickOk(element.uid)}
+                              style={{
+                                borderWidth: 1,
+                                borderColor: 'transparent',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 50,
+                                height: 50,
+                                backgroundColor: '#26bd26',
+                                borderRadius: 50,
+                              }}>
+                              <MaterialCommunityIcons
+                                name="check"
+                                size={30}
+                                color="#FFFFFF"
+                              />
+                            </TouchableOpacity>
+                          </Text>
+                        </View>
                       </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            ))}
-            {this.state.showNoMore ? (
+              ))
+            ) : (
               <View
                 key="99"
                 style={{
@@ -480,7 +479,7 @@ export default class ExperienciaScreen extends Component {
                   </Text>
                 </View>
               </View>
-            ) : null}
+            )}
           </ViewPager>
         </View>
       </>
