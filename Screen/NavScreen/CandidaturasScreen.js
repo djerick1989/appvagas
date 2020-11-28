@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import _ from 'lodash';
 import {SearchBar} from 'react-native-elements';
 import {getUserJobs, getAllJobs} from '../../helpers/api';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -25,6 +26,7 @@ export default class ExperienciaScreen extends Component {
       dateStart: '',
       dateFinish: '',
       listOfJobs: [],
+      listOfSearchJobs: [],
       modalVisible: false,
       spinner: true,
       subarea: null,
@@ -40,7 +42,14 @@ export default class ExperienciaScreen extends Component {
     if (!isValid2) {
       console.log('Error getting getUserJobs');
     }
+    let listMerged = _.merge(
+      _.keyBy(Jobs, 'job'),
+      _.keyBy(AllJobs.results, 'uid'),
+    );
+    listMerged = Object.values(listMerged);
     this.setState({
+      listMerged: listMerged,
+      listOfSearchJobs: Jobs,
       allJobs: AllJobs.results,
       listOfJobs: Jobs,
       spinner: false,
@@ -67,6 +76,21 @@ export default class ExperienciaScreen extends Component {
 
   updateSearch = (search) => {
     this.setState({search});
+    const listFinded = this.state.listOfJobs.find(
+      (el) =>
+        (el.area && el.area.includes(search)) ||
+        (el.benefits && el.benefits.includes(search)) ||
+        (el.city && el.city.includes(search)) ||
+        (el.company_name && el.company_name.includes(search)) ||
+        (el.country && el.country.includes(search)) ||
+        (el.description && el.description.includes(search)) ||
+        (el.latitude && el.latitude.includes(search)) ||
+        (el.requirements && el.requirements.includes(search)) ||
+        (el.salary && el.salary.includes(search)) ||
+        (el.state && el.state.includes(search)) ||
+        (el.title && el.title.includes(search)),
+    );
+    console.log(listFinded);
   };
 
   render() {
@@ -96,52 +120,99 @@ export default class ExperienciaScreen extends Component {
             </View>
             <KeyboardAvoidingView enabled style={{flex: 4}}>
               <Text style={styles.LabelStyle}>Candidaturas</Text>
-              {this.state.listOfJobs.map((element, index) => {
-                if (element.level != 10 && element.level != 4) {
-                  return (
-                    <View style={styles.cardContainer} key={index}>
-                      <View style={styles.cardItem}>
-                        <Text
-                          onPress={() =>
-                            this.props.navigation.navigate('Home', {
-                              searchId: element.job,
-                            })
-                          }
-                          style={styles.CardTitle}>
-                          {this.state.allJobs.map((el) =>
-                            el.uid == element.job ? el.title : null,
-                          )}
-                        </Text>
-                        <Text
-                          onPress={() =>
-                            this.props.navigation.navigate('Home', {
-                              searchId: element.job,
-                            })
-                          }
-                          style={styles.CardSubTitle}>
-                          {this.state.allJobs.map((el) =>
-                            el.uid == element.job
-                              ? el.state + '-' + el.country
-                              : null,
-                          )}
-                        </Text>
-                        <Text
-                          onPress={() =>
-                            this.props.navigation.navigate('Home', {
-                              searchId: element.id,
-                            })
-                          }
-                          style={styles.CardType}>
-                          {element.apply_date.substring(
-                            0,
-                            element.apply_date.indexOf('T'),
-                          )}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                }
-              })}
+              {this.state.search == null
+                ? this.state.listOfJobs.map((element, index) => {
+                    if (element.level != 10 && element.level != 4) {
+                      return (
+                        <View style={styles.cardContainer} key={index}>
+                          <View style={styles.cardItem}>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardTitle}>
+                              {this.state.allJobs.map((el) =>
+                                el.uid == element.job ? el.title : null,
+                              )}
+                            </Text>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardSubTitle}>
+                              {this.state.allJobs.map((el) =>
+                                el.uid == element.job
+                                  ? el.state + '-' + el.country
+                                  : null,
+                              )}
+                            </Text>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardType}>
+                              {element.apply_date.substring(
+                                0,
+                                element.apply_date.indexOf('T'),
+                              )}
+                            </Text>
+                          </View>
+                        </View>
+                      );
+                    }
+                  })
+                : this.state.listOfSearchJobs.map((element, index) => {
+                    if (element.level != 10 && element.level != 4) {
+                      return (
+                        <View style={styles.cardContainer} key={index}>
+                          <View style={styles.cardItem}>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardTitle}>
+                              {this.state.allJobs.map((el) =>
+                                el.uid == element.job ? el.title : null,
+                              )}
+                            </Text>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardSubTitle}>
+                              {this.state.allJobs.map((el) =>
+                                el.uid == element.job
+                                  ? el.state + '-' + el.country
+                                  : null,
+                              )}
+                            </Text>
+                            <Text
+                              onPress={() =>
+                                this.props.navigation.navigate('Home', {
+                                  searchId: element.job,
+                                })
+                              }
+                              style={styles.CardType}>
+                              {element.apply_date.substring(
+                                0,
+                                element.apply_date.indexOf('T'),
+                              )}
+                            </Text>
+                          </View>
+                        </View>
+                      );
+                    }
+                  })}
             </KeyboardAvoidingView>
           </View>
         </ScrollView>

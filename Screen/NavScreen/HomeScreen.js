@@ -5,15 +5,10 @@ import Share from 'react-native-share';
 import {
   StyleSheet,
   Text,
-  SafeAreaView,
   View,
   Image,
-  TextInput,
-  Modal,
-  TouchableHighlight,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Dimensions,
   ScrollView,
 } from 'react-native';
 import {SearchBar} from 'react-native-elements';
@@ -50,7 +45,6 @@ export default class ExperienciaScreen extends Component {
   }
 
   async componentDidUpdate(prevState, prevProps) {
-    let searchId = '';
     if (this.props.route.params && this.props.route.params.searchId) {
       console.log(this.props.route.params.searchId);
       const jobToSearch = this.state.listOfJobs.find(
@@ -185,6 +179,7 @@ export default class ExperienciaScreen extends Component {
 
   clickOk = async (uidIn) => {
     this.go('next');
+    console.log(uidIn);
     const [a, b] = await postUserApplyJob({
       uid: uidIn,
       status: '1',
