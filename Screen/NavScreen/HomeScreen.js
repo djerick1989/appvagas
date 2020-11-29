@@ -23,6 +23,7 @@ export default class ExperienciaScreen extends Component {
     this.state = {
       empresa: '',
       cargo: '',
+      searching: false,
       searchId: 0,
       search: '',
       descripcion: '',
@@ -32,9 +33,11 @@ export default class ExperienciaScreen extends Component {
       dateStart: '',
       dateFinish: '',
       listOfJobs: [],
+      listOfSearchJobs: [],
       modalVisible: false,
       showNoMore: false,
       spinner: true,
+      comeOutside: false,
       firstOpen: true,
       subarea: null,
     };
@@ -44,17 +47,47 @@ export default class ExperienciaScreen extends Component {
     });
   }
 
-  async componentDidUpdate(prevState, prevProps) {
-    if (this.props.route.params && this.props.route.params.searchId) {
-      console.log(this.props.route.params.searchId);
-      const jobToSearch = this.state.listOfJobs.find(
-        (element) => element.uid == this.props.route.params.searchId,
-      );
-      console.log(jobToSearch);
-      if (this.state.searchId !== jobToSearch.id) {
-        this.setState({searchId: jobToSearch.id});
-        console.log(jobToSearch);
-        this.go(jobToSearch.id);
+  // useEffect = () => {
+  //   if (this.props.route.params?.searchId) {
+  //     console.log('llego aqui');
+  //   }
+  // };
+
+  componentDidUpdate(prevState, prevProps) {
+    // if (this.props.route.params && this.props.route.params.searchId) {
+    //   console.log('no entrar aqui');
+    // console.log(this.props.route.params.searchId);
+    // const jobToSearch = this.state.listOfJobs.find(
+    //   (element) => element.uid == this.props.route.params.searchId,
+    // );
+    // console.log(jobToSearch);
+    // console.log('test 1');
+    // console.log(this.state.searchId);
+    // console.log(jobToSearch.id);
+    // if (this.state.searchId !== jobToSearch.id) {
+    //   console.log('test 2');
+    //   this.setState({searchId: jobToSearch.id});
+    //   this.go(jobToSearch.id);
+    // }
+    // }
+    // console.log(prevProps.searchId);
+    // console.log(this.props.route.params.searchId);
+    if (this.props.route && this.props.route.params) {
+      if (prevProps.searchId !== this.props.route.params.searchId && this.state.searching == false) {
+        this.setState(
+          {searchId: this.props.route.params.searchId, searching: true},
+          () => {
+            const jobToSearch = this.state.listOfJobs.findIndex(
+              (element) => element.uid == this.props.route.params.searchId,
+            );
+            console.log(jobToSearch);
+            this.go(jobToSearch);
+            console.log(prevProps.searchId);
+            console.log(this.props.route.params.searchId);
+            console.log('entro aqui correctamente');
+            this.setState({searching: false});
+          },
+        );
       }
     }
   }
@@ -64,16 +97,46 @@ export default class ExperienciaScreen extends Component {
     if (!isValid) {
       console.log('error en getAllJobs');
     }
+    console.log('get Jobs');
     console.log(Jobs);
     this.setState({
+      listOfSearchJobs: Jobs.results,
       listOfJobs: Jobs.results,
       firstOpen: true,
       spinner: false,
     });
   }
 
+  onSearchClick = () => {
+    const search = this.state.search;
+    const listFinded = this.state.listOfJobs.filter(
+      (el) =>
+        (el.area && el.area.toLowerCase().includes(search.toLowerCase())) ||
+        (el.benefits &&
+          el.benefits.toLowerCase().includes(search.toLowerCase())) ||
+        (el.city && el.city.toLowerCase().includes(search.toLowerCase())) ||
+        (el.company_name &&
+          el.company_name.toLowerCase().includes(search.toLowerCase())) ||
+        (el.country &&
+          el.country.toLowerCase().includes(search.toLowerCase())) ||
+        (el.description &&
+          el.description.toLowerCase().includes(search.toLowerCase())) ||
+        (el.latitude &&
+          el.latitude.toLowerCase().includes(search.toLowerCase())) ||
+        (el.requirements &&
+          el.requirements.toLowerCase().includes(search.toLowerCase())) ||
+        (el.salary && el.salary.toLowerCase().includes(search.toLowerCase())) ||
+        (el.state && el.state.toLowerCase().includes(search.toLowerCase())) ||
+        (el.title && el.title.toLowerCase().includes(search.toLowerCase())),
+    );
+    this.setState({listOfSearchJobs: listFinded});
+  };
+
   updateSearch = (search) => {
-    this.setState({search});
+    // this.setState({search});
+    if (search !== '' && search) {
+      this.go(search);
+    }
   };
 
   getMapbox = (latitude, longitude) => {
@@ -200,13 +263,12 @@ export default class ExperienciaScreen extends Component {
         currentPage: goToPage,
       });
     } else {
-      console.log('aqio');
-      this.viewPager.current.setPage(page - 1);
+      const newPage = parseInt(page);
+      this.viewPager.current.setPage(newPage);
       this.setState({
-        currentPage: page,
+        currentPage: newPage,
       });
     }
-    console.log(page);
   };
 
   clickNo = () => {
@@ -232,6 +294,7 @@ export default class ExperienciaScreen extends Component {
               inputContainerStyle={{
                 backgroundColor: 'transparent',
               }}
+              onSubmitEditing={() => this.onSearchClick()}
               placeholder="Buscar Vagas..."
               onChangeText={this.updateSearch}
               value={this.state.search}
