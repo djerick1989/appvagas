@@ -96,7 +96,6 @@ export default class ExperienciaScreen extends Component {
         (el.state && el.state.toLowerCase().includes(search.toLowerCase())) ||
         (el.title && el.title.toLowerCase().includes(search.toLowerCase())),
     );
-    // console.log(listFinded);
     this.setState({listOfSearchJobs: listFinded});
   };
 

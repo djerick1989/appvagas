@@ -67,7 +67,7 @@ const ConfigsStackScreen = () => (
     />
     <ConfigsStack.Screen
       name="JumpBack"
-      component={AuthStackScreen}
+      component={SlideScreen}
       options={{headerShown: false}}
     />
   </ConfigsStack.Navigator>
