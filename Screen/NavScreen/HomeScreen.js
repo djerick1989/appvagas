@@ -47,45 +47,21 @@ export default class ExperienciaScreen extends Component {
     });
   }
 
-  // useEffect = () => {
-  //   if (this.props.route.params?.searchId) {
-  //     console.log('llego aqui');
-  //   }
-  // };
-
   componentDidUpdate(prevState, prevProps) {
-    // if (this.props.route.params && this.props.route.params.searchId) {
-    //   console.log('no entrar aqui');
-    // console.log(this.props.route.params.searchId);
-    // const jobToSearch = this.state.listOfJobs.find(
-    //   (element) => element.uid == this.props.route.params.searchId,
-    // );
-    // console.log(jobToSearch);
-    // console.log('test 1');
-    // console.log(this.state.searchId);
-    // console.log(jobToSearch.id);
-    // if (this.state.searchId !== jobToSearch.id) {
-    //   console.log('test 2');
-    //   this.setState({searchId: jobToSearch.id});
-    //   this.go(jobToSearch.id);
-    // }
-    // }
-    // console.log(prevProps.searchId);
-    // console.log(this.props.route.params.searchId);
     if (this.props.route && this.props.route.params) {
-      if (prevProps.searchId !== this.props.route.params.searchId && this.state.searching == false) {
+      if (
+        prevProps.searchId !== this.props.route.params.searchId &&
+        this.state.searching == false
+      ) {
+        console.log('entro aqui');
         this.setState(
           {searchId: this.props.route.params.searchId, searching: true},
           () => {
             const jobToSearch = this.state.listOfJobs.findIndex(
               (element) => element.uid == this.props.route.params.searchId,
             );
-            console.log(jobToSearch);
             this.go(jobToSearch);
-            console.log(prevProps.searchId);
-            console.log(this.props.route.params.searchId);
-            console.log('entro aqui correctamente');
-            this.setState({searching: false});
+            this.setState({searching: false, spinner: false});
           },
         );
       }
@@ -97,8 +73,7 @@ export default class ExperienciaScreen extends Component {
     if (!isValid) {
       console.log('error en getAllJobs');
     }
-    console.log('get Jobs');
-    console.log(Jobs);
+    console.log('entro aqui2');    
     this.setState({
       listOfSearchJobs: Jobs.results,
       listOfJobs: Jobs.results,
@@ -108,8 +83,9 @@ export default class ExperienciaScreen extends Component {
   }
 
   onSearchClick = () => {
+    console.log('clickee');
     const search = this.state.search;
-    const listFinded = this.state.listOfJobs.filter(
+    const listFinded = this.state.listOfJobs.findIndex(
       (el) =>
         (el.area && el.area.toLowerCase().includes(search.toLowerCase())) ||
         (el.benefits &&
@@ -129,14 +105,12 @@ export default class ExperienciaScreen extends Component {
         (el.state && el.state.toLowerCase().includes(search.toLowerCase())) ||
         (el.title && el.title.toLowerCase().includes(search.toLowerCase())),
     );
-    this.setState({listOfSearchJobs: listFinded});
+    this.go(listFinded);
+    // this.setState({listOfSearchJobs: listFinded});
   };
 
   updateSearch = (search) => {
-    // this.setState({search});
-    if (search !== '' && search) {
-      this.go(search);
-    }
+    this.setState({search});
   };
 
   getMapbox = (latitude, longitude) => {
