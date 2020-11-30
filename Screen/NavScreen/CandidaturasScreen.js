@@ -12,6 +12,8 @@ import _ from 'lodash';
 import {SearchBar} from 'react-native-elements';
 import {getUserJobs, getAllJobs} from '../../helpers/api';
 import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationEvents } from "react-navigation";
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -34,6 +36,14 @@ export default class ExperienciaScreen extends Component {
   }
 
   async componentDidMount() {
+    await this.getInformation();
+    this.props.navigation.addListener('focus', (e) => {
+      this.getInformation();
+    });
+  }
+
+  async getInformation(){
+    this.setState({spinner: true});
     const [isValid, AllJobs] = await getAllJobs();
     if (!isValid) {
       console.log('Error getting getAllJobs');
