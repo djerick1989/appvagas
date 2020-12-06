@@ -80,7 +80,6 @@ export default class ExperienciaScreen extends Component {
     if (!isValid) {
       console.log('error en getAllJobs');
     }
-    console.log('entro aqui2');
     this.setState({
       listOfSearchJobs: Jobs.results,
       listOfJobs: Jobs.results,
@@ -330,7 +329,7 @@ export default class ExperienciaScreen extends Component {
                           <View>
                             <KeyboardAvoidingView
                               enabled
-                              style={{flex: 4, marginTop: 30}}>
+                              style={{flex: 4, marginTop: 50}}>
                               <View style={styles.containerEspecial33}>
                                 <View style={styles.SectionStyleEspecial2}>
                                   <Text style={styles.InputLabelStyleTitle}>
@@ -400,21 +399,27 @@ export default class ExperienciaScreen extends Component {
                             </KeyboardAvoidingView>
                           </View>
                         </ScrollView>
-                        <Image
-                          source={{uri: element.logo}}
-                          style={{
-                            height: 50,
-                            position: 'absolute',
-                            resizeMode: 'contain',
-                            borderColor: '#686868',
-                            borderWidth: 1,
-                            width: 200,
-                            backgroundColor: '#FFFFFF',
-                            top: -30,
-                            padding: 5,
-                            borderRadius: 5,
-                          }}
-                        />
+                        {element.logo !== null && element.logo !== '' ? (
+                          <Image
+                            source={{
+                              uri: element.logo
+                                .replace('//', '/')
+                                .replace('//', '/'),
+                            }}
+                            style={{
+                              position: 'absolute',
+                              resizeMode: 'contain',
+                              borderColor: '#686868',
+                              borderWidth: 1,
+                              height: 75,
+                              width: 110,
+                              backgroundColor: '#FFFFFF',
+                              top: -30,
+                              padding: 5,
+                              borderRadius: 5,
+                            }}
+                          />
+                        ) : null}
                       </View>
                     </View>
 
