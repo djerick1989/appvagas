@@ -21,6 +21,7 @@ import {
   getUserEducations,
   deleteUserEducation,
 } from '../../helpers/api';
+import moment from 'moment';
 
 export default class FormacaoScreen extends Component {
   constructor(props) {
@@ -97,8 +98,27 @@ export default class FormacaoScreen extends Component {
 
   clickAddOrEdit = async () => {
     this.setState({spinner: true});
+    if (
+      this.state.nameEscola == '' ||
+      this.state.nameCurso == '' ||
+      this.state.itemNivel == '' ||
+      this.state.itemStatus == '' ||
+      this.state.dateStart == '' ||
+      this.state.dateFinish == ''
+    ) {
+      alert('requer a adição de todos os dados para continuar');
+      this.setState({spinner: false});
+      return;
+    }
     let realDate = this.transformDate(this.state.dateStart);
     let realDate2 = this.transformDate(this.state.dateFinish);
+    let date1 = moment(realDate);
+    let date2 = moment(realDate2);
+    if (!date1.isValid() || !date2.isValid()) {
+      alert('datas inválidas');
+      this.setState({spinner: false});
+      return;
+    }
     if (this.state.modalIs == 'created') {
       await postUserEducation({
         level: this.state.itemNivel,

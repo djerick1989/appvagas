@@ -267,9 +267,11 @@ export default class ExperienciaScreen extends Component {
           textStyle={styles.spinnerTextStyle}
         />
         <View style={styles.scrollContainer}>
-          <View>
+          <View style={{backgroundColor: '#6948F4'}}>
             <SearchBar
               lightTheme={true}
+              innerBorderStyle={{color: '#6948F4'}}
+              color={'#fff'}
               containerStyle={{
                 backgroundColor: 'transparent',
                 borderColor: 'transparent',

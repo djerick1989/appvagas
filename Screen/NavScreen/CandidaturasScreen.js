@@ -13,8 +13,9 @@ import _ from 'lodash';
 import {SearchBar} from 'react-native-elements';
 import {getUserJobs, getAllJobs} from '../../helpers/api';
 import Spinner from 'react-native-loading-spinner-overlay';
+import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
-import { NavigationEvents } from "react-navigation";
+import {NavigationEvents} from 'react-navigation';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -34,6 +35,7 @@ export default class ExperienciaScreen extends Component {
       spinner: true,
       subarea: null,
     };
+    moment.locale('pt-br');
   }
 
   async componentDidMount() {
@@ -43,7 +45,7 @@ export default class ExperienciaScreen extends Component {
     });
   }
 
-  async getInformation(){
+  async getInformation() {
     this.setState({spinner: true});
     const [isValid, AllJobs] = await getAllJobs();
     if (!isValid) {
@@ -121,9 +123,11 @@ export default class ExperienciaScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <View>
+            <View style={{backgroundColor: '#6948F4'}}>
               <SearchBar
                 lightTheme={true}
+                innerBorderStyle={{color: '#6948F4'}}
+                color={'#fff'}
                 containerStyle={{
                   backgroundColor: 'transparent',
                   borderColor: 'transparent',
@@ -140,96 +144,90 @@ export default class ExperienciaScreen extends Component {
               <Text style={styles.LabelStyle}>Candidaturas</Text>
               {this.state.search == null
                 ? this.state.listOfJobs.map((element, index) => {
-                    if (element.level != 10 && element.level != 4) {
-                      return (
-                        <View style={styles.cardContainer} key={index}>
-                          <View style={styles.cardItem}>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardTitle}>
-                              {this.state.allJobs.map((el) =>
-                                el.uid == element.job ? el.title : null,
-                              )}
-                            </Text>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardSubTitle}>
-                              {this.state.allJobs.map((el) =>
-                                el.uid == element.job
-                                  ? el.state + '-' + el.country
-                                  : null,
-                              )}
-                            </Text>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardType}>
-                              {element.apply_date.substring(
-                                0,
-                                element.apply_date.indexOf('T'),
-                              )}
-                            </Text>
-                          </View>
+                    return (
+                      <View style={styles.cardContainer} key={index}>
+                        <View style={styles.cardItem}>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardTitle}>
+                            {this.state.allJobs.map((el) =>
+                              el.uid == element.job ? el.title : null,
+                            )}
+                          </Text>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardSubTitle}>
+                            {this.state.allJobs.map((el) =>
+                              el.uid == element.job
+                                ? el.state + '-' + el.country
+                                : null,
+                            )}
+                          </Text>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardType}>
+                            {moment(element.apply_date)
+                              .locale('pt-br')
+                              .format('DD-MMM-YYYY')}
+                          </Text>
                         </View>
-                      );
-                    }
+                      </View>
+                    );
                   })
                 : this.state.listOfSearchJobs.map((element, index) => {
-                    if (element.level != 10 && element.level != 4) {
-                      return (
-                        <View style={styles.cardContainer} key={index}>
-                          <View style={styles.cardItem}>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardTitle}>
-                              {this.state.allJobs.map((el) =>
-                                el.uid == element.job ? el.title : null,
-                              )}
-                            </Text>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardSubTitle}>
-                              {this.state.allJobs.map((el) =>
-                                el.uid == element.job
-                                  ? el.state + '-' + el.country
-                                  : null,
-                              )}
-                            </Text>
-                            <Text
-                              onPress={() =>
-                                this.props.navigation.navigate('Home', {
-                                  searchId: element.job,
-                                })
-                              }
-                              style={styles.CardType}>
-                              {element.apply_date.substring(
-                                0,
-                                element.apply_date.indexOf('T'),
-                              )}
-                            </Text>
-                          </View>
+                    return (
+                      <View style={styles.cardContainer} key={index}>
+                        <View style={styles.cardItem}>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardTitle}>
+                            {this.state.allJobs.map((el) =>
+                              el.uid == element.job ? el.title : null,
+                            )}
+                          </Text>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardSubTitle}>
+                            {this.state.allJobs.map((el) =>
+                              el.uid == element.job
+                                ? el.state + '-' + el.country
+                                : null,
+                            )}
+                          </Text>
+                          <Text
+                            onPress={() =>
+                              this.props.navigation.navigate('Home', {
+                                searchId: element.job,
+                              })
+                            }
+                            style={styles.CardType}>
+                            {moment(element.apply_date)
+                              .locale('pt-br')
+                              .format('DD-MMM-YYYY')}
+                          </Text>
                         </View>
-                      );
-                    }
+                      </View>
+                    );
                   })}
             </KeyboardAvoidingView>
           </View>
@@ -253,7 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
-    margin: 10,
+    margin: 5,
   },
   containerEspecial2: {
     // flex: 1,
@@ -268,12 +266,12 @@ const styles = StyleSheet.create({
   cardItem: {
     width: '90%',
     marginLeft: 20,
-    backgroundColor: '#66666621',
+    backgroundColor: '#ffffff',
     height: 120,
     color: '#6948F4',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#6948F4',
+    borderColor: 'transparent',
   },
   item2: {
     width: '90%',
@@ -282,7 +280,7 @@ const styles = StyleSheet.create({
     color: '#6948F4',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#6948F4',
+    // borderColor: '#6948F4',
   },
   container: {
     flex: 1,
@@ -291,7 +289,8 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
+    backgroundColor: '#66666621',
   },
   SectionStyle: {
     height: 70,

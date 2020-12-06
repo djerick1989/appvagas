@@ -24,7 +24,7 @@ export default class IdiomasScreen extends Component {
     this.state = {
       spinner: true,
       fullName: 'Nome e Sobrenome',
-      imageSource: require('../../Image/avatar.png'),
+      imageSource: require('../../Image/avatar2.png'),
       phone1: '',
     };
   }
