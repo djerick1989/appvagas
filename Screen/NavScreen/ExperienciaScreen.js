@@ -9,6 +9,7 @@ import {
   TextInput,
   Modal,
   TouchableHighlight,
+  StatusBar,
   KeyboardAvoidingView,
   Keyboard,
   Platform,
@@ -171,6 +172,7 @@ export default class ExperienciaScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

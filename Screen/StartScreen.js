@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  StatusBar,
   Image,
   TouchableOpacity,
   Dimensions,
@@ -18,6 +19,7 @@ export default class StartScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <View style={{alignItems: 'center', flex: 1}}>
           <Image
             source={require('../Image/Logo-Pesquisa-Vagas.png')}

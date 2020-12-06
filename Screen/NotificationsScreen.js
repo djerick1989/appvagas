@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  StatusBar,
   Image,
   TouchableOpacity,
   Dimensions,
@@ -43,6 +44,7 @@ export default class NotificationsScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <View style={styles.SectionStyle}>
           <Image
             source={require('../Image/Messages-pana.png')}

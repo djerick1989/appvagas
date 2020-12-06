@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  StatusBar,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -152,6 +153,7 @@ const LoginScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <Loader loading={loading} />
       <View style={{alignItems: 'center', flex: 1}}>
         <Image
@@ -195,6 +197,7 @@ const LoginScreen = (props) => {
             style={styles.inputStyle}
             onChangeText={(password) => setPassword(password)}
             placeholder="******"
+            secureTextEntry={true}
             placeholderTextColor="#aaaaaa"
             autoCapitalize="sentences"
             returnKeyType="next"

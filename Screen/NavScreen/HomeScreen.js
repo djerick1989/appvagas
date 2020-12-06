@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  StatusBar,
   Image,
   KeyboardAvoidingView,
   TouchableOpacity,
@@ -49,10 +50,15 @@ export default class ExperienciaScreen extends Component {
 
   componentDidUpdate(prevState, prevProps) {
     if (this.props.route && this.props.route.params) {
+      console.log('test 1');
+      console.log('test 2');
+      console.log(prevProps.searchId);
+      console.log(this.props.route.params.searchId);
       if (
         prevProps.searchId !== this.props.route.params.searchId &&
         this.state.searching == false
       ) {
+        console.log('test 3');
         console.log('entro aqui');
         this.setState(
           {searchId: this.props.route.params.searchId, searching: true},
@@ -61,6 +67,7 @@ export default class ExperienciaScreen extends Component {
               (element) => element.uid == this.props.route.params.searchId,
             );
             this.go(jobToSearch);
+            console.log(jobToSearch);
             this.setState({searching: false, spinner: false});
           },
         );
@@ -73,7 +80,7 @@ export default class ExperienciaScreen extends Component {
     if (!isValid) {
       console.log('error en getAllJobs');
     }
-    console.log('entro aqui2');    
+    console.log('entro aqui2');
     this.setState({
       listOfSearchJobs: Jobs.results,
       listOfJobs: Jobs.results,
@@ -216,7 +223,6 @@ export default class ExperienciaScreen extends Component {
 
   clickOk = async (uidIn) => {
     this.go('next');
-    console.log(uidIn);
     const [a, b] = await postUserApplyJob({
       uid: uidIn,
       status: '1',
@@ -229,6 +235,7 @@ export default class ExperienciaScreen extends Component {
   };
 
   go = (page) => {
+    console.log('ingrese a go');
     if (page == 'next') {
       const goToPage = this.state.currentPage + 1;
       console.log(goToPage);
@@ -238,6 +245,8 @@ export default class ExperienciaScreen extends Component {
       });
     } else {
       const newPage = parseInt(page);
+      console.log(newPage);
+      console.log(this.state.listOfJobs.length);
       this.viewPager.current.setPage(newPage);
       this.setState({
         currentPage: newPage,
@@ -252,6 +261,7 @@ export default class ExperienciaScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

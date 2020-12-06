@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ScrollView,
+  StatusBar,
   TouchableOpacity,
   Button,
 } from 'react-native';
@@ -30,6 +31,7 @@ export default class PolicyScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <ScrollView
           style={styles.container}
           ref={(ref) => {

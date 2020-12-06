@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  StatusBar,
   Modal,
   TouchableHighlight,
   KeyboardAvoidingView,
@@ -142,6 +143,7 @@ export default class ObjetivoScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

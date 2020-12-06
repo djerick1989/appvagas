@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 
 import {
   StyleSheet,
+  StatusBar,
   Text,
   View,
   KeyboardAvoidingView,
@@ -112,6 +113,7 @@ export default class ExperienciaScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  StatusBar,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -46,6 +47,7 @@ const ChangePassScreen = (props) => {
   return (
     <View style={styles.container}>
       <Loader loading={loading} />
+      <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <View style={{alignItems: 'center', flex: 1}}>
         <Image
           source={require('../Image/Logo-Pesquisa-Vagas.png')}

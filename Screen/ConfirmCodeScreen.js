@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  StatusBar,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -39,6 +40,7 @@ const ConfirmCodeScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <Loader loading={loading} />
       <View style={{alignItems: 'center', flex: 1}}>
         <Image

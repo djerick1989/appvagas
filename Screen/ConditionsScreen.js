@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  StatusBar,
   TouchableOpacity,
   ScrollView,
   Dimensions,
@@ -32,6 +33,7 @@ export default class ConditionsScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <ScrollView
           style={styles.container}
           ref={(ref) => {

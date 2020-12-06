@@ -7,6 +7,7 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
+  StatusBar,
   ScrollView,
   SafeAreaView,
   Button,
@@ -52,6 +53,7 @@ export default class PreferencesScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <View style={styles.backTop}>
           <Text
             style={styles.BackStyle2}

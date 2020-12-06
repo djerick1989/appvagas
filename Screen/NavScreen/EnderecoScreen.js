@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  StatusBar,
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
@@ -70,6 +71,7 @@ export default class EnderecoScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

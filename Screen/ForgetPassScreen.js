@@ -1,11 +1,11 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
-  TextInput,
+  StatusBar,
   KeyboardAvoidingView,
 } from 'react-native';
 import Loader from '../Components/Loader';
@@ -16,7 +16,6 @@ const ForgetPassScreen = (props) => {
   let [userPhon, setUserPhon] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
-  //   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const handleSubmitButton = async () => {
     setErrortext('');
@@ -39,6 +38,7 @@ const ForgetPassScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <Loader loading={loading} />
       <View style={{alignItems: 'center', flex: 1}}>
         <Image

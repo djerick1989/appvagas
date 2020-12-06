@@ -5,6 +5,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  StatusBar,
   Dimensions,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
@@ -73,6 +74,7 @@ export default class SlideScreen extends Component {
     );
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <View style={{alignItems: 'center', flex: 1}}>
           <Image
             source={require('../Image/Logo-Pesquisa-Vagas.png')}

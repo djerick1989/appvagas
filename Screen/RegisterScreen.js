@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Modal,
+  StatusBar,
   TouchableHighlight,
   Alert,
   SafeAreaView,
@@ -677,6 +678,7 @@ export default class RegiterScreen extends Component {
     autoCapitalize = 'sentences',
     returnKeyType = 'next',
     keyboardType = 'default',
+    isPassword = false,
   ) => {
     return (
       <KeyboardAvoidingView enabled>
@@ -692,6 +694,7 @@ export default class RegiterScreen extends Component {
             blurOnSubmit={false}
             keyboardType={keyboardType}
             editable={!editable}
+            secureTextEntry={isPassword ? true : false}
           />
         </FadeInView>
       </KeyboardAvoidingView>
@@ -784,6 +787,7 @@ export default class RegiterScreen extends Component {
         onContentSizeChange={() =>
           this.scrollView.scrollToEnd({animated: true})
         }>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Loader loading={this.state.showLoading} />
         <TouchableWithoutFeedback>
           <View style={{padding: 20}}>
@@ -840,6 +844,11 @@ export default class RegiterScreen extends Component {
                   () => this.handleSubmitText('password'),
                   '*******',
                   this.state.isValidPassword,
+                  '#aaaaaa',
+                  'sentences',
+                  'next',
+                  'default',
+                  true,
                 )
               : null}
             {this.state.isValidPassword
@@ -1313,6 +1322,7 @@ export default class RegiterScreen extends Component {
             console.log('Modal has been closed.');
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+            <StatusBar backgroundColor="#6948F4" barStyle="default" />
             <ScrollView>
               <View style={{flex: 5, justifyContent: 'flex-start'}}>
                 <Text style={styles.LabelStyle}>

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  StatusBar,
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
@@ -156,6 +157,7 @@ export default class DadosPessoaisScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

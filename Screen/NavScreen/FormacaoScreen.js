@@ -7,6 +7,7 @@ import {
   View,
   TextInput,
   Modal,
+  StatusBar,
   TouchableHighlight,
   KeyboardAvoidingView,
   ScrollView,
@@ -165,6 +166,7 @@ export default class FormacaoScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

@@ -5,6 +5,7 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
+  StatusBar,
   Linking,
   ScrollView,
 } from 'react-native';
@@ -39,6 +40,7 @@ export default class IdiomasScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

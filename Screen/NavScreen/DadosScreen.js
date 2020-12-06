@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  StatusBar,
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
@@ -78,6 +79,7 @@ export default class DadosScreen extends Component {
   render() {
     return (
       <>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Spinner
           visible={this.state.spinner}
           textContent={'Carregando...'}

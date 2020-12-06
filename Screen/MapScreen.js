@@ -6,6 +6,7 @@ import {
   View,
   Image,
   TouchableOpacity,
+  StatusBar,
   Dimensions,
   Platform,
 } from 'react-native';
@@ -63,6 +64,7 @@ export default class MapScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <View style={styles.SectionStyle}>
           <Image
             source={require('../Image/map.png')}
