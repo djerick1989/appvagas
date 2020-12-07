@@ -1,10 +1,12 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
+import {Text, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
@@ -31,6 +33,52 @@ import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
 import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
+
+const ConfigsDrawer = createDrawerNavigator();
+const ConfigsDrawerScreen = () => (
+  <ConfigsDrawer.Navigator>
+    <ConfigsDrawer.Screen
+      name="HomeDrawer"
+      component={AppTabsScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="Configs"
+      component={ConfigurationScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="Policy"
+      component={PolicyScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="Termos"
+      component={ConditionsScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="Preferences"
+      component={PreferencesScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="Notifications"
+      component={NotificationsScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="MapScreen"
+      component={MapScreen}
+      options={{headerShown: false}}
+    />
+    <ConfigsDrawer.Screen
+      name="JumpBack"
+      component={SlideScreen}
+      options={{headerShown: false}}
+    />
+  </ConfigsDrawer.Navigator>
+);
 
 const ConfigsStack = createStackNavigator();
 const ConfigsStackScreen = () => (
@@ -118,6 +166,10 @@ const CurriculumStackScreen = () => (
     />
   </CurriculumStack.Navigator>
 );
+
+function SettingsScreen(props) {
+  return null;
+}
 
 const AppTabs = createBottomTabNavigator();
 const AppTabsScreen = () => (
@@ -279,7 +331,7 @@ export default () => {
         {userToken == '' || userToken == null ? (
           <AuthStackScreen />
         ) : (
-          <AppTabsScreen />
+          <ConfigsDrawerScreen />
         )}
       </NavigationContainer>
     </SafeAreaView>
