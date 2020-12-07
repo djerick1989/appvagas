@@ -123,11 +123,12 @@ export default class ExperienciaScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <View style={{backgroundColor: '#6948F4'}}>
+            <View>
+              {/* style={{backgroundColor: '#6948F4'}} */}
+              {/* color={'#fff'} */}
               <SearchBar
                 lightTheme={true}
                 innerBorderStyle={{color: '#6948F4'}}
-                color={'#fff'}
                 containerStyle={{
                   backgroundColor: 'transparent',
                   borderColor: 'transparent',

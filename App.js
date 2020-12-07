@@ -119,7 +119,11 @@ function CustomDrawerContent(propsParent) {
 const ConfigsDrawer = createDrawerNavigator();
 const ConfigsDrawerScreen = () => (
   <ConfigsDrawer.Navigator
-    drawerContent={(props) => <CustomDrawerContent {...props} />}>
+    drawerContent={(props) => <CustomDrawerContent {...props} />}
+    drawerContentOptions={{
+      activeTintColor: '#FFFFFF',
+      itemStyle: {marginVertical: 30},
+    }}>
     <ConfigsDrawer.Screen
       name="HomeDrawer"
       component={AppTabsScreen}
@@ -153,6 +157,36 @@ const ConfigsDrawerScreen = () => (
     <ConfigsDrawer.Screen
       name="Policy"
       component={PolicyScreen}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
+    />
+    <ConfigsDrawer.Screen
+      name="Notifications"
+      component={NotificationsScreen}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
+    />
+    <ConfigsDrawer.Screen
+      name="MapScreen"
+      component={MapScreen}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
+    />
+    <ConfigsDrawer.Screen
+      name="JumpBack"
+      component={SlideScreen}
       options={{
         drawerLabel: () => null,
         headerShown: false,
