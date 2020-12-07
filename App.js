@@ -1,12 +1,24 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
-import {Text, View} from 'react-native';
+import {
+  Text,
+  View,
+  Linking,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {List} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 
 import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
@@ -34,23 +46,97 @@ import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 
+function CustomDrawerContent(propsParent) {
+  return (
+    <DrawerContentScrollView {...propsParent}>
+      <DrawerItemList {...propsParent} />
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: '#ffffff',
+        }}>
+        <View>
+          <KeyboardAvoidingView enabled style={{flex: 4}}>
+
+            <View
+              style={{
+                marginTop: 40,
+                marginLeft: 15,
+                marginRight: 15,
+                margin: 10,
+              }}>
+              <List.Item
+                title="Preferências"
+                onPress={() => propsParent.navigation.navigate('Preferences')}
+                right={(props) => <List.Icon {...props} icon="menu-right" />}
+              />
+              <List.Item
+                title="Termos"
+                onPress={() =>
+                  propsParent.navigation.navigate('Termos', {
+                    comeFrom: 'preferences',
+                  })
+                }
+                right={(props) => <List.Icon {...props} icon="menu-right" />}
+              />
+              <List.Item
+                title="Políticas"
+                onPress={() =>
+                  propsParent.navigation.navigate('Policy', {
+                    comeFrom: 'preferences',
+                  })
+                }
+                right={(props) => <List.Icon {...props} icon="menu-right" />}
+              />
+              <List.Item
+                title="Ajuda"
+                onPress={() =>
+                  Linking.openURL('https://jobconvo.freshdesk.com/')
+                }
+                right={(props) => <List.Icon {...props} icon="menu-right" />}
+              />
+              <List.Item
+                title="Convidar Amgios"
+                onPress={() => alert('not implemented Yet')}
+                right={(props) => <List.Icon {...props} icon="logout" />}
+              />
+              <List.Item
+                title="Divulgar Vaga"
+                onPress={() =>
+                  Linking.openURL('https://www.jobconvo.com/pt-br/pricing/')
+                }
+                right={(props) => <List.Icon {...props} icon="menu-right" />}
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
+    </DrawerContentScrollView>
+  );
+}
+
 const ConfigsDrawer = createDrawerNavigator();
 const ConfigsDrawerScreen = () => (
-  <ConfigsDrawer.Navigator>
+  <ConfigsDrawer.Navigator
+    drawerContent={(props) => <CustomDrawerContent {...props} />}>
     <ConfigsDrawer.Screen
       name="HomeDrawer"
       component={AppTabsScreen}
-      options={{headerShown: false}}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
     />
-    <ConfigsDrawer.Screen
-      name="Configs"
-      component={ConfigurationScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsDrawer.Screen
-      name="Policy"
-      component={PolicyScreen}
-      options={{headerShown: false}}
+    {/* <ConfigsDrawer.Screen
+      name="Preferences"
+      component={PreferencesScreen}
+      options={{
+        drawerLabel: 'Preferências',
+        headerShown: false,
+        drawerIcon: () => <MaterialCommunityIcons name="home" />,
+      }}
     />
     <ConfigsDrawer.Screen
       name="Termos"
@@ -58,25 +144,14 @@ const ConfigsDrawerScreen = () => (
       options={{headerShown: false}}
     />
     <ConfigsDrawer.Screen
-      name="Preferences"
-      component={PreferencesScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsDrawer.Screen
-      name="Notifications"
-      component={NotificationsScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsDrawer.Screen
-      name="MapScreen"
-      component={MapScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsDrawer.Screen
-      name="JumpBack"
-      component={SlideScreen}
-      options={{headerShown: false}}
-    />
+      name="Policy"
+      component={PolicyScreen}
+      options={{
+        drawerLabel: 'Políticas',
+        headerShown: false,
+        drawerIcon: () => null,
+      }}
+    /> */}
   </ConfigsDrawer.Navigator>
 );
 
@@ -101,21 +176,6 @@ const ConfigsStackScreen = () => (
     <ConfigsStack.Screen
       name="Preferences"
       component={PreferencesScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsStack.Screen
-      name="Notifications"
-      component={NotificationsScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsStack.Screen
-      name="MapScreen"
-      component={MapScreen}
-      options={{headerShown: false}}
-    />
-    <ConfigsStack.Screen
-      name="JumpBack"
-      component={SlideScreen}
       options={{headerShown: false}}
     />
   </ConfigsStack.Navigator>
