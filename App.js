@@ -51,7 +51,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 function CustomDrawerContent(propsParent) {
   return (
     <DrawerContentScrollView {...propsParent}>
-      <DrawerItemList {...propsParent} />
       <ScrollView
         style={{
           flex: 1,
@@ -112,6 +111,7 @@ function CustomDrawerContent(propsParent) {
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
+      <DrawerItemList {...propsParent} />
     </DrawerContentScrollView>
   );
 }
@@ -130,29 +130,36 @@ const ConfigsDrawerScreen = () => (
         drawerIcon: () => null,
       }}
     />
-    {/* <ConfigsDrawer.Screen
+    <ConfigsDrawer.Screen
       name="Preferences"
       component={PreferencesScreen}
       options={{
-        drawerLabel: 'Preferências',
+        drawerLabel: () => null,
         headerShown: false,
-        drawerIcon: () => <MaterialCommunityIcons name="home" />,
+        title: null,
+        drawerIcon: () => null,
       }}
     />
     <ConfigsDrawer.Screen
       name="Termos"
       component={ConditionsScreen}
-      options={{headerShown: false}}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
     />
     <ConfigsDrawer.Screen
       name="Policy"
       component={PolicyScreen}
       options={{
-        drawerLabel: 'Políticas',
+        drawerLabel: () => null,
         headerShown: false,
+        title: null,
         drawerIcon: () => null,
       }}
-    /> */}
+    />
   </ConfigsDrawer.Navigator>
 );
 

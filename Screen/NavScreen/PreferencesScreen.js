@@ -84,11 +84,11 @@ export default class PreferencesScreen extends Component {
                   }
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
                 />
-                <List.Item
+                {/* <List.Item
                   title="open drawer "
                   onPress={() => this.props.navigation.toggleDrawer()}
                   right={(props) => <List.Icon {...props} icon="menu-right" />}
-                />
+                /> */}
               </View>
             </KeyboardAvoidingView>
           </View>
