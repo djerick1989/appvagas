@@ -3,6 +3,8 @@ import * as React from 'react';
 import {
   Text,
   View,
+  Button,
+  TouchableOpacity,
   Linking,
   ScrollView,
   KeyboardAvoidingView,
@@ -57,7 +59,6 @@ function CustomDrawerContent(propsParent) {
         }}>
         <View>
           <KeyboardAvoidingView enabled style={{flex: 4}}>
-
             <View
               style={{
                 marginTop: 40,
@@ -227,12 +228,9 @@ const CurriculumStackScreen = () => (
   </CurriculumStack.Navigator>
 );
 
-function SettingsScreen(props) {
-  return null;
-}
-
 const AppTabs = createBottomTabNavigator();
-const AppTabsScreen = () => (
+const AppTabsScreen = (propsParent) => (
+  //  tabBar={(props) => <MyTabBar {...props} />}
   <AppTabs.Navigator>
     <AppTabs.Screen
       name="Home"
@@ -272,9 +270,12 @@ const AppTabsScreen = () => (
         ),
       }}
     />
-    <AppTabs.Screen
+    {/* <AppTabs.Item
       name="Configs"
-      component={ConfigsStackScreen}
+      component={(props) => {
+        this.preventDefault = true;
+        return props.navigation.toggleDrawer();
+      }}
       options={{
         tabBarLabel: 'Configs',
         tabBarIcon: ({color, size}) => (
@@ -285,9 +286,54 @@ const AppTabsScreen = () => (
           />
         ),
       }}
+    /> */}
+    <AppTabs.Screen
+      name="Configs"
+      component={() => null}
+      options={{
+        tabBarLabel: 'Configs',
+        tabBarIcon: ({color, size}) => (
+          <MaterialCommunityIcons
+            name="cog-outline"
+            color={color}
+            size={size}
+          />
+        ),
+        tabBarButton: () => (
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              top: 3,
+            }}
+            onPress={() => propsParent.navigation.toggleDrawer()}>
+            <MaterialCommunityIcons
+              name="cog-outline"
+              color={'#969696'}
+              size={24}
+            />
+            <Text style={{color: '#969696', fontSize: 10, top: 7}}>
+              Configs
+            </Text>
+          </TouchableOpacity>
+        ),
+      }}
     />
   </AppTabs.Navigator>
 );
+
+function MyTabBar({navigation}) {
+  return (
+    <Button
+      title="Go somewhere"
+      onPress={() => {
+        // Navigate using the `navigation` prop that you received
+        navigation.toggleDrawer();
+      }}
+    />
+  );
+}
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
