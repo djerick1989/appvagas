@@ -330,7 +330,7 @@ const AppTabsScreen = (propsParent) => (
     /> */}
     <AppTabs.Screen
       name="Configs"
-      component={() => null}
+      component={ConfigsStackScreen}
       options={{
         tabBarLabel: 'Configs',
         tabBarIcon: ({color, size}) => (

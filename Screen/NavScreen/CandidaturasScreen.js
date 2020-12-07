@@ -35,7 +35,6 @@ export default class ExperienciaScreen extends Component {
       spinner: true,
       subarea: null,
     };
-    moment.locale('pt-br');
   }
 
   async componentDidMount() {
@@ -123,9 +122,7 @@ export default class ExperienciaScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <View>
-              {/* style={{backgroundColor: '#6948F4'}} */}
-              {/* color={'#fff'} */}
+            <View style={{backgroundColor: '#FFF'}}>
               <SearchBar
                 lightTheme={true}
                 innerBorderStyle={{color: '#6948F4'}}
