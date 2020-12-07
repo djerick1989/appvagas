@@ -23,6 +23,7 @@ import DropdownItems from '../Components/DropdownItems';
 import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {TextInputMask} from 'react-native-masked-text';
+import moment from 'moment';
 
 export default class RegiterScreen extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ export default class RegiterScreen extends Component {
       isValidJob: false,
       modalVisible: false,
       allowNotification: props.route.params.allowNotification,
-      hasEmail: null,
+      hasEmail: false,
       UserName: '',
       FirstName: '',
       LastName: '',
@@ -180,11 +181,13 @@ export default class RegiterScreen extends Component {
     timer = 750,
     withImage = false,
     styleIn = styles.chatboxStyle,
+    ChatContainerStyle = styles.ChatContainerStyle,
+    ChatTextStyle = styles.ChatTextStyle,
   ) {
     return (
       <View style={styleIn}>
-        <FadeInView duration={timer} style={styles.ChatContainerStyle}>
-          <Text style={styles.ChatTextStyle}>{item}</Text>
+        <FadeInView duration={timer} style={ChatContainerStyle}>
+          <Text style={ChatTextStyle}>{item}</Text>
           {withImage ? (
             <Image
               style={{
@@ -521,6 +524,11 @@ export default class RegiterScreen extends Component {
         break;
       case 'dateInicio':
         if (this.state.date.length == 10) {
+          let date1 = moment(this.state.date);
+          if (!date1.isValid()) {
+            alert('data inválida');
+            return;
+          }
           this.setState({
             isValidInicio: true,
           });
@@ -528,6 +536,11 @@ export default class RegiterScreen extends Component {
         break;
       case 'dateConcluido':
         if (this.state.dateConcluido.length == 10) {
+          let date2 = moment(this.state.date);
+          if (!date2.isValid()) {
+            alert('data inválida');
+            return;
+          }
           let realDate = this.transformDate(this.state.date);
           let realDate2 = this.transformDate(this.state.dateConcluido);
           fetch('https://mobapivagas.jobconvo.com/v1/user/add/education/', {
@@ -894,6 +907,8 @@ export default class RegiterScreen extends Component {
                   1000,
                   false,
                   styles.answerboxStyle,
+                  styles.ChatContainerStyleAnswer,
+                  styles.ChatTextStyleAnswer,
                 )
               : null}
             {this.state.hasEmail == false
@@ -1044,6 +1059,8 @@ export default class RegiterScreen extends Component {
                   1200,
                   false,
                   styles.answerboxStyle,
+                  styles.ChatContainerStyleAnswer,
+                  styles.ChatTextStyleAnswer,
                 )
               : null}
 
@@ -1231,11 +1248,6 @@ export default class RegiterScreen extends Component {
                       this.handleSubmitText('dateConcluido')
                     }
                     onChangeText={(text) => {
-                      if (text.length == 10) {
-                        this.setState({
-                          isValidConcluido: true,
-                        });
-                      }
                       this.setState({
                         dateConcluido: text,
                       });
@@ -1844,9 +1856,19 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
   },
+  ChatContainerStyleAnswer: {
+    backgroundColor: '#6948F4',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 15,
+  },
   ChatTextStyle: {
     fontSize: 18,
     color: '#000000',
+  },
+  ChatTextStyleAnswer: {
+    fontSize: 18,
+    color: '#ffffff',
   },
   MultiLineInputBoxStyle: {
     width: '70%',

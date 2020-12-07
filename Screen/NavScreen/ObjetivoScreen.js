@@ -806,10 +806,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonStyleArea: {
-    backgroundColor: '#6948F4',
+    backgroundColor: '#f7b604',
     borderWidth: 0,
     color: '#FFFFFF',
-    borderColor: '#6948F4',
+    borderColor: '#f7b604',
     height: 30,
     alignItems: 'center',
     borderRadius: 25,
@@ -821,8 +821,8 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   buttonTextStyleArea: {
-    color: '#FFFFFF',
-    paddingVertical: 8,
+    color: '#000000',
+    paddingVertical: 5,
     fontSize: 14,
     padding: 15,
   },
