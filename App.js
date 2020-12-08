@@ -19,6 +19,7 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerActions,
   DrawerItem,
 } from '@react-navigation/drawer';
 
@@ -194,6 +195,26 @@ const ConfigsDrawerScreen = () => (
         drawerIcon: () => null,
       }}
     />
+    <ConfigsDrawer.Screen
+      name="Curriculum"
+      component={CurriculumScreen}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
+    />
+    <ConfigsDrawer.Screen
+      name="Candidaturas"
+      component={CandidaturasScreen}
+      options={{
+        drawerLabel: () => null,
+        headerShown: false,
+        title: null,
+        drawerIcon: () => null,
+      }}
+    />
   </ConfigsDrawer.Navigator>
 );
 
@@ -348,7 +369,9 @@ const AppTabsScreen = (propsParent) => (
               justifyContent: 'flex-start',
               top: 3,
             }}
-            onPress={() => propsParent.navigation.toggleDrawer()}>
+            onPress={(props) => {
+              propsParent.navigation.toggleDrawer();
+            }}>
             <MaterialCommunityIcons
               name="cog-outline"
               color={'#969696'}
@@ -436,7 +459,7 @@ const AuthStackScreen = () => (
     />
     <AuthStack.Screen
       name="JumpToThis"
-      component={AppTabsScreen}
+      component={ConfigsDrawerScreen}
       options={{headerShown: false}}
     />
   </AuthStack.Navigator>

@@ -1,24 +1,12 @@
-//Import React and Hooks we needed
 import React, {useState, useEffect} from 'react';
-
-//Import all required component
 import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-// import NetInfo from '@react-native-community/netinfo';
 const SplashScreen = (props) => {
-  //State for ActivityIndicator animation
   let [animating, setAnimating] = useState(true);
 
   useEffect(() => {
-    // NetInfo.fetch().then((state) => {
-    //   console.log('Connection type', state.type);
-    //   console.log('Is connected?', state.isConnected);
-    // });
     setTimeout(() => {
       setAnimating(false);
-      //Check if user_id is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
       AsyncStorage.getItem('user_id').then((value) =>
         props.navigation.navigate(
           value === null ? 'SlideScreen' : 'DrawerNavigationRoutes',
