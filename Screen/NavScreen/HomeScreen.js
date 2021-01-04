@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share from 'react-native-share';
 import {
@@ -12,11 +12,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {SearchBar} from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {getAllJobs, postUserApplyJob} from '../../helpers/api';
+import { getAllJobs, postUserApplyJob } from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -49,26 +49,20 @@ export default class ExperienciaScreen extends Component {
   }
 
   componentDidUpdate(prevState, prevProps) {
-    if (this.props.route && this.props.route.params) {
-      console.log('test 1');
-      console.log('test 2');
-      console.log(prevProps.searchId);
-      console.log(this.props.route.params.searchId);
+    if (this.props.route && this.props.route.params) {     
       if (
         prevProps.searchId !== this.props.route.params.searchId &&
         this.state.searching == false
-      ) {
-        console.log('test 3');
-        console.log('entro aqui');
+      ) {      
         this.setState(
-          {searchId: this.props.route.params.searchId, searching: true},
+          { searchId: this.props.route.params.searchId, searching: true },
           () => {
             const jobToSearch = this.state.listOfJobs.findIndex(
               (element) => element.uid == this.props.route.params.searchId,
             );
             this.go(jobToSearch);
             console.log(jobToSearch);
-            this.setState({searching: false, spinner: false});
+            this.setState({ searching: false, spinner: false });
           },
         );
       }
@@ -116,7 +110,7 @@ export default class ExperienciaScreen extends Component {
   };
 
   updateSearch = (search) => {
-    this.setState({search});
+    this.setState({ search });
   };
 
   getMapbox = (latitude, longitude) => {
@@ -270,13 +264,18 @@ export default class ExperienciaScreen extends Component {
           <View>
             <SearchBar
               lightTheme={true}
-              innerBorderStyle={{color: '#6948F4'}}
+              innerBorderStyle={{ color: '#6948F4' }}
+              placeholderTextColor='white'
               containerStyle={{
-                backgroundColor: 'transparent',
-                borderColor: 'transparent',
+                marginTop: -10,
+                backgroundColor: '#6948F4',
+                borderColor: '#6948F4',
               }}
               inputContainerStyle={{
-                backgroundColor: 'transparent',
+                backgroundColor: '#6948F4',
+              }}
+              inputStyle={{
+                color: 'white'
               }}
               onSubmitEditing={() => this.onSearchClick()}
               placeholder="Buscar Vagas..."
@@ -308,7 +307,7 @@ export default class ExperienciaScreen extends Component {
                       borderBottomEndRadius: 25,
                       borderBottomStartRadius: 25,
                     }}>
-                    <View style={{width: '100%', height: '40%'}}>
+                    <View style={{ width: '100%', height: '40%' }}>
                       <WebView
                         javaScriptEnabled={true}
                         source={{
@@ -319,18 +318,18 @@ export default class ExperienciaScreen extends Component {
                         }}
                       />
                     </View>
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                       <View
                         style={{
                           flex: 1,
                           justifyContent: 'center',
                           alignItems: 'center',
                         }}>
-                        <ScrollView style={styles.scrollContainer}>
+                        <ScrollView style={styles.scrollContainerContent}>
                           <View>
                             <KeyboardAvoidingView
                               enabled
-                              style={{flex: 4, marginTop: 50}}>
+                              style={{ flex: 4, marginTop: 50 }}>
                               <View style={styles.containerEspecial33}>
                                 <View style={styles.SectionStyleEspecial2}>
                                   <Text style={styles.InputLabelStyleTitle}>
@@ -511,23 +510,23 @@ export default class ExperienciaScreen extends Component {
                 </View>
               ))
             ) : (
-              <View
-                key="99"
-                style={{
-                  paddingLeft: 25,
-                  paddingRight: 25,
-                }}>
                 <View
+                  key="99"
                   style={{
-                    height: '100%',
-                    alignSelf: 'center',
+                    paddingLeft: 25,
+                    paddingRight: 25,
                   }}>
-                  <Text style={styles.textWhenNone}>
-                    volte mais tarde para procurar mais vagas
+                  <View
+                    style={{
+                      height: '100%',
+                      alignSelf: 'center',
+                    }}>
+                    <Text style={styles.textWhenNone}>
+                      volte mais tarde para procurar mais vagas
                   </Text>
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
           </ViewPager>
         </View>
       </>
@@ -540,6 +539,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start',
+    backgroundColor: 'white',
     paddingTop: 20,
     borderColor: '#686868',
     borderTopWidth: 1,
@@ -596,7 +596,7 @@ const styles = StyleSheet.create({
   cardItem: {
     width: '90%',
     marginLeft: 20,
-    backgroundColor: '#66666621',
+    backgroundColor: 'white',
     height: 120,
     color: '#6948F4',
     borderWidth: 1,
@@ -622,7 +622,13 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#66666621',
+    borderColor: '#686868',
+    borderTopWidth: 1,
+  },
+  scrollContainerContent: {
+    flex: 1,
+    backgroundColor: 'white',
     borderColor: '#686868',
     borderTopWidth: 1,
   },
@@ -816,7 +822,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
   },
-
   BackStyle2: {
     color: '#6948F4',
     fontWeight: 'bold',

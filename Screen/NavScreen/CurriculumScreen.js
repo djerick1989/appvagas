@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,8 +11,8 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import {patchUserProfile, getUserProfile, uploadPhoto} from '../../helpers/api';
-import {List} from 'react-native-paper';
+import { patchUserProfile, getUserProfile, uploadPhoto } from '../../helpers/api';
+import { List } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -39,21 +38,21 @@ export default class IdiomasScreen extends Component {
       spinner: false,
     });
     if (d.photo) {
-      this.setState({imageSource: {uri: d.photo}});
+      this.setState({ imageSource: { uri: d.photo } });
     }
   }
 
   updateImageOnProfile = async (urlImage) => {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     const dataIn = this.createFormData(urlImage, {
       area_code: '11',
       phone1: this.state.phone1,
     });
     const [a, b] = await uploadPhoto(dataIn);
     if (b.photo) {
-      this.setState({imageSource: {uri: b.photo}});
+      this.setState({ imageSource: { uri: b.photo } });
     }
-    this.setState({spinner: false});
+    this.setState({ spinner: false });
   };
 
   createFormData = (photo, body) => {
@@ -83,6 +82,7 @@ export default class IdiomasScreen extends Component {
       maxWidth: 200,
     };
     ImagePicker.launchCamera(options, (response) => {
+      console.log('image changed');
       this.updateImageOnProfile(response);
     });
   };
@@ -98,12 +98,12 @@ export default class IdiomasScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <TouchableHighlight
                 activeOpacity={1}
                 underlayColor={'transparent'}
                 onPress={() => this.onClickImage()}>
-                <View style={{alignItems: 'center', flex: 1}}>
+                <View style={{ alignItems: 'center', flex: 1 }}>
                   <Image
                     source={this.state.imageSource}
                     style={{
@@ -125,39 +125,39 @@ export default class IdiomasScreen extends Component {
                 <List.Item
                   title="Dado Cadastrais"
                   onPress={() => this.props.navigation.navigate('Dados')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Dados Pessoais"
                   onPress={() =>
                     this.props.navigation.navigate('DadosPessoais')
                   }
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Endereço"
                   onPress={() => this.props.navigation.navigate('Endereco')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Objetivo Profissional"
                   onPress={() => this.props.navigation.navigate('Objetivo')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Formação Acadêmica"
                   onPress={() => this.props.navigation.navigate('Formacao')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Experiência Profissional"
                   onPress={() => this.props.navigation.navigate('Experiencia')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
                 <List.Item
                   title="Idiomas"
                   onPress={() => this.props.navigation.navigate('Idiom')}
-                  right={(props) => <List.Icon {...props} icon="menu-right" />}
+                  right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
                 />
               </View>
             </KeyboardAvoidingView>

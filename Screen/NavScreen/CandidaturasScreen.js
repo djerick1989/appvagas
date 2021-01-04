@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
@@ -10,12 +10,12 @@ import {
   ScrollView,
 } from 'react-native';
 import _ from 'lodash';
-import {SearchBar} from 'react-native-elements';
-import {getUserJobs, getAllJobs} from '../../helpers/api';
+import { SearchBar } from 'react-native-elements';
+import { getUserJobs, getAllJobs } from '../../helpers/api';
 import Spinner from 'react-native-loading-spinner-overlay';
 import moment from 'moment';
 import AsyncStorage from '@react-native-community/async-storage';
-import {NavigationEvents} from 'react-navigation';
+import { NavigationEvents } from 'react-navigation';
 
 export default class ExperienciaScreen extends Component {
   constructor(props) {
@@ -45,7 +45,7 @@ export default class ExperienciaScreen extends Component {
   }
 
   async getInformation() {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     const [isValid, AllJobs] = await getAllJobs();
     if (!isValid) {
       console.log('Error getting getAllJobs');
@@ -87,7 +87,7 @@ export default class ExperienciaScreen extends Component {
   }
 
   updateSearch = (search) => {
-    this.setState({search});
+    this.setState({ search });
     const listFinded = this.state.listOfJobs.filter(
       (el) =>
         (el.area && el.area.toLowerCase().includes(search.toLowerCase())) ||
@@ -108,7 +108,7 @@ export default class ExperienciaScreen extends Component {
         (el.state && el.state.toLowerCase().includes(search.toLowerCase())) ||
         (el.title && el.title.toLowerCase().includes(search.toLowerCase())),
     );
-    this.setState({listOfSearchJobs: listFinded});
+    this.setState({ listOfSearchJobs: listFinded });
   };
 
   render() {
@@ -122,111 +122,116 @@ export default class ExperienciaScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <View style={{backgroundColor: '#FFF'}}>
+            <View style={{ backgroundColor: '#FFF' }}>
               <SearchBar
                 lightTheme={true}
-                innerBorderStyle={{color: '#6948F4'}}
+                innerBorderStyle={{ color: '#6948F4' }}
+                placeholderTextColor='white'
                 containerStyle={{
-                  backgroundColor: 'transparent',
-                  borderColor: 'transparent',
+                  marginTop: -10,
+                  backgroundColor: '#6948F4',
+                  borderColor: '#6948F4',
                 }}
                 inputContainerStyle={{
-                  backgroundColor: 'transparent',
+                  backgroundColor: '#6948F4',
+                }}
+                inputStyle={{
+                  color: 'white'
                 }}
                 placeholder="Buscar Vagas..."
                 onChangeText={this.updateSearch}
                 value={this.state.search}
               />
             </View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <Text style={styles.LabelStyle}>Candidaturas</Text>
               {this.state.search == null
                 ? this.state.listOfJobs.map((element, index) => {
-                    return (
-                      <View style={styles.cardContainer} key={index}>
-                        <View style={styles.cardItem}>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardTitle}>
-                            {this.state.allJobs.map((el) =>
-                              el.uid == element.job ? el.title : null,
-                            )}
-                          </Text>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardSubTitle}>
-                            {this.state.allJobs.map((el) =>
-                              el.uid == element.job
-                                ? el.state + '-' + el.country
-                                : null,
-                            )}
-                          </Text>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardType}>
-                            {moment(element.apply_date)
-                              .locale('pt-br')
-                              .format('DD-MMM-YYYY')}
-                          </Text>
-                        </View>
+                  return (
+                    <View style={styles.cardContainer} key={index}>
+                      <View style={styles.cardItem}>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.uid == element.job ? el.title : null,
+                          )}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.uid == element.job
+                              ? el.state + '-' + el.country
+                              : null,
+                          )}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardType}>
+                          {moment(element.apply_date)
+                            .locale('pt-br')
+                            .format('DD-MMM-YYYY')}
+                        </Text>
                       </View>
-                    );
-                  })
+                    </View>
+                  );
+                })
                 : this.state.listOfSearchJobs.map((element, index) => {
-                    return (
-                      <View style={styles.cardContainer} key={index}>
-                        <View style={styles.cardItem}>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardTitle}>
-                            {this.state.allJobs.map((el) =>
-                              el.uid == element.job ? el.title : null,
-                            )}
-                          </Text>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardSubTitle}>
-                            {this.state.allJobs.map((el) =>
-                              el.uid == element.job
-                                ? el.state + '-' + el.country
-                                : null,
-                            )}
-                          </Text>
-                          <Text
-                            onPress={() =>
-                              this.props.navigation.navigate('Home', {
-                                searchId: element.job,
-                              })
-                            }
-                            style={styles.CardType}>
-                            {moment(element.apply_date)
-                              .locale('pt-br')
-                              .format('DD-MMM-YYYY')}
-                          </Text>
-                        </View>
+                  return (
+                    <View style={styles.cardContainer} key={index}>
+                      <View style={styles.cardItem}>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.uid == element.job ? el.title : null,
+                          )}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardSubTitle}>
+                          {this.state.allJobs.map((el) =>
+                            el.uid == element.job
+                              ? el.state + '-' + el.country
+                              : null,
+                          )}
+                        </Text>
+                        <Text
+                          onPress={() =>
+                            this.props.navigation.navigate('Home', {
+                              searchId: element.job,
+                            })
+                          }
+                          style={styles.CardType}>
+                          {moment(element.apply_date)
+                            .locale('pt-br')
+                            .format('DD-MMM-YYYY')}
+                        </Text>
                       </View>
-                    );
-                  })}
+                    </View>
+                  );
+                })}
             </KeyboardAvoidingView>
           </View>
         </ScrollView>

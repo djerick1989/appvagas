@@ -9,11 +9,11 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {StyleSheet, SafeAreaView} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {List} from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { List } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   createDrawerNavigator,
@@ -52,64 +52,63 @@ import AsyncStorage from '@react-native-community/async-storage';
 function CustomDrawerContent(propsParent) {
   return (
     <DrawerContentScrollView {...propsParent}>
-      <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff',
-        }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
         <View>
-          <KeyboardAvoidingView enabled style={{flex: 4}}>
-            <View
-              style={{
-                marginTop: 40,
-                marginLeft: 15,
-                marginRight: 15,
-                margin: 10,
-              }}>
-              <List.Item
-                title="Preferências"
-                onPress={() => propsParent.navigation.navigate('Preferences')}
-                right={(props) => <List.Icon {...props} icon="menu-right" />}
-              />
-              <List.Item
-                title="Termos"
-                onPress={() =>
-                  propsParent.navigation.navigate('Termos', {
-                    comeFrom: 'preferences',
-                  })
-                }
-                right={(props) => <List.Icon {...props} icon="menu-right" />}
-              />
-              <List.Item
-                title="Políticas"
-                onPress={() =>
-                  propsParent.navigation.navigate('Policy', {
-                    comeFrom: 'preferences',
-                  })
-                }
-                right={(props) => <List.Icon {...props} icon="menu-right" />}
-              />
-              <List.Item
-                title="Ajuda"
-                onPress={() =>
-                  Linking.openURL('https://jobconvo.freshdesk.com/')
-                }
-                right={(props) => <List.Icon {...props} icon="menu-right" />}
-              />
-              <List.Item
-                title="Convidar Amgios"
-                onPress={() => alert('not implemented Yet')}
-                right={(props) => <List.Icon {...props} icon="logout" />}
-              />
-              <List.Item
-                title="Divulgar Vaga"
-                onPress={() =>
-                  Linking.openURL('https://www.jobconvo.com/pt-br/pricing/')
-                }
-                right={(props) => <List.Icon {...props} icon="menu-right" />}
-              />
-            </View>
-          </KeyboardAvoidingView>
+          <List.Item
+            title="Preferências"
+            onPress={() => propsParent.navigation.navigate('Preferences')}
+            right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="Termos"
+            onPress={() =>
+              propsParent.navigation.navigate('Termos', {
+                comeFrom: 'preferences',
+              })
+            }
+            right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="Políticas"
+            onPress={() =>
+              propsParent.navigation.navigate('Policy', {
+                comeFrom: 'preferences',
+              })
+            }
+            right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="Ajuda"
+            onPress={() =>
+              Linking.openURL('https://jobconvo.freshdesk.com/')
+            }
+            right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="Convidar Amgios"
+            onPress={() => alert('not implemented Yet')}
+            right={(props) => <List.Icon {...props} icon="logout" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="Divulgar Vaga"
+            onPress={() =>
+              Linking.openURL('https://www.jobconvo.com/pt-br/pricing/')
+            }
+            right={(props) => <List.Icon {...props} icon="menu-right" color='#6948F4' />}
+          />
+          <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
+          <List.Item
+            title="SALIR"
+            titleStyle={{ color: 'red' }}
+            onPress={() => {
+
+            }}
+          />
         </View>
       </ScrollView>
       <DrawerItemList {...propsParent} />
@@ -123,7 +122,7 @@ const ConfigsDrawerScreen = () => (
     drawerContent={(props) => <CustomDrawerContent {...props} />}
     drawerContentOptions={{
       activeTintColor: '#FFFFFF',
-      itemStyle: {marginVertical: 30},
+      itemStyle: { marginVertical: 30 },
     }}>
     <ConfigsDrawer.Screen
       name="HomeDrawer"
@@ -224,22 +223,22 @@ const ConfigsStackScreen = () => (
     <ConfigsStack.Screen
       name="Configs"
       component={ConfigurationScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <ConfigsStack.Screen
       name="Policy"
       component={PolicyScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <ConfigsStack.Screen
       name="Termos"
       component={ConditionsScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <ConfigsStack.Screen
       name="Preferences"
       component={PreferencesScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
   </ConfigsStack.Navigator>
 );
@@ -250,56 +249,55 @@ const CurriculumStackScreen = () => (
     <CurriculumStack.Screen
       name="Curriculum"
       component={CurriculumScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Dados"
       component={DadosScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="DadosPessoais"
       component={DadosPessoaisScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="Endereco"
       component={EnderecoScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="Objetivo"
       component={ObjetivoScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="Formacao"
       component={FormacaoScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="Experiencia"
       component={ExperienciaScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
     <CurriculumStack.Screen
       name="Idiom"
       component={IdiomasScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: false }}
     />
   </CurriculumStack.Navigator>
 );
 
 const AppTabs = createBottomTabNavigator();
 const AppTabsScreen = (propsParent) => (
-  //  tabBar={(props) => <MyTabBar {...props} />}
-  <AppTabs.Navigator>
+  <AppTabs.Navigator tabBarOptions={{}}>
     <AppTabs.Screen
       name="Home"
       component={HomeScreen}
       options={{
         tabBarLabel: 'Vagas',
-        tabBarIcon: ({color, size}) => (
+        tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="home" color={color} size={size} />
         ),
       }}
@@ -309,7 +307,7 @@ const AppTabsScreen = (propsParent) => (
       component={CandidaturasScreen}
       options={{
         tabBarLabel: 'Candidaturas',
-        tabBarIcon: ({color, size}) => (
+        tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
             name="format-list-bulleted"
             color={color}
@@ -323,7 +321,7 @@ const AppTabsScreen = (propsParent) => (
       component={CurriculumStackScreen}
       options={{
         tabBarLabel: 'Currículo',
-        tabBarIcon: ({color, size}) => (
+        tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
             name="account-outline"
             color={color}
@@ -354,7 +352,7 @@ const AppTabsScreen = (propsParent) => (
       component={ConfigsStackScreen}
       options={{
         tabBarLabel: 'Configs',
-        tabBarIcon: ({color, size}) => (
+        tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
             name="cog-outline"
             color={color}
@@ -367,7 +365,7 @@ const AppTabsScreen = (propsParent) => (
               flex: 1,
               alignItems: 'center',
               justifyContent: 'flex-start',
-              top: 3,
+              top: 3
             }}
             onPress={(props) => {
               propsParent.navigation.toggleDrawer();
@@ -377,7 +375,7 @@ const AppTabsScreen = (propsParent) => (
               color={'#969696'}
               size={24}
             />
-            <Text style={{color: '#969696', fontSize: 10, top: 7}}>
+            <Text style={{ color: '#969696', fontSize: 10, top: 7 }}>
               Configs
             </Text>
           </TouchableOpacity>
@@ -387,7 +385,7 @@ const AppTabsScreen = (propsParent) => (
   </AppTabs.Navigator>
 );
 
-function MyTabBar({navigation}) {
+function MyTabBar({ navigation }) {
   return (
     <Button
       title="Go somewhere"
@@ -405,62 +403,62 @@ const AuthStackScreen = () => (
     <AuthStack.Screen
       name="SplashScreen"
       component={SplashScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="SlideScreen"
       component={SlideScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="StartScreen"
       component={StartScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="LoginScreen"
       component={LoginScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="ForgetPassScreen"
       component={ForgetPassScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="ChangePassScreen"
       component={ChangePassScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="ConfirmCodeScreen"
       component={ConfirmCodeScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="ConditionsScreen"
       component={ConditionsScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="RegisterScreen"
       component={RegisterScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="MapScreen"
       component={MapScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="NotificationsScreen"
       component={NotificationsScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <AuthStack.Screen
       name="JumpToThis"
       component={ConfigsDrawerScreen}
-      options={{headerShown: false}}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
   </AuthStack.Navigator>
 );
@@ -501,8 +499,8 @@ export default () => {
         {userToken == '' || userToken == null ? (
           <AuthStackScreen />
         ) : (
-          <ConfigsDrawerScreen />
-        )}
+            <ConfigsDrawerScreen />
+          )}
       </NavigationContainer>
     </SafeAreaView>
   );

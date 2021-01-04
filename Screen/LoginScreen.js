@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect, useContext} from 'react';
+import React, { Component, useState, useEffect, useContext } from 'react';
 
 import {
   StyleSheet,
@@ -13,10 +13,10 @@ import {
   Keyboard,
 } from 'react-native';
 import Loader from '../Components/Loader';
-import {TextInputMask} from 'react-native-masked-text';
+import { TextInputMask } from 'react-native-masked-text';
 import KeyboardListener from 'react-native-keyboard-listener';
 import AsyncStorage from '@react-native-community/async-storage';
-import {AuthContext} from '../Components/AuthContext';
+import { AuthContext } from '../Components/AuthContext';
 
 const LoginScreen = (props) => {
   let [userPhon, setUserPhon] = useState('');
@@ -26,7 +26,7 @@ const LoginScreen = (props) => {
   let [usertoken, setToken] = useState(false);
   let [isKeyboardVisible, setKeyboardVisible] = useState('');
 
-  const {signIn} = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -123,8 +123,8 @@ const LoginScreen = (props) => {
               );
               fetch(
                 'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
-                  responseJson.id +
-                  '/update/',
+                responseJson.id +
+                '/update/',
                 {
                   method: 'GET',
                   headers: {
@@ -155,7 +155,7 @@ const LoginScreen = (props) => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <Loader loading={loading} />
-      <View style={{alignItems: 'center', flex: 1}}>
+      <View style={{ alignItems: 'center', flex: 1 }}>
         <Image
           source={require('../Image/Logo-Pesquisa-Vagas.png')}
           style={{
@@ -168,7 +168,7 @@ const LoginScreen = (props) => {
         />
       </View>
 
-      <KeyboardAvoidingView enabled style={{flex: 4}}>
+      <KeyboardAvoidingView enabled style={{ flex: 4 }}>
         <Text style={styles.LabelStyle}>Login</Text>
         <View style={styles.SectionStyle}>
           <Text style={styles.InputLabelStyle}>Telefone Celular</Text>
@@ -199,7 +199,7 @@ const LoginScreen = (props) => {
             placeholder="******"
             secureTextEntry={true}
             placeholderTextColor="#aaaaaa"
-            autoCapitalize="sentences"
+            autoCapitalize="none"
             returnKeyType="next"
             blurOnSubmit={false}
             onSubmitEditing={() => handleSubmitButton()}
@@ -211,18 +211,18 @@ const LoginScreen = (props) => {
       </KeyboardAvoidingView>
       {isKeyboardVisible == false && (
         <View
-          style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
+          style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}>
           <View
             style={{
               flexDirection: 'row',
               marginBottom: 30,
               alignItems: 'center',
             }}>
-            <Text style={{color: '#000000'}}>Esqueceu sua senha? </Text>
+            <Text style={{ color: '#000000' }}>Esqueceu sua senha? </Text>
             <TouchableOpacity
               onPress={() => props.navigation.navigate('ForgetPassScreen')}
               activeOpacity={0.5}>
-              <Text style={{color: '#6948F4', fontWeight: 'bold'}}>
+              <Text style={{ color: '#6948F4', fontWeight: 'bold' }}>
                 Recuperar
               </Text>
             </TouchableOpacity>
