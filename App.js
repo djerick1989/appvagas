@@ -48,6 +48,7 @@ import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
 import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
 import AsyncStorage from '@react-native-community/async-storage';
+import RNRestart from 'react-native-restart';
 
 function CustomDrawerContent(propsParent) {
   return (
@@ -105,8 +106,10 @@ function CustomDrawerContent(propsParent) {
           <List.Item
             title="SALIR"
             titleStyle={{ color: 'red' }}
-            onPress={() => {
-
+            onPress={async () => {
+              await AsyncStorage.clear().then(() => {
+                RNRestart.Restart();
+              });
             }}
           />
         </View>

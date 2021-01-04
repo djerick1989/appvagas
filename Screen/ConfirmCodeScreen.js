@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,15 +8,52 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  Platform
 } from 'react-native';
+import { getPhoneNumber } from 'react-native-device-info';
+import { request, check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Loader from '../Components/Loader';
-import {postUserRecoverCode} from '../helpers/api';
+import { postUserRecoverCode, postUserRecoverPass } from '../helpers/api';
 
 const ConfirmCodeScreen = (props) => {
   let [userCode, setuserCode] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
   //   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+
+  useEffect(() => {
+    const getCode = async () => {
+      if (Platform.OS !== 'ios') {
+        let permission = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+        if (permission !== RESULTS.GRANTED) {
+          await request(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+          permission = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
+          if (permission == RESULTS.GRANTED) {
+            getPhoneNumber().then(async phone => {
+              setLoading(true);
+              const [a, b] = await postUserRecoverCode({
+                username: phone.slice(3),
+              });
+              setLoading(false);
+              console.log(a);
+              console.log(b);
+            });
+          }
+        } else {
+          getPhoneNumber().then(async phone => {
+            setLoading(true);
+            const [a, b] = await postUserRecoverCode({
+              username: phone.slice(3),
+            });
+            setLoading(false);
+            console.log(a);
+            console.log(b);
+          });
+        }
+      }
+    }
+    getCode();
+  }, []);
 
   const handleSubmitButton = async () => {
     setErrortext('');
@@ -42,7 +79,7 @@ const ConfirmCodeScreen = (props) => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#6948F4" barStyle="default" />
       <Loader loading={loading} />
-      <View style={{alignItems: 'center', flex: 1}}>
+      <View style={{ alignItems: 'center', flex: 1 }}>
         <Image
           source={require('../Image/Logo-Pesquisa-Vagas.png')}
           style={{
@@ -55,7 +92,7 @@ const ConfirmCodeScreen = (props) => {
         />
       </View>
 
-      <KeyboardAvoidingView enabled style={{flex: 4}}>
+      <KeyboardAvoidingView enabled style={{ flex: 4 }}>
         <Text style={styles.LabelStyle}>Recuperar Senha</Text>
         <Text style={styles.LabelStyle2}>
           Enviamos un SMS no seu número com o código para recuperar sua senha.

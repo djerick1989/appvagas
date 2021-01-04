@@ -105,11 +105,9 @@ const LoginScreen = (props) => {
       .then((response) => response.json())
       .then((responseJson) => {
         //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
+        setLoading(false);        
         // If server response message same as Data Matched
-        if (responseJson.token) {
-          console.log(responseJson.token.api_key);
+        if (responseJson.token) {          
           setToken(responseJson.token.api_key);
           AsyncStorage.setItem('userId', '' + responseJson.id);
           AsyncStorage.setItem('username', '' + responseJson.username);
@@ -220,7 +218,7 @@ const LoginScreen = (props) => {
             }}>
             <Text style={{ color: '#000000' }}>Esqueceu sua senha? </Text>
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('ForgetPassScreen')}
+              onPress={() => props.navigation.navigate('ConfirmCodeScreen')}
               activeOpacity={0.5}>
               <Text style={{ color: '#6948F4', fontWeight: 'bold' }}>
                 Recuperar
@@ -239,6 +237,7 @@ const LoginScreen = (props) => {
 };
 
 export default LoginScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
