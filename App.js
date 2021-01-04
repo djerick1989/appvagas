@@ -254,37 +254,37 @@ const CurriculumStackScreen = () => (
     <CurriculumStack.Screen
       name="Dados"
       component={DadosScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="DadosPessoais"
       component={DadosPessoaisScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Endereco"
       component={EnderecoScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Objetivo"
       component={ObjetivoScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Formacao"
       component={FormacaoScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Experiencia"
       component={ExperienciaScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
     <CurriculumStack.Screen
       name="Idiom"
       component={IdiomasScreen}
-      options={{ headerShown: false }}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
   </CurriculumStack.Navigator>
 );

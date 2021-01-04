@@ -183,7 +183,7 @@ export default class ExperienciaScreen extends Component {
                           style={styles.CardType}>
                           {moment(element.apply_date)
                             .locale('pt-br')
-                            .format('DD-MMM-YYYY')}
+                            .format('DD-MMMM-YYYY')}
                         </Text>
                       </View>
                     </View>
@@ -275,6 +275,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: 'transparent',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5
   },
   item2: {
     width: '90%',

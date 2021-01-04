@@ -49,11 +49,11 @@ export default class ExperienciaScreen extends Component {
   }
 
   componentDidUpdate(prevState, prevProps) {
-    if (this.props.route && this.props.route.params) {     
+    if (this.props.route && this.props.route.params) {
       if (
         prevProps.searchId !== this.props.route.params.searchId &&
         this.state.searching == false
-      ) {      
+      ) {
         this.setState(
           { searchId: this.props.route.params.searchId, searching: true },
           () => {
@@ -255,13 +255,10 @@ export default class ExperienciaScreen extends Component {
     return (
       <>
         <StatusBar backgroundColor="#6948F4" barStyle="default" />
-        <Spinner
-          visible={this.state.spinner}
-          textContent={'Carregando...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-        <View style={styles.scrollContainer}>
-          <View>
+        <Spinner visible={this.state.spinner} textContent={'Carregando...'} textStyle={{ color: 'white' }} />
+        <View style={{ display: 'flex', flex: 1 }}>
+          {/* Search bar */}
+          <View style={{ display: 'flex', flex: 0.1 }}>
             <SearchBar
               lightTheme={true}
               innerBorderStyle={{ color: '#6948F4' }}
@@ -283,569 +280,161 @@ export default class ExperienciaScreen extends Component {
               value={this.state.search}
             />
           </View>
+          {/* View Pager */}
           <ViewPager
-            style={styles.viewPager}
+            style={{ flex: 0.9, marginVertical: 30 }}
             initialPage={0}
             scrollEnabled={false}
             ref={this.viewPager}
             transitionStyle="curl">
-            {this.state.listOfJobs.length > this.state.currentPage ? (
+            {this.state.listOfJobs.length > this.state.currentPage ?
               this.state.listOfJobs.map((element, index) => (
-                <View
-                  key={element.id}
-                  collapsable={false}
-                  style={{
-                    backgroundColor: '#00000',
-                    paddingLeft: 25,
-                    paddingRight: 25,
-                  }}>
-                  <View
-                    style={{
-                      height: '100%',
-                      borderColor: '#686868',
-                      borderWidth: 1,
-                      borderBottomEndRadius: 25,
-                      borderBottomStartRadius: 25,
-                    }}>
-                    <View style={{ width: '100%', height: '40%' }}>
-                      <WebView
-                        javaScriptEnabled={true}
+                <View key={element.id} collapsable={false} style={{ display: 'flex', flex: 1, paddingRight: 25, paddingLeft: 25 }}>
+                  <View style={{ flex: 0.4 }}>
+                    <WebView
+                      javaScriptEnabled={true}
+                      source={{
+                        html: this.getMapbox(
+                          element.latitude,
+                          element.longitude,
+                        ),
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 0.5, backgroundColor: 'white' }}>
+                    <ScrollView>
+                      <Text style={{ fontWeight: 'bold', fontSize: 22, marginTop: 50, marginLeft: 30 }}>
+                        {element.title}
+                      </Text>
+                      <Text style={{ fontSize: 16, marginLeft: 30 }}>
+                        {`[${element.company_name}]`}
+                      </Text>
+                      <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                          Local
+                        </Text>
+                        <Text style={{ fontSize: 16, marginLeft: 55 }}>
+                          {element.state} - {element.country}
+                        </Text>
+                      </View>
+                      <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                          Detalhes
+                        </Text>
+                        <Text style={{ fontSize: 16, marginLeft: 30, marginRight: 20 }}>
+                          {element.description}
+                        </Text>
+                      </View>
+                      <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                          Requisitos
+                        </Text>
+                        <Text style={{ fontSize: 16, marginLeft: 15, marginRight: 20 }}>
+                          {element.requirements}
+                        </Text>
+                      </View>
+                    </ScrollView>
+                    {element.logo !== null && element.logo !== '' ? (
+                      <Image
                         source={{
-                          html: this.getMapbox(
-                            element.latitude,
-                            element.longitude,
-                          ),
+                          uri: element.logo
+                            .replace('//', '/')
+                            .replace('//', '/'),
+                        }}
+                        style={{
+                          position: 'absolute',
+                          resizeMode: 'contain',
+                          alignSelf: 'center',
+                          borderColor: '#686868',
+                          borderWidth: 1,
+                          height: 70,
+                          width: 70,
+                          backgroundColor: '#FFFFFF',
+                          top: -50,
+                          padding: 5,
+                          borderRadius: 5,
                         }}
                       />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <View
+                    ) : null}
+                  </View>
+                  <View style={{ flex: 0.1, justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
+                    <TouchableOpacity
+                      onPress={() => this.clickNo()}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#ff0000',
+                        borderRadius: 50,
+                      }}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={30}
+                        color="#FFFFFF"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        Share.open({
+                          title: element.title,
+                          message: element.description,
+                        })
+                          .then((res) => {
+                            console.log(res);
+                          })
+                          .catch((err) => {
+                            err && console.log(err);
+                          })
+                      }
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#fff',
+                      }}>
+                      <MaterialCommunityIcons
                         style={{
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <ScrollView style={styles.scrollContainerContent}>
-                          <View>
-                            <KeyboardAvoidingView
-                              enabled
-                              style={{ flex: 4, marginTop: 50 }}>
-                              <View style={styles.containerEspecial33}>
-                                <View style={styles.SectionStyleEspecial2}>
-                                  <Text style={styles.InputLabelStyleTitle}>
-                                    {element.title}
-                                  </Text>
-                                </View>
-                              </View>
-
-                              <View style={styles.containerEspecial22}>
-                                <View style={styles.SectionStyleEspecial2}>
-                                  <Text style={styles.InputLabelStyleSubtitle}>
-                                    ({element.company_name})
-                                  </Text>
-                                </View>
-                              </View>
-
-                              <View style={styles.containerEspecial}>
-                                <View style={styles.item11}>
-                                  <View style={styles.SectionStyleEspecial2}>
-                                    <Text style={styles.InputLabelStyle}>
-                                      Local
-                                    </Text>
-                                  </View>
-                                </View>
-                                <View style={styles.item21}>
-                                  <View style={styles.SectionStyleEspecial1}>
-                                    <Text style={styles.InputLabelStyle22}>
-                                      {element.state} - {element.country}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </View>
-
-                              <View style={styles.containerEspecial}>
-                                <View style={styles.item11}>
-                                  <View style={styles.SectionStyleEspecial2}>
-                                    <Text style={styles.InputLabelStyle}>
-                                      Detalhes
-                                    </Text>
-                                  </View>
-                                </View>
-                                <View style={styles.item21}>
-                                  <View style={styles.SectionStyleEspecial1}>
-                                    <Text style={styles.InputLabelStyle22}>
-                                      {element.description}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </View>
-
-                              <View style={styles.containerEspecial}>
-                                <View style={styles.item11}>
-                                  <View style={styles.SectionStyleEspecial2}>
-                                    <Text style={styles.InputLabelStyle}>
-                                      Requisitos
-                                    </Text>
-                                  </View>
-                                </View>
-                                <View style={styles.item21}>
-                                  <View style={styles.SectionStyleEspecial1}>
-                                    <Text style={styles.InputLabelStyle22}>
-                                      {element.requirements}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </View>
-                            </KeyboardAvoidingView>
-                          </View>
-                        </ScrollView>
-                        {element.logo !== null && element.logo !== '' ? (
-                          <Image
-                            source={{
-                              uri: element.logo
-                                .replace('//', '/')
-                                .replace('//', '/'),
-                            }}
-                            style={{
-                              position: 'absolute',
-                              resizeMode: 'contain',
-                              borderColor: '#686868',
-                              borderWidth: 1,
-                              height: 75,
-                              width: 110,
-                              backgroundColor: '#FFFFFF',
-                              top: -30,
-                              padding: 5,
-                              borderRadius: 5,
-                            }}
-                          />
-                        ) : null}
-                      </View>
-                    </View>
-
-                    <View style={styles.containerEspecial34}>
-                      <View style={styles.item33}>
-                        <View style={styles.btnCenter}>
-                          <Text style={styles.InputLabelStyle}>
-                            <TouchableOpacity
-                              onPress={() => this.clickNo()}
-                              style={{
-                                borderWidth: 1,
-                                borderColor: 'transparent',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: 50,
-                                height: 50,
-                                backgroundColor: '#ff0000',
-                                borderRadius: 50,
-                              }}>
-                              <MaterialCommunityIcons
-                                name="close"
-                                size={30}
-                                color="#FFFFFF"
-                              />
-                            </TouchableOpacity>
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.item33}>
-                        <View style={styles.btnCenter}>
-                          <Text style={styles.InputLabelStyle22}>
-                            <TouchableOpacity
-                              onPress={() =>
-                                Share.open({
-                                  title: element.title,
-                                  message: element.description,
-                                })
-                                  .then((res) => {
-                                    console.log(res);
-                                  })
-                                  .catch((err) => {
-                                    err && console.log(err);
-                                  })
-                              }
-                              style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: '#fff',
-                              }}>
-                              <MaterialCommunityIcons
-                                style={{
-                                  marginTop: 5,
-                                }}
-                                name="export-variant"
-                                size={40}
-                                color="#6948F4"
-                              />
-                            </TouchableOpacity>
-                          </Text>
-                        </View>
-                      </View>
-                      <View style={styles.item33}>
-                        <View style={styles.btnCenter}>
-                          <Text style={styles.InputLabelStyle22}>
-                            <TouchableOpacity
-                              onPress={() => this.clickOk(element.uid)}
-                              style={{
-                                borderWidth: 1,
-                                borderColor: 'transparent',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: 50,
-                                height: 50,
-                                backgroundColor: '#26bd26',
-                                borderRadius: 50,
-                              }}>
-                              <MaterialCommunityIcons
-                                name="check"
-                                size={30}
-                                color="#FFFFFF"
-                              />
-                            </TouchableOpacity>
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
+                          marginTop: 5,
+                        }}
+                        name="export-variant"
+                        size={40}
+                        color="#6948F4"
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => this.clickOk(element.uid)}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 50,
+                        height: 50,
+                        backgroundColor: '#26bd26',
+                        borderRadius: 50,
+                      }}>
+                      <MaterialCommunityIcons
+                        name="check"
+                        size={30}
+                        color="#FFFFFF"
+                      />
+                    </TouchableOpacity>
                   </View>
                 </View>
               ))
-            ) : (
-                <View
-                  key="99"
-                  style={{
-                    paddingLeft: 25,
-                    paddingRight: 25,
-                  }}>
-                  <View
-                    style={{
-                      height: '100%',
-                      alignSelf: 'center',
-                    }}>
-                    <Text style={styles.textWhenNone}>
-                      volte mais tarde para procurar mais vagas
+              :
+              <View key="99" style={{ paddingLeft: 25, paddingRight: 25 }}>
+                <View style={{ height: '100%', alignSelf: 'center' }}>
+                  <Text style={{ top: 250, color: '#686868', fontSize: 20 }}>
+                    volte mais tarde para procurar mais vagas
                   </Text>
-                  </View>
                 </View>
-              )}
+              </View>}
           </ViewPager>
         </View>
       </>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  containerEspecial34: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    backgroundColor: 'white',
-    paddingTop: 20,
-    borderColor: '#686868',
-    borderTopWidth: 1,
-  },
-  containerEspecial: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    marginBottom: 10,
-  },
-  containerEspecial33: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    marginTop: 10,
-  },
-  containerEspecial22: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    marginBottom: 25,
-  },
-  viewPager: {
-    flex: 1,
-    marginTop: 30,
-    marginBottom: 30,
-  },
-  cardContainer: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    margin: 10,
-  },
-  containerEspecial2: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    margin: 10,
-  },
-  item11: {
-    width: '30%',
-  },
-  item33: {
-    width: '33%',
-  },
-  btnCenter: {
-    alignSelf: 'center',
-  },
-  item21: {
-    width: '70%',
-  },
-  cardItem: {
-    width: '90%',
-    marginLeft: 20,
-    backgroundColor: 'white',
-    height: 120,
-    color: '#6948F4',
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#6948F4',
-  },
-  item2: {
-    width: '90%',
-    marginLeft: 20,
-    height: 150,
-    color: '#6948F4',
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#6948F4',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-  },
-  spinnerTextStyle: {
-    color: '#FFFFFF',
-  },
-  scrollContainer: {
-    flex: 1,
-    backgroundColor: '#66666621',
-    borderColor: '#686868',
-    borderTopWidth: 1,
-  },
-  scrollContainerContent: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderColor: '#686868',
-    borderTopWidth: 1,
-  },
-  textWhenNone: {
-    top: 250,
-    color: '#686868',
-    fontSize: 20,
-  },
-  SectionStyle: {
-    height: 70,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
-  },
-  SectionStyleEspecial1: {
-    marginRight: 25,
-    marginLeft: 10,
-  },
-  SectionStyleEspecial2: {
-    marginLeft: 25,
-    marginRight: 10,
-  },
-  SectionStyleEspecial11: {
-    marginRight: 25,
-    marginLeft: 10,
-  },
-  SectionStyleEspecial12: {
-    marginLeft: 25,
-    marginRight: 10,
-  },
-  SectionStyleEspecial122: {
-    marginLeft: 30,
-    marginTop: 30,
-  },
-  SectionStyleEspecial13: {
-    marginLeft: 35,
-    marginTop: 15,
-    marginBottom: 15,
-    marginRight: 10,
-  },
-  LabelStyle: {
-    fontWeight: 'bold',
-    fontSize: 25,
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 35,
-  },
-  InputLabelStyle: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    paddingBottom: 5,
-  },
-  InputLabelStyleTitle: {
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-  InputLabelStyleSubtitle: {
-    fontSize: 16,
-    paddingBottom: 5,
-  },
-  InputLabelStyle22: {
-    fontSize: 14,
-    paddingBottom: 5,
-  },
-  textHoverSlider: {
-    fontWeight: 'bold',
-    fontSize: 12,
-    color: '#6948F4',
-  },
-  InputLabelStyleArea: {
-    alignSelf: 'flex-end',
-  },
-  dLabelStyle: {
-    fontWeight: 'bold',
-    textAlign: 'left',
-    color: '#6948F4',
-  },
-  dItemStyle: {
-    justifyContent: 'flex-start',
-  },
-  dPlaceholderStyle: {
-    textAlign: 'left',
-    color: 'black',
-    fontWeight: '200',
-  },
-  dStyle: {
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    minHeight: 300,
-  },
-  subarea: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    padding: 10,
-    backgroundColor: '#6948F4',
-    borderRadius: 25,
-    margin: 5,
-  },
-  buttonStyle: {
-    backgroundColor: '#6948F4',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#6948F4',
-    height: 40,
-    alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 35,
-    marginRight: 35,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  buttonStyleArea: {
-    backgroundColor: '#6948F4',
-    borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#6948F4',
-    height: 30,
-    alignItems: 'center',
-    borderRadius: 25,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
-  },
-  buttonTextStyleArea: {
-    color: '#FFFFFF',
-    paddingVertical: 8,
-    fontSize: 14,
-    padding: 15,
-  },
-  buttonTextStyle: {
-    color: '#FFFFFF',
-    paddingVertical: 8,
-    fontSize: 18,
-  },
-  LabelStyle1: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    paddingTop: 20,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-  LabelStyles1: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 30,
-  },
-  inputStyle: {
-    flex: 1,
-    color: '#6948F4',
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderWidth: 1,
-    borderRadius: 15,
-    borderColor: '#6948F4',
-  },
-  errorTextStyle: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 14,
-  },
-  CardTitle: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    paddingTop: 10,
-    paddingLeft: 10,
-    color: '#6948F4',
-  },
-  CardSubTitle: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    paddingTop: 5,
-    paddingLeft: 10,
-    color: '#00000096',
-  },
-  CardType: {
-    fontWeight: 'bold',
-    fontSize: 14,
-    paddingTop: 30,
-    paddingLeft: 10,
-    color: '#6948f4b3',
-  },
-  BackStyle: {
-    color: '#6948F4',
-    fontWeight: 'bold',
-    fontSize: 16,
-    textAlign: 'center',
-    bottom: 20,
-    right: 0,
-    left: 0,
-  },
-  BackStyle2: {
-    color: '#6948F4',
-    fontWeight: 'bold',
-    alignSelf: 'flex-start',
-    fontSize: 16,
-    paddingTop: 30,
-    paddingLeft: 35,
-  },
-  BackStyle3: {
-    color: '#ff0000c7',
-    fontWeight: 'bold',
-    alignSelf: 'flex-end',
-    fontSize: 12,
-    paddingTop: 30,
-    paddingLeft: 250,
-  },
-
-  BackStyle22: {
-    backgroundColor: '#6948F4',
-    color: '#FFFFFF',
-    margin: 20,
-    fontWeight: 'bold',
-    fontSize: 16,
-    paddingTop: 30,
-    paddingLeft: 35,
-  },
-});
