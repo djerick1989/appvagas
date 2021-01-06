@@ -21,40 +21,6 @@ const ConfirmCodeScreen = (props) => {
   let [errortext, setErrortext] = useState('');
   //   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
-  useEffect(() => {
-    const getCode = async () => {
-      if (Platform.OS !== 'ios') {
-        let permission = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
-        if (permission !== RESULTS.GRANTED) {
-          await request(PERMISSIONS.ANDROID.READ_PHONE_STATE);
-          permission = await check(PERMISSIONS.ANDROID.READ_PHONE_STATE);
-          if (permission == RESULTS.GRANTED) {
-            getPhoneNumber().then(async phone => {
-              setLoading(true);
-              const [a, b] = await postUserRecoverCode({
-                username: phone.slice(3),
-              });
-              setLoading(false);
-              console.log(a);
-              console.log(b);
-            });
-          }
-        } else {
-          getPhoneNumber().then(async phone => {
-            setLoading(true);
-            const [a, b] = await postUserRecoverCode({
-              username: phone.slice(3),
-            });
-            setLoading(false);
-            console.log(a);
-            console.log(b);
-          });
-        }
-      }
-    }
-    getCode();
-  }, []);
-
   const handleSubmitButton = async () => {
     setErrortext('');
     if (!userCode || userCode.length < 2) {

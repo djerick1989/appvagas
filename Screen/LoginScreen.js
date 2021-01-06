@@ -218,7 +218,7 @@ const LoginScreen = (props) => {
             }}>
             <Text style={{ color: '#000000' }}>Esqueceu sua senha? </Text>
             <TouchableOpacity
-              onPress={() => props.navigation.navigate('ConfirmCodeScreen')}
+              onPress={() => props.navigation.navigate('ForgetPassScreen')}
               activeOpacity={0.5}>
               <Text style={{ color: '#6948F4', fontWeight: 'bold' }}>
                 Recuperar
