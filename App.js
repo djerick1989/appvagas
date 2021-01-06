@@ -406,7 +406,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen
       name="SplashScreen"
       component={SplashScreen}
-      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
+      options={{ headerShown: false }}
     />
     <AuthStack.Screen
       name="SlideScreen"
