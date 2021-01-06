@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,11 +9,12 @@ import {
   StatusBar,
   TouchableHighlight,
   KeyboardAvoidingView,
-  ScrollView,
+  ScrollView
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import {Picker} from '@react-native-picker/picker';
-import {TextInputMask} from 'react-native-masked-text';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import { TextInputMask } from 'react-native-masked-text';
 import {
   postUserEducation,
   patchUserEducation,
@@ -31,23 +31,23 @@ export default class FormacaoScreen extends Component {
       nameCurso: '',
       currentID: 0,
       listNivels: [
-        {label: 'Até 5º ano do Ensino Fundamental', value: 0},
-        {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
-        {label: 'Ensino Fundamental', value: 2},
-        {label: 'Ensino Medio', value: 3},
-        {label: 'Curso Tecnico', value: 4},
-        {label: 'Tecnologo', value: 5},
-        {label: 'Ensino Superior', value: 6},
-        {label: 'Pos', value: 7},
-        {label: 'Mestrado', value: 8},
-        {label: 'Doutorado', value: 9},
-        {label: 'Curso', value: 10},
+        { label: 'Até 5º ano do Ensino Fundamental', value: 0 },
+        { label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1 },
+        { label: 'Ensino Fundamental', value: 2 },
+        { label: 'Ensino Medio', value: 3 },
+        { label: 'Curso Tecnico', value: 4 },
+        { label: 'Tecnologo', value: 5 },
+        { label: 'Ensino Superior', value: 6 },
+        { label: 'Pos', value: 7 },
+        { label: 'Mestrado', value: 8 },
+        { label: 'Doutorado', value: 9 },
+        { label: 'Curso', value: 10 },
       ],
       listStatus: [
-        {label: 'Concluido', value: 1},
-        {label: 'Cursando', value: 2},
-        {label: 'Incompleto', value: 3},
-        {label: 'Desconhecido', value: 4},
+        { label: 'Concluido', value: 1 },
+        { label: 'Cursando', value: 2 },
+        { label: 'Incompleto', value: 3 },
+        { label: 'Desconhecido', value: 4 },
       ],
       modalIs: 'created',
       itemNivel: '',
@@ -97,7 +97,7 @@ export default class FormacaoScreen extends Component {
   }
 
   clickAddOrEdit = async () => {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     if (
       this.state.nameEscola == '' ||
       this.state.nameCurso == '' ||
@@ -107,7 +107,7 @@ export default class FormacaoScreen extends Component {
       this.state.dateFinish == ''
     ) {
       alert('requer a adição de todos os dados para continuar');
-      this.setState({spinner: false});
+      this.setState({ spinner: false });
       return;
     }
     let realDate = this.transformDate(this.state.dateStart);
@@ -116,7 +116,7 @@ export default class FormacaoScreen extends Component {
     let date2 = moment(realDate2);
     if (!date1.isValid() || !date2.isValid()) {
       alert('datas inválidas');
-      this.setState({spinner: false});
+      this.setState({ spinner: false });
       return;
     }
     if (this.state.modalIs == 'created') {
@@ -153,7 +153,7 @@ export default class FormacaoScreen extends Component {
   };
 
   deleteThisOne = async () => {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     const [a, b] = await deleteUserEducation(this.state.currentID);
     console.log(a, b);
     const [isValid, educations] = await getUserEducations();
@@ -201,7 +201,7 @@ export default class FormacaoScreen extends Component {
                 Voltar
               </Text>
             </View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <Text style={styles.LabelStyle}>Formação Acadêmica</Text>
               <View style={styles.SectionStyleEspecial13}>
                 <View
@@ -226,7 +226,7 @@ export default class FormacaoScreen extends Component {
                         currentID: 0,
                       });
                     }}>
-                    <Text style={{color: '#FFFFFF'}}>Adicionar</Text>
+                    <Text style={{ color: '#FFFFFF' }}>Adicionar</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -366,9 +366,9 @@ export default class FormacaoScreen extends Component {
           animationType={'slide'}
           transparent={false}
           visible={this.state.modalVisible}>
-          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
             <ScrollView style={styles.scrollContainer}>
-              <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              <View style={{ flex: 5, justifyContent: 'flex-start' }}>
                 <View
                   style={{
                     paddingBottom: 40,
@@ -377,7 +377,7 @@ export default class FormacaoScreen extends Component {
                   }}>
                   <Text
                     style={styles.BackStyle2}
-                    onPress={() => this.setState({modalVisible: false})}>
+                    onPress={() => this.setState({ modalVisible: false })}>
                     Voltar
                   </Text>
                   {this.state.modalIs !== 'created' ? (
@@ -388,13 +388,13 @@ export default class FormacaoScreen extends Component {
                     </Text>
                   ) : null}
                 </View>
-                <KeyboardAvoidingView enabled style={{flex: 4}}>
+                <KeyboardAvoidingView enabled style={{ flex: 4 }}>
                   <View style={styles.SectionStyle}>
                     <Text style={styles.InputLabelStyle}>Nome da Escola</Text>
                     <TextInput
                       style={styles.inputStyle}
                       value={this.state.nameEscola}
-                      onChangeText={(text) => this.setState({nameEscola: text})}
+                      onChangeText={(text) => this.setState({ nameEscola: text })}
                       placeholderTextColor="#aaaaaa"
                       returnKeyType="next"
                       blurOnSubmit={false}
@@ -405,7 +405,7 @@ export default class FormacaoScreen extends Component {
                     <TextInput
                       style={styles.inputStyle}
                       value={this.state.nameCurso}
-                      onChangeText={(text) => this.setState({nameCurso: text})}
+                      onChangeText={(text) => this.setState({ nameCurso: text })}
                       placeholderTextColor="#aaaaaa"
                       autoCapitalize="sentences"
                       returnKeyType="next"
@@ -538,7 +538,7 @@ export default class FormacaoScreen extends Component {
                   onPress={() => {
                     this.clickAddOrEdit();
                   }}>
-                  <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                  <Text style={{ color: '#FFFFFF' }}>Confirmar</Text>
                 </TouchableHighlight>
               </View>
             </View>

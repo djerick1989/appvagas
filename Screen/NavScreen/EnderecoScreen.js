@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,15 +9,128 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import {getUserProfile, patchUserProfile} from '../../helpers/api';
+import { Picker } from '@react-native-picker/picker';
+import { TextInputMask } from 'react-native-masked-text';
+import { getUserProfile, patchUserProfile } from '../../helpers/api';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Spinner from 'react-native-loading-spinner-overlay';
+
+const data = [
+  {
+    label: 'Acre',
+    value: 'AC',
+  },
+  {
+    label: 'Alagoas',
+    value: 'AL',
+  },
+  {
+    label: 'Amapá',
+    value: 'AP',
+  },
+  {
+    label: 'Amazonas',
+    value: 'AM',
+  },
+  {
+    label: 'Bahia',
+    value: 'BA',
+  },
+  {
+    label: 'Ceará',
+    value: 'CE',
+  },
+  {
+    label: 'Distrito Federal',
+    value: 'DF',
+  },
+  {
+    label: 'Espírito Santo',
+    value: 'ES',
+  },
+  {
+    label: 'Goiás',
+    value: 'GO',
+  },
+  {
+    label: 'Maranhão',
+    value: 'MA',
+  },
+  {
+    label: 'Mato Grosso',
+    value: 'MT',
+  },
+  {
+    label: 'Mato Grosso do Sul',
+    value: 'MS',
+  },
+  {
+    label: 'Minas Gerais',
+    value: 'MG',
+  },
+  {
+    label: 'Pará',
+    value: 'PA',
+  },
+  {
+    label: 'Paraíba',
+    value: 'PB',
+  },
+  {
+    label: 'Paraná',
+    value: 'PR',
+  },
+  {
+    label: 'Pernambuco',
+    value: 'PE',
+  },
+  {
+    label: 'Piauí',
+    value: 'PI',
+  },
+  {
+    label: 'Rio de Janeiro',
+    value: 'RJ',
+  },
+  {
+    label: 'Rio Grande do Norte',
+    value: 'RN',
+  },
+  {
+    label: 'Rio Grande do Sul',
+    value: 'RS',
+  },
+  {
+    label: 'Rondônia',
+    value: 'RO',
+  },
+  {
+    label: 'Roraima',
+    value: 'RR',
+  },
+  {
+    label: 'Santa Catarina',
+    value: 'SC',
+  },
+  {
+    label: 'São Paulo',
+    value: 'SP',
+  },
+  {
+    label: 'Sergipe',
+    value: 'SE',
+  },
+  {
+    label: 'Tocantins',
+    value: 'TO',
+  }
+];
 
 export default class EnderecoScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      estado: '',
+      estado: 'AC',
       cidade: '',
       bairro: '',
       complemento: '',
@@ -32,7 +144,7 @@ export default class EnderecoScreen extends Component {
   }
 
   async componentDidMount() {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     const [data, user] = await getUserProfile();
     if (!data) {
       console.log('error getUserProfile');
@@ -51,7 +163,7 @@ export default class EnderecoScreen extends Component {
   }
 
   async handleSubmitButton() {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     const dataInJson = this.state;
     delete dataInJson.loading;
     // aqui llamo al update
@@ -65,7 +177,7 @@ export default class EnderecoScreen extends Component {
       address: this.state.endereco,
       phone1: this.state.userPhon,
     });
-    this.setState({spinner: false, showAlert: true});
+    this.setState({ spinner: false, showAlert: true });
   }
 
   render() {
@@ -96,16 +208,28 @@ export default class EnderecoScreen extends Component {
                 Voltar
               </Text>
             </View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <Text style={styles.LabelStyle}>Endereço</Text>
               <View style={styles.SectionStyle}>
                 <Text style={styles.InputLabelStyle}>CEP</Text>
-                <TextInput
+                {/* <TextInput
                   style={styles.inputStyle}
                   value={this.state.zipcode}
-                  onChangeText={(text) => this.setState({zipcode: text})}
+                  onChangeText={(text) => this.setState({ zipcode: text })}
                   placeholderTextColor="#aaaaaa"
                   autoCapitalize="sentences"
+                  returnKeyType="next"
+                  blurOnSubmit={false}
+                /> */}
+
+                <TextInputMask
+                  style={styles.inputStyle}
+                  type='cpf'
+                  options={{}}
+                  value={this.state.zipcode}
+                  onChangeText={(text) => this.setState({ zipcode: text.replace(/[^0-9]/g, '') })}
+                  placeholder={'99999-999'}
+                  placeholderTextColor="#aaaaaa"
                   returnKeyType="next"
                   blurOnSubmit={false}
                 />
@@ -115,7 +239,7 @@ export default class EnderecoScreen extends Component {
                 <TextInput
                   style={styles.inputStyle}
                   value={this.state.endereco}
-                  onChangeText={(text) => this.setState({endereco: text})}
+                  onChangeText={(text) => this.setState({ endereco: text })}
                   placeholderTextColor="#aaaaaa"
                   autoCapitalize="sentences"
                   returnKeyType="next"
@@ -129,7 +253,7 @@ export default class EnderecoScreen extends Component {
                     <TextInput
                       style={styles.inputStyle}
                       value={this.state.number}
-                      onChangeText={(text) => this.setState({number: text})}
+                      onChangeText={(text) => this.setState({ number: text })}
                       placeholderTextColor="#aaaaaa"
                       autoCapitalize="sentences"
                       returnKeyType="next"
@@ -144,7 +268,7 @@ export default class EnderecoScreen extends Component {
                       style={styles.inputStyle}
                       value={this.state.complemento}
                       onChangeText={(text) =>
-                        this.setState({complemento: text})
+                        this.setState({ complemento: text })
                       }
                       placeholderTextColor="#aaaaaa"
                       autoCapitalize="sentences"
@@ -160,7 +284,7 @@ export default class EnderecoScreen extends Component {
                 <TextInput
                   style={styles.inputStyle}
                   value={this.state.bairro}
-                  onChangeText={(text) => this.setState({bairro: text})}
+                  onChangeText={(text) => this.setState({ bairro: text })}
                   placeholderTextColor="#aaaaaa"
                   autoCapitalize="sentences"
                   returnKeyType="next"
@@ -172,7 +296,7 @@ export default class EnderecoScreen extends Component {
                 <TextInput
                   style={styles.inputStyle}
                   value={this.state.cidade}
-                  onChangeText={(text) => this.setState({cidade: text})}
+                  onChangeText={(text) => this.setState({ cidade: text })}
                   placeholderTextColor="#aaaaaa"
                   autoCapitalize="sentences"
                   returnKeyType="next"
@@ -181,15 +305,34 @@ export default class EnderecoScreen extends Component {
               </View>
               <View style={styles.SectionStyle}>
                 <Text style={styles.InputLabelStyle}>Estado</Text>
-                <TextInput
+                {/* <TextInput
                   style={styles.inputStyle}
                   value={this.state.estado}
-                  onChangeText={(text) => this.setState({estado: text})}
+                  onChangeText={(text) => this.setState({ estado: text })}
                   placeholderTextColor="#aaaaaa"
                   autoCapitalize="sentences"
                   returnKeyType="next"
                   blurOnSubmit={false}
-                />
+                /> */}
+                <Picker
+                  selectedValue={this.state.estado}
+                  style={{
+                    height: 40,
+                    width: '100%',
+                  }}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({ estado: itemValue });
+                  }}>
+                  {data.map((es, index) => {
+                    return (
+                      <Picker.Item
+                        key={es.label + index}
+                        label={es.label}
+                        value={es.value}
+                      />
+                    );
+                  })}
+                </Picker>
               </View>
               <TouchableOpacity
                 style={styles.buttonStyle}
@@ -267,7 +410,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
-
   buttonTextStyle: {
     color: '#FFFFFF',
     paddingVertical: 8,
@@ -290,7 +432,6 @@ const styles = StyleSheet.create({
   spinnerTextStyle: {
     color: '#FFFFFF',
   },
-
   BackStyle: {
     color: '#6948F4',
     fontWeight: 'bold',
@@ -300,7 +441,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
   },
-
   BackStyle2: {
     color: '#6948F4',
     fontWeight: 'bold',

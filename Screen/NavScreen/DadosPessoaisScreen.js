@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,9 +14,9 @@ import {
   getUserDisability,
   patchUserDisability,
 } from '../../helpers/api';
-import {TextInputMask} from 'react-native-masked-text';
+import { TextInputMask } from 'react-native-masked-text';
 import RadioButtonRN from 'radio-buttons-react-native';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -35,6 +34,7 @@ const data = [
     value: 3,
   },
 ];
+
 export default class DadosPessoaisScreen extends Component {
   constructor(props) {
     super(props);
@@ -47,44 +47,44 @@ export default class DadosPessoaisScreen extends Component {
       isVisibleThisOneToo: false,
       showErrorAlert: false,
       listPCD: [
-        {label: 'NÃO', value: 0},
-        {label: 'Amputação', value: 1},
-        {label: 'Hemiplegia', value: 2},
-        {label: 'Membros com deformidade congênita ou adquirida', value: 3},
-        {label: 'Monoparesia', value: 4},
-        {label: 'Monoplegia', value: 5},
-        {label: 'Paralisia cerebral', value: 6},
-        {label: 'Paraparesia', value: 7},
-        {label: 'Paraplegia', value: 8},
-        {label: 'Tetraparesia', value: 9},
-        {label: 'Tetraplegia', value: 10},
-        {label: 'Triparesia', value: 11},
-        {label: 'Triplegia', value: 12},
-        {label: 'Nanismo', value: 13},
-        {label: 'Ostomia', value: 14},
-        {label: 'Hemiparesia', value: 15},
-        {label: 'Surdez moderada', value: 16},
-        {label: 'Surdez severa', value: 17},
-        {label: 'Anacusia', value: 18},
-        {label: 'Baixa Visão', value: 19},
-        {label: 'Cegueira', value: 20},
-        {label: 'Visão Monocular', value: 21},
-        {label: 'Deficiência Intelectual', value: 22},
-        {label: 'Deficiência Psicossocial', value: 23},
-        {label: 'Reabilitado do INSS', value: 24},
-        {label: 'Outros', value: 25},
+        { label: 'NÃO', value: 0 },
+        { label: 'Amputação', value: 1 },
+        { label: 'Hemiplegia', value: 2 },
+        { label: 'Membros com deformidade congênita ou adquirida', value: 3 },
+        { label: 'Monoparesia', value: 4 },
+        { label: 'Monoplegia', value: 5 },
+        { label: 'Paralisia cerebral', value: 6 },
+        { label: 'Paraparesia', value: 7 },
+        { label: 'Paraplegia', value: 8 },
+        { label: 'Tetraparesia', value: 9 },
+        { label: 'Tetraplegia', value: 10 },
+        { label: 'Triparesia', value: 11 },
+        { label: 'Triplegia', value: 12 },
+        { label: 'Nanismo', value: 13 },
+        { label: 'Ostomia', value: 14 },
+        { label: 'Hemiparesia', value: 15 },
+        { label: 'Surdez moderada', value: 16 },
+        { label: 'Surdez severa', value: 17 },
+        { label: 'Anacusia', value: 18 },
+        { label: 'Baixa Visão', value: 19 },
+        { label: 'Cegueira', value: 20 },
+        { label: 'Visão Monocular', value: 21 },
+        { label: 'Deficiência Intelectual', value: 22 },
+        { label: 'Deficiência Psicossocial', value: 23 },
+        { label: 'Reabilitado do INSS', value: 24 },
+        { label: 'Outros', value: 25 },
       ],
       listStatusCivil: [
-        {label: 'Solteiro', value: 1},
-        {label: 'Casado', value: 2},
-        {label: 'Outro', value: 3},
+        { label: 'Solteiro', value: 1 },
+        { label: 'Casado', value: 2 },
+        { label: 'Outro', value: 3 },
       ],
       spinner: false,
     };
   }
 
   async componentDidMount() {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     const [isValid, user] = await getUserProfile();
     if (!isValid) {
       console.log('Error in getUserProfile');
@@ -130,7 +130,7 @@ export default class DadosPessoaisScreen extends Component {
   }
 
   async handleSubmitButton() {
-    this.setState({spinner: true});
+    this.setState({ spinner: true });
     let date = '';
     let realDate = '';
     if (this.state.dt) {
@@ -139,7 +139,7 @@ export default class DadosPessoaisScreen extends Component {
       if (date[0] && date[1] && date[2]) {
         realDate = date[2] + '-' + date[1] + '-' + date[0];
       } else {
-        this.setState({showErrorAlert: true, showAler: false});
+        this.setState({ showErrorAlert: true, showAler: false });
         return;
       }
     }
@@ -151,7 +151,7 @@ export default class DadosPessoaisScreen extends Component {
     await patchUserDisability({
       disability: this.state.itemPCD,
     });
-    this.setState({spinner: false, showAlert: true});
+    this.setState({ spinner: false, showAlert: true });
   }
 
   render() {
@@ -185,7 +185,7 @@ export default class DadosPessoaisScreen extends Component {
           confirmText="Vou corrigir"
           confirmButtonColor="#DD6B55"
           onConfirmPressed={() => {
-            this.setState({showErrorAlert: false, spinner: false});
+            this.setState({ showErrorAlert: false, spinner: false });
           }}
         />
         <ScrollView style={styles.scrollContainer}>
@@ -197,7 +197,7 @@ export default class DadosPessoaisScreen extends Component {
                 Voltar
               </Text>
             </View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <Text style={styles.LabelStyle}>Dados Pessoais</Text>
               <View style={styles.SectionStyle}>
                 <Text style={styles.InputLabelStyle}>Data de Nascimento</Text>
@@ -223,7 +223,7 @@ export default class DadosPessoaisScreen extends Component {
                 data={data}
                 initial={this.state.sex}
                 activeColor="#6948F4"
-                selectedBtn={(e) => this.setState({sex: e.value})}
+                selectedBtn={(e) => this.setState({ sex: e.value })}
                 style={styles.radioButonstyle}
               />
               <View style={styles.SectionStyle}>
