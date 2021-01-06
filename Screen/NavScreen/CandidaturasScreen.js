@@ -66,6 +66,7 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs,
       spinner: false,
     });
+    console.log(listMerged);
   }
 
   transformDate(dateIn) {
