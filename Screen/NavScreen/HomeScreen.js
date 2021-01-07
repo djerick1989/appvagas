@@ -62,7 +62,7 @@ export default class ExperienciaScreen extends Component {
               (element) => element.uid == this.props.route.params.searchId,
             );
             this.go(jobToSearch);
-            console.log(jobToSearch);
+          
             this.setState({ searching: false, spinner: false });
           },
         );
@@ -73,11 +73,11 @@ export default class ExperienciaScreen extends Component {
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     if (!isValid) {
-      console.log('error en getAllJobs');
+     
     }
     const [isValid2, JobsUser] = await getUserJobs();
     if (!isValid2) {
-      console.log('Error getting getUserJobs');
+     
     }
     this.setState({
       listOfSearchJobs: Jobs.results,
@@ -89,7 +89,7 @@ export default class ExperienciaScreen extends Component {
   }
 
   onSearchClick = () => {
-    console.log('clickee');
+   
     const search = this.state.search;
     const listFinded = this.state.listOfJobs.findIndex(
       (el) =>
@@ -234,18 +234,15 @@ export default class ExperienciaScreen extends Component {
   };
 
   go = (page) => {
-    console.log('ingrese a go');
+   
     if (page == 'next') {
-      const goToPage = this.state.currentPage + 1;
-      console.log(goToPage);
+      const goToPage = this.state.currentPage + 1;    
       this.viewPager.current.setPage(goToPage);
       this.setState({
         currentPage: goToPage,
       });
     } else {
-      const newPage = parseInt(page);
-      console.log(newPage);
-      console.log(this.state.listOfJobs.length);
+      const newPage = parseInt(page);         
       this.viewPager.current.setPage(newPage);
       this.setState({
         currentPage: newPage,
@@ -258,8 +255,7 @@ export default class ExperienciaScreen extends Component {
   };
 
   foundItem = (uid) => {
-    const found = this.state.listOfUserJobs.find(x => x.job === uid);
-    console.log(found);
+    const found = this.state.listOfUserJobs.find(x => x.job === uid);   
     return found;
   }
 
@@ -396,10 +392,9 @@ export default class ExperienciaScreen extends Component {
                               message: element.description,
                             })
                               .then((res) => {
-                                console.log(res);
+                               
                               })
-                              .catch((err) => {
-                                err && console.log(err);
+                              .catch((err) => {                                
                               })
                           }
                           style={{
@@ -515,10 +510,10 @@ export default class ExperienciaScreen extends Component {
                               message: element.description,
                             })
                               .then((res) => {
-                                console.log(res);
+                               
                               })
                               .catch((err) => {
-                                err && console.log(err);
+                               
                               })
                           }
                           style={{

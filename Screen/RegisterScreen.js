@@ -309,7 +309,7 @@ export default class RegiterScreen extends Component {
         )
           .then((response) => response.json())
           .then((responseJson) => {
-            console.log(responseJson);
+           
             this.setState({showLoading: false});
             if (responseJson.user) {
               this.setState({isValidCpf: true});
@@ -1331,7 +1331,7 @@ export default class RegiterScreen extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            console.log('Modal has been closed.');
+           
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
             <StatusBar backgroundColor="#6948F4" barStyle="default" />

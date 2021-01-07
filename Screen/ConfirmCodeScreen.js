@@ -34,8 +34,7 @@ const ConfirmCodeScreen = (props) => {
     const [a, b] = await postUserRecoverCode({
       code: userCode,
     });
-    setLoading(false);
-    console.log(b);
+    setLoading(false);    
     if (a == true && b.message != 'Usuário não encontrado.') {
       props.navigation.navigate('ChangePassScreen');
     }

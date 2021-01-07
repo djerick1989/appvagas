@@ -44,18 +44,18 @@ export default class MapScreen extends Component {
     if (Platform.OS === 'ios') {
       let locWhenUse = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
       if (locWhenUse == RESULTS.GRANTED) {
-        return console.log('the user has actived location when in use');
+        
       }
       let locAlways = await check(PERMISSIONS.IOS.LOCATION_ALWAYS);
       if (locAlways == RESULTS.GRANTED) {
-        return console.log('the user has actived location Always');
+        
       }
       await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
       await request(PERMISSIONS.IOS.LocationWhenInUse);
     } else {
       let locFine = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
       if (locFine == RESULTS.GRANTED) {
-        return console.log('the user has actived fine location when in use');
+       
       }
       await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
     }

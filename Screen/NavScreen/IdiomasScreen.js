@@ -50,7 +50,7 @@ export default class IdiomasScreen extends Component {
   async componentDidMount() {
     const [isValid, Languages] = await getUserLanguages();
     if (!isValid) {
-      console.log('error getUserLanguages');
+     
     }
     this.setState({
       listOfLanguages: Languages,
@@ -67,9 +67,7 @@ export default class IdiomasScreen extends Component {
       idiom: this.state.itemIdiom,
       level: this.state.itemLevel,
     });
-    const [isValid, Languages] = await getUserLanguages();
-    console.log(isValid);
-    console.log(Languages);
+    const [isValid, Languages] = await getUserLanguages();     
     this.setState({
       listOfLanguages: Languages,
       spinner: false,

@@ -81,8 +81,7 @@ export default class IdiomasScreen extends Component {
       maxHeight: 200,
       maxWidth: 200,
     };
-    ImagePicker.launchCamera(options, (response) => {
-      console.log('image changed');
+    ImagePicker.launchCamera(options, (response) => {     
       this.updateImageOnProfile(response);
     });
   };

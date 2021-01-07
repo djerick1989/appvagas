@@ -44,8 +44,7 @@ export default class ExperienciaScreen extends Component {
 
   async componentDidMount() {
     const [isValid, Experiences] = await getUserExperience();
-    if (!isValid) {
-      console.log('Error in getUserExperience');
+    if (!isValid) {     
     }
     this.setState({
       listOfExperiences: Experiences,
@@ -110,8 +109,7 @@ export default class ExperienciaScreen extends Component {
       );
     }
     const [isValid, Experiences] = await getUserExperience();
-    if (!isValid) {
-      console.log('Error in getIserExperience');
+    if (!isValid) {     
     }
     this.setState({
       spinner: false,
@@ -122,8 +120,7 @@ export default class ExperienciaScreen extends Component {
 
   deleteThisOne = async () => {
     this.setState({spinner: true});
-    const [a, b] = await deleteUserExperience(this.state.currentID);
-    console.log(a, b);
+    const [a, b] = await deleteUserExperience(this.state.currentID);   
     const [isValid, Experiences] = await getUserExperience();
     this.setState({
       spinner: false,

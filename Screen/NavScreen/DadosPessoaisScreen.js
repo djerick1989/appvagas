@@ -87,11 +87,11 @@ export default class DadosPessoaisScreen extends Component {
     this.setState({ spinner: true });
     const [isValid, user] = await getUserProfile();
     if (!isValid) {
-      console.log('Error in getUserProfile');
+     
     }
     const [isValid1, disability] = await getUserDisability();
     if (!isValid1) {
-      console.log('Error in getUserDisability');
+     
     }
     const date = user.birthday ? user.birthday.split('-') : null;
     let realDate = null;

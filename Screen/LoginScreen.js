@@ -116,9 +116,7 @@ const LoginScreen = (props) => {
           AsyncStorage.setItem('last_name', '' + responseJson.last_name);
           AsyncStorage.setItem('userToken', responseJson.token.api_key).then(
             () => {
-              AsyncStorage.getItem('userToken').then((result) =>
-                console.log(result),
-              );
+              AsyncStorage.getItem('userToken');
               fetch(
                 'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
                 responseJson.id +

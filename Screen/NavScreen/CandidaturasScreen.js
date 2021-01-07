@@ -48,11 +48,11 @@ export default class ExperienciaScreen extends Component {
     this.setState({ spinner: true });
     const [isValid, AllJobs] = await getAllJobs();
     if (!isValid) {
-      console.log('Error getting getAllJobs');
+     
     }
     const [isValid2, Jobs] = await getUserJobs();
     if (!isValid2) {
-      console.log('Error getting getUserJobs');
+     
     }
     let listMerged = _.merge(
       _.keyBy(Jobs, 'job'),
@@ -66,7 +66,7 @@ export default class ExperienciaScreen extends Component {
       listOfJobs: Jobs,
       spinner: false,
     });
-    console.log(listMerged);
+   
   }
 
   transformDate(dateIn) {

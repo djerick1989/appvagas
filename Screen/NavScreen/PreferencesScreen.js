@@ -105,8 +105,7 @@ export default class PreferencesScreen extends Component {
           animationType={'slide'}
           transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
+          onRequestClose={() => {           
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
             <View style={{flex: 5, justifyContent: 'flex-start'}}>

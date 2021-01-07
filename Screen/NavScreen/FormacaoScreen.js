@@ -70,7 +70,7 @@ export default class FormacaoScreen extends Component {
   async componentDidMount() {
     const [isValid, educations] = await getUserEducations();
     if (!isValid) {
-      console.log('Error getUserEducations');
+     
     }
     this.setState({
       listOfEducations: educations,
@@ -143,7 +143,7 @@ export default class FormacaoScreen extends Component {
     }
     const [isValid, educations] = await getUserEducations();
     if (!isValid) {
-      console.log('error catching data');
+    
     }
     this.setState({
       spinner: false,
@@ -155,7 +155,7 @@ export default class FormacaoScreen extends Component {
   deleteThisOne = async () => {
     this.setState({ loading: true });
     const [a, b] = await deleteUserEducation(this.state.currentID);
-    console.log(a, b);
+   
     const [isValid, educations] = await getUserEducations();
     this.setState({
       loading: false,

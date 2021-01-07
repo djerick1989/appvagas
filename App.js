@@ -472,8 +472,7 @@ export default () => {
     try {
       await AsyncStorage.removeItem('userToken');
     } catch (error) {
-      // Error retrieving data
-      console.log(error.message);
+      // Error retrieving data      
     }
   };
   const readData = async () => {

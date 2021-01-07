@@ -147,7 +147,7 @@ export default class EnderecoScreen extends Component {
     this.setState({ spinner: true });
     const [data, user] = await getUserProfile();
     if (!data) {
-      console.log('error getUserProfile');
+    
     }
     this.setState({
       estado: user.state,

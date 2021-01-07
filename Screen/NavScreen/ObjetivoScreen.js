@@ -51,7 +51,7 @@ export default class ObjetivoScreen extends Component {
     const [isValid2, exp] = await getUserExp();
     const [isValid3, salary] = await getUserSalary();
     if (!isValid || !isValid2 || !isValid3) {
-      console.log('Error consiguiendo informacion de Objetivo Screen');
+     
     }
     this.updateCurrentInformation(areas, exp, salary);
   }
@@ -133,8 +133,7 @@ export default class ObjetivoScreen extends Component {
     });
     if (this.state.listOfNewAreas.length) {
       for (let index = 0; index < this.state.listOfNewAreas.length; index++) {
-        const [a, b] = await postUserAreas(this.state.listOfNewAreas[index]);
-        console.log(a, b);
+        const [a, b] = await postUserAreas(this.state.listOfNewAreas[index]);       
       }
     }
     this.setState({listOfNewAreas: [], spinner: false, showAlert: true});
@@ -286,8 +285,7 @@ export default class ObjetivoScreen extends Component {
           animationType={'slide'}
           transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
+          onRequestClose={() => {           
           }}>
           <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
             <View style={{flex: 5, justifyContent: 'flex-start'}}>
