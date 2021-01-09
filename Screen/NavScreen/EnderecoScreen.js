@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { TextInputMask } from 'react-native-masked-text';
+import TextInputMask from 'react-native-text-input-mask';
 import { getUserProfile, patchUserProfile } from '../../helpers/api';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -147,7 +147,7 @@ export default class EnderecoScreen extends Component {
     this.setState({ spinner: true });
     const [data, user] = await getUserProfile();
     if (!data) {
-    
+
     }
     this.setState({
       estado: user.state,
@@ -212,26 +212,12 @@ export default class EnderecoScreen extends Component {
               <Text style={styles.LabelStyle}>Endereço</Text>
               <View style={styles.SectionStyle}>
                 <Text style={styles.InputLabelStyle}>CEP</Text>
-                {/* <TextInput
-                  style={styles.inputStyle}
-                  value={this.state.zipcode}
-                  onChangeText={(text) => this.setState({ zipcode: text })}
-                  placeholderTextColor="#aaaaaa"
-                  autoCapitalize="sentences"
-                  returnKeyType="next"
-                  blurOnSubmit={false}
-                /> */}
-
                 <TextInputMask
                   style={styles.inputStyle}
-                  type='cpf'
-                  options={{}}
-                  value={this.state.zipcode}
                   onChangeText={(text) => this.setState({ zipcode: text.replace(/[^0-9]/g, '') })}
                   placeholder={'99999-999'}
-                  placeholderTextColor="#aaaaaa"
-                  returnKeyType="next"
-                  blurOnSubmit={false}
+                  value={this.state.zipcode}
+                  mask={"[00000]-[999]"}
                 />
               </View>
               <View style={styles.SectionStyle}>

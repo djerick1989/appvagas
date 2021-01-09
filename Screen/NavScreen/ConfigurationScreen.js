@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
+import Share from 'react-native-share';
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,7 @@ import {
   Linking,
   ScrollView,
 } from 'react-native';
-import {List} from 'react-native-paper';
+import { List } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class IdiomasScreen extends Component {
@@ -32,7 +32,7 @@ export default class IdiomasScreen extends Component {
       if (supported) {
         Linking.openURL(url);
       } else {
-       
+
       }
     });
   };
@@ -48,7 +48,7 @@ export default class IdiomasScreen extends Component {
         />
         <ScrollView style={styles.scrollContainer}>
           <View>
-            <KeyboardAvoidingView enabled style={{flex: 4}}>
+            <KeyboardAvoidingView enabled style={{ flex: 4 }}>
               <Text style={styles.LabelStyle}>Configs</Text>
 
               <View style={styles.SectionStyle}>

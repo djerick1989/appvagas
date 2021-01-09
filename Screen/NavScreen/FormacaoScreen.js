@@ -12,9 +12,9 @@ import {
   ScrollView
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { TextInputMask } from 'react-native-masked-text';
+import TextMask from 'react-native-text-input-mask';
 import {
   postUserEducation,
   patchUserEducation,
@@ -70,7 +70,7 @@ export default class FormacaoScreen extends Component {
   async componentDidMount() {
     const [isValid, educations] = await getUserEducations();
     if (!isValid) {
-     
+
     }
     this.setState({
       listOfEducations: educations,
@@ -85,6 +85,14 @@ export default class FormacaoScreen extends Component {
       realDate = date[2] + '-' + date[1] + '-' + date[0];
     }
     return realDate;
+  }
+
+  validateDate = (date) => {
+    let array = date.split('/');
+    if (parseInt(array[0]) > 0 && parseInt(array[0]) < 13) {
+      return true;
+    }
+    return false;
   }
 
   retransformDate(dateIn) {
@@ -110,8 +118,13 @@ export default class FormacaoScreen extends Component {
       this.setState({ spinner: false });
       return;
     }
-    let realDate = this.transformDate(this.state.dateStart);
-    let realDate2 = this.transformDate(this.state.dateFinish);
+    if (this.validateDate(this.state.dateStart) === false || this.validateDate(this.state.dateFinish) === false) {
+      alert('datas inválidas');
+      this.setState({ spinner: false });
+      return;
+    }
+    let realDate = this.transformDate(`01/${this.state.dateStart}`);
+    let realDate2 = this.transformDate(`01/${this.state.dateFinish}`);
     let date1 = moment(realDate);
     let date2 = moment(realDate2);
     if (!date1.isValid() || !date2.isValid()) {
@@ -143,7 +156,7 @@ export default class FormacaoScreen extends Component {
     }
     const [isValid, educations] = await getUserEducations();
     if (!isValid) {
-    
+
     }
     this.setState({
       spinner: false,
@@ -155,7 +168,7 @@ export default class FormacaoScreen extends Component {
   deleteThisOne = async () => {
     this.setState({ loading: true });
     const [a, b] = await deleteUserEducation(this.state.currentID);
-   
+
     const [isValid, educations] = await getUserEducations();
     this.setState({
       loading: false,
@@ -425,10 +438,7 @@ export default class FormacaoScreen extends Component {
                           if (itemValue == -1) {
                             return;
                           }
-                          this.changValue({
-                            itemNivel: itemValue,
-                            isValidNivel: true,
-                          });
+                          this.setState({ itemNivel: itemValue });
                         }}>
                         {this.state.listNivels.map((el, index) => {
                           return (
@@ -457,9 +467,7 @@ export default class FormacaoScreen extends Component {
                               if (itemValue == -1) {
                                 return;
                               }
-                              this.changValue({
-                                itemStatus: itemValue,
-                              });
+                              this.setState({ itemStatus: itemValue });
                             }}>
                             {this.state.listStatus.map((el, index) => {
                               return (
@@ -480,13 +488,11 @@ export default class FormacaoScreen extends Component {
                             <Text style={styles.InputLabelStyle}>
                               Data de Inicio
                             </Text>
-                            <TextInputMask
+                            <TextMask
                               style={styles.inputStyle}
-                              type={'datetime'}
-                              options={{
-                                format: 'DD/MM/YYYY',
-                              }}
-                              placeholder="30/10/1990"
+                              keyboardType="numeric"
+                              mask={"[00]/[0000]"}
+                              placeholder="10/1990"
                               value={this.state.dateStart}
                               onChangeText={(text) => {
                                 this.setState({
@@ -501,13 +507,11 @@ export default class FormacaoScreen extends Component {
                             <Text style={styles.InputLabelStyle}>
                               Data de Término
                             </Text>
-                            <TextInputMask
+                            <TextMask
                               style={styles.inputStyle}
-                              type={'datetime'}
-                              options={{
-                                format: 'DD/MM/YYYY',
-                              }}
-                              placeholder="30/10/1990"
+                              keyboardType="numeric"
+                              mask={"[00]/[0000]"}
+                              placeholder="10/1990"
                               value={this.state.dateFinish}
                               onChangeText={(text) => {
                                 this.setState({
@@ -578,12 +582,13 @@ const styles = StyleSheet.create({
   cardItem: {
     width: '90%',
     marginLeft: 20,
-    backgroundColor: '#66666621',
+    backgroundColor: '#ffffff',
     height: 120,
     color: '#6948F4',
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: '#6948F4',
+    borderColor: 'transparent',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5
   },
   item2: {
     width: '90%',
@@ -601,7 +606,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#66666621',
   },
   SectionStyle: {
     height: 70,

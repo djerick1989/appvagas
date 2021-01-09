@@ -3,16 +3,14 @@ import React, { Component } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share from 'react-native-share';
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
   Image,
-  KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
+  TextInput
 } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { getAllJobs, postUserApplyJob, getUserJobs } from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
@@ -62,7 +60,7 @@ export default class ExperienciaScreen extends Component {
               (element) => element.uid == this.props.route.params.searchId,
             );
             this.go(jobToSearch);
-          
+
             this.setState({ searching: false, spinner: false });
           },
         );
@@ -73,11 +71,11 @@ export default class ExperienciaScreen extends Component {
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     if (!isValid) {
-     
+
     }
     const [isValid2, JobsUser] = await getUserJobs();
     if (!isValid2) {
-     
+
     }
     this.setState({
       listOfSearchJobs: Jobs.results,
@@ -89,7 +87,7 @@ export default class ExperienciaScreen extends Component {
   }
 
   onSearchClick = () => {
-   
+
     const search = this.state.search;
     const listFinded = this.state.listOfJobs.findIndex(
       (el) =>
@@ -234,15 +232,15 @@ export default class ExperienciaScreen extends Component {
   };
 
   go = (page) => {
-   
+
     if (page == 'next') {
-      const goToPage = this.state.currentPage + 1;    
+      const goToPage = this.state.currentPage + 1;
       this.viewPager.current.setPage(goToPage);
       this.setState({
         currentPage: goToPage,
       });
     } else {
-      const newPage = parseInt(page);         
+      const newPage = parseInt(page);
       this.viewPager.current.setPage(newPage);
       this.setState({
         currentPage: newPage,
@@ -255,7 +253,7 @@ export default class ExperienciaScreen extends Component {
   };
 
   foundItem = (uid) => {
-    const found = this.state.listOfUserJobs.find(x => x.job === uid);   
+    const found = this.state.listOfUserJobs.find(x => x.job === uid);
     return found;
   }
 
@@ -266,32 +264,16 @@ export default class ExperienciaScreen extends Component {
         <Spinner visible={this.state.spinner} textContent={'Carregando...'} textStyle={{ color: 'white' }} />
         <View style={{ display: 'flex', flex: 1 }}>
           {/* Search bar */}
-          <View style={{ display: 'flex', flex: 0.1 }}>
-            <SearchBar
-              lightTheme={true}
-              innerBorderStyle={{ color: '#6948F4' }}
-              placeholderTextColor='white'
-              containerStyle={{
-                marginTop: -10,
-                backgroundColor: '#6948F4',
-                borderColor: '#6948F4',
-              }}
-              inputContainerStyle={{
-                backgroundColor: '#6948F4',
-              }}
-              inputStyle={{
-                color: 'white'
-              }}
-              onSubmitEditing={() => this.onSearchClick()}
-              placeholder="Buscar Vagas..."
-              onChangeText={this.updateSearch}
-              value={this.state.search}
-            />
+          <View style={{ display: 'flex', flex: 0.1, backgroundColor: '#6948F4', paddingHorizontal: 20, justifyContent: 'center' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+              <TextInput value={this.state.search} onChangeText={this.updateSearch} placeholder="Buscar Vagas" placeholderTextColor="white" style={{ width: '85%', backgroundColor: '#5A3DD6', borderRadius: 3, paddingHorizontal: 10 }} />
+              <Text onPress={this.onSearchClick} style={{ color: 'white', marginLeft: 10 }}>Buscar</Text>
+            </View>
           </View>
           {/* View Pager */}
           <ViewPager
             style={{ flex: 0.9, marginVertical: 30 }}
-            initialPage={0}            
+            initialPage={0}
             ref={this.viewPager}
             transitionStyle="curl">
             {this.state.listOfJobs.length > this.state.currentPage ?
@@ -374,14 +356,14 @@ export default class ExperienciaScreen extends Component {
                             borderColor: 'transparent',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            width: 50,
-                            height: 50,
+                            width: 40,
+                            height: 40,
                             backgroundColor: '#ff0000',
                             borderRadius: 50,
                           }}>
                           <MaterialCommunityIcons
                             name="close"
-                            size={30}
+                            size={20}
                             color="#FFFFFF"
                           />
                         </TouchableOpacity>
@@ -392,9 +374,9 @@ export default class ExperienciaScreen extends Component {
                               message: element.description,
                             })
                               .then((res) => {
-                               
+
                               })
-                              .catch((err) => {                                
+                              .catch((err) => {
                               })
                           }
                           style={{
@@ -407,7 +389,7 @@ export default class ExperienciaScreen extends Component {
                               marginTop: 5,
                             }}
                             name="export-variant"
-                            size={40}
+                            size={30}
                             color="#6948F4"
                           />
                         </TouchableOpacity>
@@ -418,116 +400,15 @@ export default class ExperienciaScreen extends Component {
                             borderColor: 'transparent',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            width: 50,
-                            height: 50,
+                            width: 40,
+                            height: 40,
                             backgroundColor: '#26bd26',
                             borderRadius: 50,
                           }}>
                           <MaterialCommunityIcons
                             name="check"
-                            size={30}
+                            size={20}
                             color="#FFFFFF"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  )
-                } else {
-                  return (
-                    <View key={element.id} collapsable={false} style={{ display: 'flex', flex: 1, paddingRight: 25, paddingLeft: 25 }}>
-                      <View style={{ flex: 0.4 }}>
-                        <WebView
-                          javaScriptEnabled={true}
-                          source={{
-                            html: this.getMapbox(
-                              element.latitude,
-                              element.longitude,
-                            ),
-                          }}
-                        />
-                      </View>
-                      <View style={{ flex: 0.5, backgroundColor: 'white' }}>
-                        <ScrollView>
-                          <Text style={{ fontWeight: 'bold', fontSize: 22, marginTop: 50, marginLeft: 30 }}>
-                            {element.title}
-                          </Text>
-                          <Text style={{ fontSize: 16, marginLeft: 30 }}>
-                            {`[${element.company_name}]`}
-                          </Text>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Local
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 55 }}>
-                              {element.state} - {element.country}
-                            </Text>
-                          </View>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Detalhes
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 30, marginRight: 20 }}>
-                              {element.description}
-                            </Text>
-                          </View>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Requisitos
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 15, marginRight: 20 }}>
-                              {element.requirements}
-                            </Text>
-                          </View>
-                        </ScrollView>
-                        {element.logo !== null && element.logo !== '' ? (
-                          <Image
-                            source={{
-                              uri: element.logo
-                                .replace('//', '/')
-                                .replace('//', '/'),
-                            }}
-                            style={{
-                              position: 'absolute',
-                              resizeMode: 'contain',
-                              alignSelf: 'center',
-                              borderColor: '#686868',
-                              borderWidth: 1,
-                              height: 70,
-                              width: 70,
-                              backgroundColor: '#FFFFFF',
-                              top: -50,
-                              padding: 5,
-                              borderRadius: 5,
-                            }}
-                          />
-                        ) : null}
-                      </View>
-                      <View style={{ flex: 0.1, justifyContent: 'center', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-                        <TouchableOpacity
-                          onPress={() =>
-                            Share.open({
-                              title: element.title,
-                              message: element.description,
-                            })
-                              .then((res) => {
-                               
-                              })
-                              .catch((err) => {
-                               
-                              })
-                          }
-                          style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: '#fff',
-                          }}>
-                          <MaterialCommunityIcons
-                            style={{
-                              marginTop: 5,
-                            }}
-                            name="export-variant"
-                            size={40}
-                            color="#6948F4"
                           />
                         </TouchableOpacity>
                       </View>

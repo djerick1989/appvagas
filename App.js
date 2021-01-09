@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
+import Share from 'react-native-share';
 import {
   Text,
   View,
@@ -22,7 +23,6 @@ import {
   DrawerActions,
   DrawerItem,
 } from '@react-navigation/drawer';
-
 import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
 import StartScreen from './Screen/StartScreen';
@@ -91,7 +91,17 @@ function CustomDrawerContent(propsParent) {
           <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
           <List.Item
             title="Convidar Amgios"
-            onPress={() => alert('not implemented Yet')}
+            onPress={() => {
+              Share.open({
+                title: "App Vagas",
+                message: "Estou usando o app Pesquisava Vagas e recomendo #pesquisavagas #vagas #tinderforjobs",
+              })
+                .then((res) => {
+
+                })
+                .catch((err) => {
+                })
+            }}
             right={(props) => <List.Icon {...props} icon="logout" color='#6948F4' />}
           />
           <View style={{ width: '100%', borderTopWidth: 1, borderColor: 'gray' }} />
