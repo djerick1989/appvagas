@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -15,14 +15,15 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {ScrollView} from 'react-native-gesture-handler';
+import { Picker } from '@react-native-picker/picker';
+import { ScrollView } from 'react-native-gesture-handler';
 import Loader from '../Components/Loader';
 import FadeInView from 'react-native-fade-in-view';
 import DropdownItems from '../Components/DropdownItems';
 import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {TextInputMask} from 'react-native-masked-text';
+import { TextInputMask } from 'react-native-masked-text';
+import TextMask from 'react-native-text-input-mask';
 import moment from 'moment';
 
 export default class RegiterScreen extends Component {
@@ -83,25 +84,25 @@ export default class RegiterScreen extends Component {
       itemStatus: '',
       areaSelected: '',
       listNivels: [
-        {label: 'Nivel', value: -1},
-        {label: 'Até 5º ano do Ensino Fundamental', value: 0},
-        {label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1},
-        {label: 'Ensino Fundamental', value: 2},
-        {label: 'Ensino Medio', value: 3},
-        {label: 'Curso Tecnico', value: 4},
-        {label: 'Tecnologo', value: 5},
-        {label: 'Ensino Superior', value: 6},
-        {label: 'Pos', value: 7},
-        {label: 'Mestrado', value: 8},
-        {label: 'Doutorado', value: 9},
-        {label: 'Curso', value: 10},
+        { label: 'Nivel', value: -1 },
+        { label: 'Até 5º ano do Ensino Fundamental', value: 0 },
+        { label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1 },
+        { label: 'Ensino Fundamental', value: 2 },
+        { label: 'Ensino Medio', value: 3 },
+        { label: 'Curso Tecnico', value: 4 },
+        { label: 'Tecnologo', value: 5 },
+        { label: 'Ensino Superior', value: 6 },
+        { label: 'Pos', value: 7 },
+        { label: 'Mestrado', value: 8 },
+        { label: 'Doutorado', value: 9 },
+        { label: 'Curso', value: 10 },
       ],
       listStatus: [
-        {label: 'Todos', value: 0},
-        {label: 'Concluido', value: 1},
-        {label: 'Cursando', value: 2},
-        {label: 'Incompleto', value: 3},
-        {label: 'Desconhecido', value: 4},
+        { label: 'Todos', value: 0 },
+        { label: 'Concluido', value: 1 },
+        { label: 'Cursando', value: 2 },
+        { label: 'Incompleto', value: 3 },
+        { label: 'Desconhecido', value: 4 },
       ],
       isVisible1: false,
       isVisible2: false,
@@ -162,7 +163,7 @@ export default class RegiterScreen extends Component {
     this.showMode('time');
   };
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   sendToApp() {
     const user_info = this.state.user_info;
@@ -214,17 +215,42 @@ export default class RegiterScreen extends Component {
             FirstName: userName.substring(0, firstSpace),
             LastName: userName.substring(firstSpace + 1, userName.length),
           });
-          this.setState({isCorrectUser: true});
+          this.setState({ isCorrectUser: true });
+        } else {
+          Alert.alert('Alerta', 'Favor inserir seu sobrenome');
         }
         break;
       case 'phone':
         if (this.state.PhonNumber.length === 11) {
-          this.setState({isValidPhone: true});
+          fetch(`https://mobapivagas.jobconvo.com/v1/user/username/${this.state.PhonNumber}`, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            }
+          })
+            .then(response => response.json())
+            .then(result => {
+              if (result.first_name) {
+                Alert.alert('Alerta', 'Este número já está cadastrado',
+                  [
+                    {
+                      text: "Cancel",
+                      style: "cancel"
+                    },
+                    {
+                      text: "Login", onPress: () => this.props.navigation.navigate('LoginScreen')
+                    }
+                  ])
+              } else {
+                this.setState({ isValidPhone: true });
+              }
+            })
         }
         break;
       case 'password':
         if (this.state.Password.length >= 4) {
-          this.setState({showLoading: true});
+          this.setState({ showLoading: true });
           fetch('https://mobapivagas.jobconvo.com/v1/user/create/', {
             method: 'POST',
             headers: {
@@ -254,19 +280,19 @@ export default class RegiterScreen extends Component {
                 })
                   .then((response) => response.json())
                   .then((responseJsonLogin) => {
-                    this.setState({isValidPassword: true});
-                    this.setState({showLoading: false});
-                    this.setState({isregistered: true});
+                    this.setState({ isValidPassword: true });
+                    this.setState({ showLoading: false });
+                    this.setState({ isregistered: true });
                     if (responseJsonLogin.token) {
-                      this.setState({user_info: responseJsonLogin});
+                      this.setState({ user_info: responseJsonLogin });
                     }
                   })
                   .catch((error) => {
-                    this.setState({showLoading: false});
+                    this.setState({ showLoading: false });
                     console.error(error);
                   });
               } else {
-                this.setState({showLoading: false});
+                this.setState({ showLoading: false });
                 Alert.alert(
                   'usuario',
                   responseJson.username[0],
@@ -278,7 +304,7 @@ export default class RegiterScreen extends Component {
                     },
                     ,
                   ],
-                  {cancelable: false},
+                  { cancelable: false },
                 );
                 // requiero mostrar el boton volver
                 return;
@@ -290,11 +316,11 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'cpf':
-        this.setState({showLoading: true});
+        this.setState({ showLoading: true });
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/cpf/' +
-            this.state.user_info.id +
-            '/update/',
+          this.state.user_info.id +
+          '/update/',
           {
             method: 'PATCH',
             headers: {
@@ -309,18 +335,18 @@ export default class RegiterScreen extends Component {
         )
           .then((response) => response.json())
           .then((responseJson) => {
-           
-            this.setState({showLoading: false});
+
+            this.setState({ showLoading: false });
             if (responseJson.user) {
-              this.setState({isValidCpf: true});
+              this.setState({ isValidCpf: true });
             } else {
               if (responseJson.message) {
                 Alert.alert(responseJson.message);
               } else {
                 Alert.alert(
                   'Vimos que já há um outro cadastro com seu CPF em nosso sistema. \n' +
-                    'Favor entrar em contato com nosso suporte em: \n' +
-                    'suporte@jobconvo.com',
+                  'Favor entrar em contato com nosso suporte em: \n' +
+                  'suporte@jobconvo.com',
                 );
               }
               return;
@@ -340,8 +366,8 @@ export default class RegiterScreen extends Component {
         } else {
           fetch(
             'https://mobapivagas.jobconvo.com/v1/user/' +
-              this.state.user_info.id +
-              '/update/',
+            this.state.user_info.id +
+            '/update/',
             {
               method: 'PATCH',
               headers: {
@@ -356,7 +382,7 @@ export default class RegiterScreen extends Component {
           )
             .then((response) => response.json())
             .then(() => {
-              this.setState({isValidEmail: true});
+              this.setState({ isValidEmail: true });
             })
             .catch((error) => {
               console.error(error);
@@ -365,26 +391,26 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'Cep':
-        this.setState({isValidCep: true});
+        this.setState({ isValidCep: true });
         break;
       case 'Address':
-        this.setState({isValidAddress: true});
+        this.setState({ isValidAddress: true });
         break;
       case 'Neiboughood':
-        this.setState({isValidNeiboughood: true});
+        this.setState({ isValidNeiboughood: true });
         break;
       case 'City':
-        this.setState({isValidCity: true});
+        this.setState({ isValidCity: true });
         break;
       case 'State':
-        this.setState({isValidState: true});
+        this.setState({ isValidState: true });
         break;
       case 'Country':
-        this.setState({showLoading: true});
+        this.setState({ showLoading: true });
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/profile/' +
-            this.state.user_info.id +
-            '/update/',
+          this.state.user_info.id +
+          '/update/',
           {
             method: 'PATCH',
             headers: {
@@ -406,7 +432,7 @@ export default class RegiterScreen extends Component {
         )
           .then((response) => response.json())
           .then(() => {
-            this.setState({showLoading: false, isValidCountry: true});
+            this.setState({ showLoading: false, isValidCountry: true });
           })
           .catch((error) => {
             console.error(error);
@@ -415,11 +441,11 @@ export default class RegiterScreen extends Component {
         break;
       case 'hasExperience':
         if (value === false) {
-          this.setState({showLoading: true});
+          this.setState({ showLoading: true });
           fetch(
             'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-              this.state.user_info.id +
-              '/update/',
+            this.state.user_info.id +
+            '/update/',
             {
               method: 'PATCH',
               headers: {
@@ -435,28 +461,28 @@ export default class RegiterScreen extends Component {
           )
             .then((response) => response.json())
             .then(() => {
-              this.setState({showLoading: false, hasExperience: value});
+              this.setState({ showLoading: false, hasExperience: value });
             })
             .catch((error) => {
               console.error(error);
               Alert.alert('server error');
             });
         } else {
-          this.setState({hasExperience: value});
+          this.setState({ hasExperience: value });
         }
         break;
       case 'YearsExp':
         if (this.state.YearsExp == '' || this.state.YearsExp == null) {
-          this.setState({YearsExp: 0});
+          this.setState({ YearsExp: 0 });
         }
-        this.setState({isValidExperience: true});
+        this.setState({ isValidExperience: true });
         break;
       case 'InfoExp':
-        this.setState({showLoading: true});
+        this.setState({ showLoading: true });
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-            this.state.user_info.id +
-            '/update/',
+          this.state.user_info.id +
+          '/update/',
           {
             method: 'PATCH',
             headers: {
@@ -472,7 +498,7 @@ export default class RegiterScreen extends Component {
         )
           .then((response) => response.json())
           .then(() => {
-            this.setState({showLoading: false, isValidExperienceInfo: true});
+            this.setState({ showLoading: false, isValidExperienceInfo: true });
           })
           .catch((error) => {
             console.error(error);
@@ -495,11 +521,11 @@ export default class RegiterScreen extends Component {
         });
         break;
       case 'LastSaldo':
-        this.setState({showLoading: true});
+        this.setState({ showLoading: true });
         fetch(
           'https://mobapivagas.jobconvo.com/v1/user/salary/' +
-            this.state.user_info.id +
-            '/update/',
+          this.state.user_info.id +
+          '/update/',
           {
             method: 'PATCH',
             headers: {
@@ -515,7 +541,7 @@ export default class RegiterScreen extends Component {
         )
           .then((response) => response.json())
           .then(() => {
-            this.setState({showLoading: false, isValidLastSaldo: true});
+            this.setState({ showLoading: false, isValidLastSaldo: true });
           })
           .catch((error) => {
             console.error(error);
@@ -523,8 +549,9 @@ export default class RegiterScreen extends Component {
           });
         break;
       case 'dateInicio':
-        if (this.state.date.length == 10) {
-          let date1 = moment(this.state.date);
+        if (this.state.date.length == 8) {
+          let tmp = `01/${this.state.date}`;
+          let date1 = moment(tmp);
           if (!date1.isValid()) {
             alert('data inválida');
             return;
@@ -535,8 +562,9 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'dateConcluido':
-        if (this.state.dateConcluido.length == 10) {
-          let date2 = moment(this.state.date);
+        if (this.state.dateConcluido.length == 8) {
+          let tmp = `01/${this.state.dateConcluido}`;
+          let date2 = moment(tmp);
           if (!date2.isValid()) {
             alert('data inválida');
             return;
@@ -573,11 +601,11 @@ export default class RegiterScreen extends Component {
         break;
       case 'hasWorking':
         if (value === false) {
-          this.setState({showLoading: true});
+          this.setState({ showLoading: true });
           fetch(
             'https://mobapivagas.jobconvo.com/v1/user/resume/exp/' +
-              this.state.user_info.id +
-              '/update/',
+            this.state.user_info.id +
+            '/update/',
             {
               method: 'PATCH',
               headers: {
@@ -592,14 +620,14 @@ export default class RegiterScreen extends Component {
           )
             .then((response) => response.json())
             .then(() => {
-              this.setState({showLoading: false, hasWorking: value});
+              this.setState({ showLoading: false, hasWorking: value });
             })
             .catch((error) => {
               console.error(error);
               Alert.alert('server error');
             });
         } else {
-          this.setState({hasWorking: value});
+          this.setState({ hasWorking: value });
         }
         break;
       default:
@@ -644,7 +672,7 @@ export default class RegiterScreen extends Component {
     if (this.state.subarea == null) {
       return;
     }
-    this.setState({showLoading: true});
+    this.setState({ showLoading: true });
     fetch('https://mobapivagas.jobconvo.com/v1/user/add/area/', {
       method: 'POST',
       headers: {
@@ -772,7 +800,7 @@ export default class RegiterScreen extends Component {
       <View style={inputStyle}>
         <FadeInView
           duration={timer}
-          style={(styles.InputBoxStyle, {flexDirection: 'row'})}>
+          style={(styles.InputBoxStyle, { flexDirection: 'row' })}>
           <TouchableOpacity
             style={styleY}
             activeOpacity={0.5}
@@ -798,12 +826,12 @@ export default class RegiterScreen extends Component {
           this.scrollView = ref;
         }}
         onContentSizeChange={() =>
-          this.scrollView.scrollToEnd({animated: true})
+          this.scrollView.scrollToEnd({ animated: true })
         }>
         <StatusBar backgroundColor="#6948F4" barStyle="default" />
         <Loader loading={this.state.showLoading} />
         <TouchableWithoutFeedback>
-          <View style={{padding: 20}}>
+          <View style={{ padding: 20 }}>
             {this.renderChatBox('Olá, muito bem vindo!', 500, true)}
             {this.renderChatBox(
               'Sou o Pesquisa Vagas e estou aqui para ajuda-lo a conseguir um novo trabalho. Vamos lá?',
@@ -816,7 +844,7 @@ export default class RegiterScreen extends Component {
             {this.renderChatBox('Como você se chama?', 4900)}
             {this.inputWithKeyBoard(
               6500,
-              (val) => this.setState({UserName: val}),
+              (val) => this.setState({ UserName: val }),
               () => this.handleSubmitText('userName'),
               'NOME E SOBRENOME',
               this.state.isCorrectUser,
@@ -829,276 +857,276 @@ export default class RegiterScreen extends Component {
               : null}
             {this.state.isCorrectUser
               ? this.inputWithInputMask(
-                  750,
-                  'cel-phone',
-                  {
-                    maskType: 'BRL',
-                    withDDD: true,
-                    dddMask: '(99) ',
-                  },
-                  this.state.PhonNumber,
-                  (text) => {
-                    this.setState({
-                      PhonNumber: text.replace(/[^0-9]/g, ''),
-                    });
-                  },
-                  () => this.handleSubmitText('phone'),
-                  '(11) 98877 5566',
-                  this.state.isValidPhone,
-                )
+                750,
+                'cel-phone',
+                {
+                  maskType: 'BRL',
+                  withDDD: true,
+                  dddMask: '(99) ',
+                },
+                this.state.PhonNumber,
+                (text) => {
+                  this.setState({
+                    PhonNumber: text.replace(/[^0-9]/g, ''),
+                  });
+                },
+                () => this.handleSubmitText('phone'),
+                '(11) 98877 5566',
+                this.state.isValidPhone,
+              )
               : null}
             {this.state.isValidPhone
               ? this.renderChatBox('Cadastre agora a sua senha de acesso')
               : null}
             {this.state.isValidPhone
               ? this.inputWithKeyBoard(
-                  5500,
-                  (val) => this.setState({Password: val}),
-                  () => this.handleSubmitText('password'),
-                  '*******',
-                  this.state.isValidPassword,
-                  '#aaaaaa',
-                  'sentences',
-                  'next',
-                  'default',
-                  true,
-                )
+                5500,
+                (val) => this.setState({ Password: val }),
+                () => this.handleSubmitText('password'),
+                '*******',
+                this.state.isValidPassword,
+                '#aaaaaa',
+                'sentences',
+                'next',
+                'default',
+                true,
+              )
               : null}
             {this.state.isValidPassword
               ? this.renderChatBox('Qual o seu CPF?')
               : null}
             {this.state.isValidPassword
               ? this.inputWithInputMask(
-                  1800,
-                  'cpf',
-                  {},
-                  this.state.CPF,
-                  (text) => {
-                    this.setState({
-                      CPF: text.replace(/[^0-9]/g, ''),
-                    });
-                  },
-                  () => this.handleSubmitText('cpf'),
-                  '',
-                  this.state.isValidCpf,
-                )
+                1800,
+                'cpf',
+                {},
+                this.state.CPF,
+                (text) => {
+                  this.setState({
+                    CPF: text.replace(/[^0-9]/g, ''),
+                  });
+                },
+                () => this.handleSubmitText('cpf'),
+                '',
+                this.state.isValidCpf,
+              )
               : null}
             {this.state.isValidCpf
               ? this.renderChatBox('Você tem email?')
               : null}
             {this.state.isValidCpf && this.state.hasEmail == null
               ? this.buttonsIn(
-                  () => this.setState({hasEmail: true}),
-                  () => this.setState({hasEmail: false}),
-                )
+                () => this.setState({ hasEmail: true }),
+                () => this.setState({ hasEmail: false }),
+              )
               : null}
             {this.state.hasEmail
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({Email: val}),
-                  () => this.handleSubmitText('email'),
-                  'INSERIR EMAIL',
-                  this.state.isValidEmail,
-                )
+                1000,
+                (val) => this.setState({ Email: val }),
+                () => this.handleSubmitText('email'),
+                'INSERIR EMAIL',
+                this.state.isValidEmail,
+              )
               : null}
             {this.state.hasEmail == false
               ? this.renderChatBox(
-                  'Eu não tenho email',
-                  1000,
-                  false,
-                  styles.answerboxStyle,
-                  styles.ChatContainerStyleAnswer,
-                  styles.ChatTextStyleAnswer,
-                )
+                'Eu não tenho email',
+                1000,
+                false,
+                styles.answerboxStyle,
+                styles.ChatContainerStyleAnswer,
+                styles.ChatTextStyleAnswer,
+              )
               : null}
             {this.state.hasEmail == false
               ? this.renderChatBox('Tudo bem, vamos continuar.', 2000)
               : null}
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.renderChatBox(
-                  'Legal. Seu cadastro foi realizado com sucesso!',
-                  2600,
-                )
+                'Legal. Seu cadastro foi realizado com sucesso!',
+                2600,
+              )
               : null}
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.renderChatBox(
-                  'Agora informe seu endereço para mostrarmos as vagas mais perto de você.',
-                  3200,
-                )
+                'Agora informe seu endereço para mostrarmos as vagas mais perto de você.',
+                3200,
+              )
               : null}
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.buttonInChat(
-                  4200,
-                  () => this.setState({hasClickAdress: true}),
-                  'CADASTRAR ENDEREÇO',
-                )
+                4200,
+                () => this.setState({ hasClickAdress: true }),
+                'CADASTRAR ENDEREÇO',
+              )
               : null}
             {this.state.hasClickAdress
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({Cep: val}),
-                  () => this.handleSubmitText('Cep'),
-                  'CEP',
-                  this.state.isValidCep,
-                )
+                1000,
+                (val) => this.setState({ Cep: val }),
+                () => this.handleSubmitText('Cep'),
+                'CEP',
+                this.state.isValidCep,
+              )
               : null}
             {this.state.isValidCep
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({Address: val}),
-                  () => this.handleSubmitText('Address'),
-                  'Endereço',
-                  this.state.isValidAddress,
-                )
+                1000,
+                (val) => this.setState({ Address: val }),
+                () => this.handleSubmitText('Address'),
+                'Endereço',
+                this.state.isValidAddress,
+              )
               : null}
             {this.state.isValidAddress
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({Neiboughood: val}),
-                  () => this.handleSubmitText('Neiboughood'),
-                  'Bairro',
-                  this.state.isValidNeiboughood,
-                )
+                1000,
+                (val) => this.setState({ Neiboughood: val }),
+                () => this.handleSubmitText('Neiboughood'),
+                'Bairro',
+                this.state.isValidNeiboughood,
+              )
               : null}
             {this.state.isValidNeiboughood
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({City: val}),
-                  () => this.handleSubmitText('City'),
-                  'Cidade',
-                  this.state.isValidCity,
-                )
+                1000,
+                (val) => this.setState({ City: val }),
+                () => this.handleSubmitText('City'),
+                'Cidade',
+                this.state.isValidCity,
+              )
               : null}
             {this.state.isValidCity
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({State: val}),
-                  () => this.handleSubmitText('State'),
-                  'Estado',
-                  this.state.isValidState,
-                )
+                1000,
+                (val) => this.setState({ State: val }),
+                () => this.handleSubmitText('State'),
+                'Estado',
+                this.state.isValidState,
+              )
               : null}
             {this.state.isValidState
               ? this.inputWithKeyBoard(
-                  1000,
-                  (val) => this.setState({Country: val}),
-                  () => this.handleSubmitText('Country'),
-                  'País',
-                  this.state.isValidCountry,
-                )
+                1000,
+                (val) => this.setState({ Country: val }),
+                () => this.handleSubmitText('Country'),
+                'País',
+                this.state.isValidCountry,
+              )
               : null}
             {this.state.isValidCountry
               ? this.renderChatBox(
-                  'Agora me diga em que área você quer trabalhar?',
-                  1200,
-                )
+                'Agora me diga em que área você quer trabalhar?',
+                1200,
+              )
               : null}
             {this.state.isValidCountry
               ? this.buttonInChat(
-                  2000,
-                  () => this.setState({modalVisible: !this.state.modalVisible}),
-                  'ESCOLHER AREA',
-                )
+                2000,
+                () => this.setState({ modalVisible: !this.state.modalVisible }),
+                'ESCOLHER AREA',
+              )
               : null}
             {this.state.isValidJob
               ? this.renderChatBox('Ótima escolha!')
               : null}
             {this.state.isValidJob
               ? this.renderChatBox(
-                  'Se quiser adicionar outras áreas de interesse, é super fácil. Basta ir em sua página de perfil.',
-                  1500,
-                )
+                'Se quiser adicionar outras áreas de interesse, é super fácil. Basta ir em sua página de perfil.',
+                1500,
+              )
               : null}
             {this.state.isValidJob
               ? this.renderChatBox(
-                  'Você têm experiência em ' + this.state.subarea + '?',
-                  2500,
-                )
+                'Você têm experiência em ' + this.state.subarea + '?',
+                2500,
+              )
               : null}
             {this.state.isValidJob && this.state.hasExperience == null
               ? this.buttonsIn(
-                  () => this.handleSubmitText('hasExperience', true),
-                  () => this.handleSubmitText('hasExperience', false),
-                  3000,
-                )
+                () => this.handleSubmitText('hasExperience', true),
+                () => this.handleSubmitText('hasExperience', false),
+                3000,
+              )
               : null}
             {this.state.hasExperience == true
               ? this.renderChatBox('QUANTOS ANOS DE EXPERIÊNCIA?')
               : null}
             {this.state.hasExperience
               ? this.inputWithKeyBoard(
-                  1200,
-                  (num) => this.setState({YearsExp: num}),
-                  () => this.handleSubmitText('YearsExp'),
-                  'ANOS DE EXPERIÊNCIA',
-                  this.state.isValidExperience,
-                  '#aaaaaa',
-                  'sentences',
-                  'next',
-                  'phone-pad',
-                )
+                1200,
+                (num) => this.setState({ YearsExp: num }),
+                () => this.handleSubmitText('YearsExp'),
+                'ANOS DE EXPERIÊNCIA',
+                this.state.isValidExperience,
+                '#aaaaaa',
+                'sentences',
+                'next',
+                'phone-pad',
+              )
               : null}
             {this.state.hasExperience && this.state.isValidExperience
               ? this.renderChatBox(
-                  'Me fale sobre seus trabalhos, atual e anteriores.',
-                )
+                'Me fale sobre seus trabalhos, atual e anteriores.',
+              )
               : null}
             {this.state.hasExperience && this.state.isValidExperience
               ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({InfoExp: text}),
-                  () => this.handleSubmitText('InfoExp'),
-                  'CADASTRAR EXPERIÊNCIA',
-                  this.state.isValidExperienceInfo,
-                )
+                1200,
+                (text) => this.setState({ InfoExp: text }),
+                () => this.handleSubmitText('InfoExp'),
+                'CADASTRAR EXPERIÊNCIA',
+                this.state.isValidExperienceInfo,
+              )
               : null}
 
             {this.state.hasExperience == false
               ? this.renderChatBox(
-                  'Eu não tenho experiência',
-                  1200,
-                  false,
-                  styles.answerboxStyle,
-                  styles.ChatContainerStyleAnswer,
-                  styles.ChatTextStyleAnswer,
-                )
+                'Eu não tenho experiência',
+                1200,
+                false,
+                styles.answerboxStyle,
+                styles.ChatContainerStyleAnswer,
+                styles.ChatTextStyleAnswer,
+              )
               : null}
 
             {this.state.hasExperience == false
               ? this.renderChatBox(
-                  'Tranquilo, temos vagas sem experência também',
-                  1600,
-                )
+                'Tranquilo, temos vagas sem experência também',
+                1600,
+              )
               : null}
 
             {this.state.isValidExperienceInfo ||
-            this.state.hasExperience == false
+              this.state.hasExperience == false
               ? this.renderChatBox(
-                  'Estamos quase acabando. Vou te mostrar vagas já já.',
-                  2100,
-                )
+                'Estamos quase acabando. Vou te mostrar vagas já já.',
+                2100,
+              )
               : null}
 
             {this.state.isValidExperienceInfo ||
-            this.state.hasExperience == false
+              this.state.hasExperience == false
               ? this.renderChatBox(
-                  'Você está trabalhando neste momento ou está desempregado?',
-                  2400,
-                )
+                'Você está trabalhando neste momento ou está desempregado?',
+                2400,
+              )
               : null}
 
             {this.state.isValidExperienceInfo ||
-            this.state.hasExperience == false
+              this.state.hasExperience == false
               ? this.buttonsIn(
-                  () => this.handleSubmitText('hasWorking', true),
-                  () => this.handleSubmitText('hasWorking', false),
-                  3000,
-                  'TRABALHANDO',
-                  'DESEMPREGADO',
-                  styles.YbuttonStyleThree,
-                  styles.NbuttonStyleThree,
-                  styles.InputBoxStyleTwo,
-                )
+                () => this.handleSubmitText('hasWorking', true),
+                () => this.handleSubmitText('hasWorking', false),
+                3000,
+                'TRABALHANDO',
+                'DESEMPREGADO',
+                styles.YbuttonStyleThree,
+                styles.NbuttonStyleThree,
+                styles.InputBoxStyleTwo,
+              )
               : null}
 
             {this.state.hasWorking != null
@@ -1107,70 +1135,37 @@ export default class RegiterScreen extends Component {
 
             {this.state.hasWorking != null
               ? this.renderChatBox(
-                  'Me fale sobre sua formação acadêmica. Onde você estudou e qual o seu nível de instrução?',
-                  1500,
-                )
+                'Me fale sobre sua formação acadêmica. Onde você estudou e qual o seu nível de instrução?',
+                1500,
+              )
               : null}
 
             {this.state.hasWorking != null
               ? this.buttonInChat(
-                  2400,
-                  () => this.setState({hasClickEducation: true}),
-                  'CADASTRAR EDUCAÇÃO',
-                )
+                2400,
+                () => { this.props.navigation.navigate('Endereco'); this.setState({ isValidNivel: true }) },
+                'CADASTRAR EDUCAÇÃO',
+              )
               : null}
-
-            {this.state.hasClickEducation ? (
-              <KeyboardAvoidingView enabled>
-                <FadeInView duration={1200} style={styles.InputBoxStylePicker}>
-                  <Picker
-                    selectedValue={this.state.itemNivel}
-                    style={{
-                      height: 40,
-                      width: '100%',
-                    }}
-                    enabled={!this.state.isValidNivel}
-                    onValueChange={(itemValue, itemIndex) => {
-                      if (itemValue == -1) {
-                        return;
-                      }
-                      this.changValue({
-                        itemNivel: itemValue,
-                        isValidNivel: true,
-                      });
-                    }}>
-                    {this.state.listNivels.map((el, index) => {
-                      return (
-                        <Picker.Item
-                          key={el.label + index}
-                          label={el.label}
-                          value={el.value}
-                        />
-                      );
-                    })}
-                  </Picker>
-                </FadeInView>
-              </KeyboardAvoidingView>
-            ) : null}
 
             {this.state.isValidNivel
               ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Formation: text}),
-                  () => this.handleSubmitText('Formation'),
-                  'Formação',
-                  this.state.isValidFormation,
-                )
+                1200,
+                (text) => this.setState({ Formation: text }),
+                () => this.handleSubmitText('Formation'),
+                'Formação',
+                this.state.isValidFormation,
+              )
               : null}
 
             {this.state.isValidFormation
               ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({Institution: text}),
-                  () => this.handleSubmitText('Institution'),
-                  'Instituicao',
-                  this.state.isValidInstitution,
-                )
+                1200,
+                (text) => this.setState({ Institution: text }),
+                () => this.handleSubmitText('Institution'),
+                'Instituicao',
+                this.state.isValidInstitution,
+              )
               : null}
 
             {this.state.isValidInstitution ? (
@@ -1210,20 +1205,18 @@ export default class RegiterScreen extends Component {
             {this.state.isValidStatus == true ? (
               <KeyboardAvoidingView enabled>
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <TextInputMask
+                  <TextMask
                     style={styles.inputStyle}
-                    type={'datetime'}
-                    options={{
-                      format: 'DD/MM/YYYY',
-                    }}
-                    placeholder="30/10/1990"
+                    mask={"[00]/[0000]"}
+                    keyboardType='numeric'
+                    placeholder="10/1990"
                     value={this.state.date}
-                    onSubmitEditing={() => this.handleSubmitText('dateInicio')}
                     onChangeText={(text) => {
                       this.setState({
                         date: text,
                       });
                     }}
+                    onSubmitEditing={() => this.handleSubmitText('dateInicio')}
                   />
                 </FadeInView>
               </KeyboardAvoidingView>
@@ -1236,22 +1229,18 @@ export default class RegiterScreen extends Component {
             {this.state.isValidInicio != null ? (
               <KeyboardAvoidingView enabled>
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
-                  <TextInputMask
+                  <TextMask
                     style={styles.inputStyle}
-                    type={'datetime'}
-                    options={{
-                      format: 'DD/MM/YYYY',
-                    }}
-                    placeholder="30/10/1990"
+                    mask={"[00]/[0000]"}
+                    keyboardType='numeric'
+                    placeholder="10/1990"
                     value={this.state.dateConcluido}
-                    onSubmitEditing={() =>
-                      this.handleSubmitText('dateConcluido')
-                    }
                     onChangeText={(text) => {
                       this.setState({
                         dateConcluido: text,
                       });
                     }}
+                    onSubmitEditing={() => this.handleSubmitText('dateConcluido')}
                   />
                 </FadeInView>
               </KeyboardAvoidingView>
@@ -1259,36 +1248,36 @@ export default class RegiterScreen extends Component {
 
             {this.state.isValidConcluido
               ? this.renderChatBox(
-                  'Legal. Para finalizar, me fale o seu último salário e sua pretensão salarial',
-                )
+                'Legal. Para finalizar, me fale o seu último salário e sua pretensão salarial',
+              )
               : null}
 
             {this.state.isValidConcluido
               ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({FirstSaldo: text}),
-                  () => this.handleSubmitText('FirstSaldo'),
-                  'Salário anterior',
-                  this.state.isValidFirstSaldo,
-                  '#aaaaaa',
-                  'sentences',
-                  'next',
-                  'phone-pad',
-                )
+                1200,
+                (text) => this.setState({ FirstSaldo: text }),
+                () => this.handleSubmitText('FirstSaldo'),
+                'Salário anterior',
+                this.state.isValidFirstSaldo,
+                'R$ 99.999,99',
+                'sentences',
+                'next',
+                'phone-pad',
+              )
               : null}
 
             {this.state.isValidFirstSaldo
               ? this.inputWithKeyBoard(
-                  1200,
-                  (text) => this.setState({LastSaldo: text}),
-                  () => this.handleSubmitText('LastSaldo'),
-                  'pretensão salarial',
-                  this.state.isValidLastSaldo,
-                  '#aaaaaa',
-                  'sentences',
-                  'next',
-                  'phone-pad',
-                )
+                1200,
+                (text) => this.setState({ LastSaldo: text }),
+                () => this.handleSubmitText('LastSaldo'),
+                'pretensão salarial',
+                this.state.isValidLastSaldo,
+                'R$ 99.999,99',
+                'sentences',
+                'next',
+                'phone-pad',
+              )
               : null}
 
             {this.state.isValidLastSaldo
@@ -1297,9 +1286,9 @@ export default class RegiterScreen extends Component {
 
             {this.state.isValidLastSaldo
               ? this.renderChatBox(
-                  'Foi fácil certo! Agora vamos ver as vagas disponíveis mais perto de você. Boa sorte!',
-                  1500,
-                )
+                'Foi fácil certo! Agora vamos ver as vagas disponíveis mais perto de você. Boa sorte!',
+                1500,
+              )
               : null}
 
             {this.state.isValidLastSaldo ? (
@@ -1319,7 +1308,7 @@ export default class RegiterScreen extends Component {
                     onPress={() => {
                       this.sendToApp();
                     }}>
-                    <Text style={{color: '#FFFFFF'}}>VER VAGAS</Text>
+                    <Text style={{ color: '#FFFFFF' }}>VER VAGAS</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -1331,12 +1320,12 @@ export default class RegiterScreen extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-           
+
           }}>
-          <SafeAreaView style={{flex: 1, backgroundColor: 'transparent'}}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
             <StatusBar backgroundColor="#6948F4" barStyle="default" />
             <ScrollView>
-              <View style={{flex: 5, justifyContent: 'flex-start'}}>
+              <View style={{ flex: 5, justifyContent: 'flex-start' }}>
                 <Text style={styles.LabelStyle}>
                   Escolha a área que mais lhe interessar.
                 </Text>
@@ -1346,7 +1335,7 @@ export default class RegiterScreen extends Component {
                 <DropDownPicker
                   items={DropdownItems.items1}
                   defaultValue={this.state.item1}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible1}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1376,7 +1365,7 @@ export default class RegiterScreen extends Component {
                 <DropDownPicker
                   items={DropdownItems.items2}
                   defaultValue={this.state.item2}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible2}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1406,7 +1395,7 @@ export default class RegiterScreen extends Component {
                 <DropDownPicker
                   items={DropdownItems.items3}
                   defaultValue={this.state.item3}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible3}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1436,7 +1425,7 @@ export default class RegiterScreen extends Component {
                 <DropDownPicker
                   items={DropdownItems.items4}
                   defaultValue={this.state.item4}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   zIndex={12}
                   isVisible={this.state.isVisible4}
                   onOpen={() =>
@@ -1467,7 +1456,7 @@ export default class RegiterScreen extends Component {
                   items={DropdownItems.items5}
                   zIndex={11}
                   defaultValue={this.state.item5}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible5}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1497,7 +1486,7 @@ export default class RegiterScreen extends Component {
                   zIndex={10}
                   items={DropdownItems.items6}
                   defaultValue={this.state.item6}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible6}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1527,7 +1516,7 @@ export default class RegiterScreen extends Component {
                   zIndex={9}
                   items={DropdownItems.items7}
                   defaultValue={this.state.item7}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible7}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1557,7 +1546,7 @@ export default class RegiterScreen extends Component {
                   zIndex={8}
                   items={DropdownItems.items8}
                   defaultValue={this.state.item8}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible8}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1587,7 +1576,7 @@ export default class RegiterScreen extends Component {
                   zIndex={7}
                   items={DropdownItems.items9}
                   defaultValue={this.state.item9}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible9}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1617,7 +1606,7 @@ export default class RegiterScreen extends Component {
                   zIndex={6}
                   items={DropdownItems.items10}
                   defaultValue={this.state.item10}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible10}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1647,7 +1636,7 @@ export default class RegiterScreen extends Component {
                   zIndex={5}
                   items={DropdownItems.items11}
                   defaultValue={this.state.item11}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible11}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1677,7 +1666,7 @@ export default class RegiterScreen extends Component {
                   zIndex={4}
                   items={DropdownItems.items12}
                   defaultValue={this.state.item12}
-                  containerStyle={{height: 40}}
+                  containerStyle={{ height: 40 }}
                   isVisible={this.state.isVisible12}
                   onOpen={() =>
                     this.changeVisibility({
@@ -1731,7 +1720,7 @@ export default class RegiterScreen extends Component {
                       onPress={() => {
                         this.clickOkJob();
                       }}>
-                      <Text style={{color: '#FFFFFF'}}>Confirmar</Text>
+                      <Text style={{ color: '#FFFFFF' }}>Confirmar</Text>
                     </TouchableHighlight>
                   </View>
                 </View>
