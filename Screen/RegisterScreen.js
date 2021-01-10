@@ -163,8 +163,6 @@ export default class RegiterScreen extends Component {
     this.showMode('time');
   };
 
-  componentDidMount() { }
-
   sendToApp() {
     const user_info = this.state.user_info;
     AsyncStorage.setItem('userId', '' + user_info.id);
@@ -957,7 +955,7 @@ export default class RegiterScreen extends Component {
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.buttonInChat(
                 4200,
-                () => this.setState({ hasClickAdress: true }),
+                () => { this.props.navigation.navigate('Endereco'); this.setState({ hasClickAdress: true }) },
                 'CADASTRAR ENDEREÇO',
               )
               : null}
@@ -1143,12 +1141,51 @@ export default class RegiterScreen extends Component {
             {this.state.hasWorking != null
               ? this.buttonInChat(
                 2400,
-                () => { this.props.navigation.navigate('Endereco'); this.setState({ isValidNivel: true }) },
+                () => { this.setState({ isValidNivel: true }) },
                 'CADASTRAR EDUCAÇÃO',
               )
               : null}
 
-            {this.state.isValidNivel
+            {this.state.isValidNivel ? (
+              <KeyboardAvoidingView enabled>
+                <FadeInView duration={1200} style={styles.InputBoxStylePicker}>
+                  <Picker
+                    selectedValue={this.state.itemStatus}
+                    style={{
+                      height: 40,
+                      width: '100%',
+                    }}
+                    enabled={!this.state.isValidStatus}
+                    onValueChange={(itemValue, itemIndex) => {
+                      if (itemValue <= 3) {
+                        this.changValue({
+                          itemStatus: itemValue,
+                          isValidStatus: true,
+                          isValidInstitution: false
+                        });
+                      } else {
+                        this.changValue({
+                          itemStatus: itemValue,
+                          isValidStatus: false,
+                          isValidInstitution: true
+                        });
+                      }
+                    }}>
+                    {this.state.listStatus.map((el, index) => {
+                      return (
+                        <Picker.Item
+                          key={el.label + index}
+                          label={el.label}
+                          value={el.value}
+                        />
+                      );
+                    })}
+                  </Picker>
+                </FadeInView>
+              </KeyboardAvoidingView>
+            ) : null}
+
+            {this.state.isValidInstitution
               ? this.inputWithKeyBoard(
                 1200,
                 (text) => this.setState({ Formation: text }),
@@ -1164,39 +1201,9 @@ export default class RegiterScreen extends Component {
                 (text) => this.setState({ Institution: text }),
                 () => this.handleSubmitText('Institution'),
                 'Instituicao',
-                this.state.isValidInstitution,
+                this.state.isValidStatus,
               )
               : null}
-
-            {this.state.isValidInstitution ? (
-              <KeyboardAvoidingView enabled>
-                <FadeInView duration={1200} style={styles.InputBoxStylePicker}>
-                  <Picker
-                    selectedValue={this.state.itemStatus}
-                    style={{
-                      height: 40,
-                      width: '100%',
-                    }}
-                    enabled={!this.state.isValidStatus}
-                    onValueChange={(itemValue, itemIndex) => {
-                      this.changValue({
-                        itemStatus: itemValue,
-                        isValidStatus: true,
-                      });
-                    }}>
-                    {this.state.listStatus.map((el, index) => {
-                      return (
-                        <Picker.Item
-                          key={el.label + index}
-                          label={el.label}
-                          value={el.value}
-                        />
-                      );
-                    })}
-                  </Picker>
-                </FadeInView>
-              </KeyboardAvoidingView>
-            ) : null}
 
             {this.state.isValidStatus == true
               ? this.renderChatBox('insira o Inicio', 750)

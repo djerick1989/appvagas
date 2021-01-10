@@ -180,6 +180,20 @@ export default class EnderecoScreen extends Component {
     this.setState({ spinner: false, showAlert: true });
   }
 
+  findByCep = async () => {
+    fetch(`https://mobapivagas.jobconvo.com/v1/geocode/${this.state.zipcode}`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+      })
+  }
+
   render() {
     return (
       <>
@@ -218,6 +232,7 @@ export default class EnderecoScreen extends Component {
                   placeholder={'99999-999'}
                   value={this.state.zipcode}
                   mask={"[00000]-[999]"}
+                  onSubmitEditing={this.findByCep}
                 />
               </View>
               <View style={styles.SectionStyle}>
