@@ -19,9 +19,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
-  DrawerItemList,
-  DrawerActions,
-  DrawerItem,
+  DrawerItemList
 } from '@react-navigation/drawer';
 import SplashScreen from './Screen/SplashScreen';
 import SlideScreen from './Screen/SlideScreen';
@@ -47,6 +45,7 @@ import DadosPessoaisScreen from './Screen/NavScreen/DadosPessoaisScreen';
 import FormacaoScreen from './Screen/NavScreen/FormacaoScreen';
 import IdiomasScreen from './Screen/NavScreen/IdiomasScreen';
 import ObjetivoScreen from './Screen/NavScreen/ObjetivoScreen';
+import DetailScreen from './Screen/NavScreen/DetailScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import RNRestart from 'react-native-restart';
 
@@ -302,6 +301,22 @@ const CurriculumStackScreen = () => (
   </CurriculumStack.Navigator>
 );
 
+const CandidaturasStack = createStackNavigator();
+const CandidaturasStackScreen = () => (
+  <CandidaturasStack.Navigator initialRouteName="Candidaturas">
+    <CandidaturasStack.Screen
+      name="Candidaturas"
+      component={CandidaturasScreen}
+      options={{ headerShown: false }}
+    />
+    <CandidaturasStack.Screen
+      name="Detail"
+      component={DetailScreen}
+      options={{ headerShown: false }}
+    />
+  </CandidaturasStack.Navigator>
+);
+
 const AppTabs = createBottomTabNavigator();
 const AppTabsScreen = (propsParent) => (
   <AppTabs.Navigator tabBarOptions={{}}>
@@ -316,8 +331,8 @@ const AppTabsScreen = (propsParent) => (
       }}
     />
     <AppTabs.Screen
-      name="Candidaturas"
-      component={CandidaturasScreen}
+      name="CandidaturasTab"
+      component={CandidaturasStackScreen}
       options={{
         tabBarLabel: 'Candidaturas',
         tabBarIcon: ({ color, size }) => (
@@ -343,23 +358,6 @@ const AppTabsScreen = (propsParent) => (
         ),
       }}
     />
-    {/* <AppTabs.Item
-      name="Configs"
-      component={(props) => {
-        this.preventDefault = true;
-        return props.navigation.toggleDrawer();
-      }}
-      options={{
-        tabBarLabel: 'Configs',
-        tabBarIcon: ({color, size}) => (
-          <MaterialCommunityIcons
-            name="cog-outline"
-            color={color}
-            size={size}
-          />
-        ),
-      }}
-    /> */}
     <AppTabs.Screen
       name="Configs"
       component={ConfigsStackScreen}
@@ -397,18 +395,6 @@ const AppTabsScreen = (propsParent) => (
     />
   </AppTabs.Navigator>
 );
-
-function MyTabBar({ navigation }) {
-  return (
-    <Button
-      title="Go somewhere"
-      onPress={() => {
-        // Navigate using the `navigation` prop that you received
-        navigation.toggleDrawer();
-      }}
-    />
-  );
-}
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (

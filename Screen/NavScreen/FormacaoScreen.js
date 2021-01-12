@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Picker } from '@react-native-picker/picker';
-import { TextInputMask } from 'react-native-masked-text';
 import TextMask from 'react-native-text-input-mask';
 import {
   postUserEducation,
@@ -24,48 +23,45 @@ import {
 import moment from 'moment';
 
 export default class FormacaoScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nameEscola: '',
-      nameCurso: '',
-      currentID: 0,
-      listNivels: [
-        { label: 'Até 5º ano do Ensino Fundamental', value: 0 },
-        { label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1 },
-        { label: 'Ensino Fundamental', value: 2 },
-        { label: 'Ensino Medio', value: 3 },
-        { label: 'Curso Tecnico', value: 4 },
-        { label: 'Tecnologo', value: 5 },
-        { label: 'Ensino Superior', value: 6 },
-        { label: 'Pos', value: 7 },
-        { label: 'Mestrado', value: 8 },
-        { label: 'Doutorado', value: 9 },
-        { label: 'Curso', value: 10 },
-      ],
-      listStatus: [
-        { label: 'Concluido', value: 1 },
-        { label: 'Cursando', value: 2 },
-        { label: 'Incompleto', value: 3 },
-        { label: 'Desconhecido', value: 4 },
-      ],
-      modalIs: 'created',
-      itemNivel: '',
-      itemStatus: '',
-      yearsExp: '',
-      dateStart: '',
-      spinner: true,
-      dateFinish: '',
-      prof: '',
-      currentSalary: 0,
-      listOfNewAreas: [],
-      listOfEducations: [],
-      lastSalary: 0,
-      dataSalary: '',
-      modalVisible: false,
-      subarea: null,
-    };
-  }
+  state = {
+    nameEscola: '',
+    nameCurso: '',
+    currentID: 0,
+    listNivels: [
+      { label: 'Até 5º ano do Ensino Fundamental', value: 0 },
+      { label: 'Do 6º ao 9º ano do Ensino Fundamental', value: 1 },
+      { label: 'Ensino Fundamental', value: 2 },
+      { label: 'Ensino Medio', value: 3 },
+      { label: 'Curso Tecnico', value: 4 },
+      { label: 'Tecnologo', value: 5 },
+      { label: 'Ensino Superior', value: 6 },
+      { label: 'Pos', value: 7 },
+      { label: 'Mestrado', value: 8 },
+      { label: 'Doutorado', value: 9 },
+      { label: 'Curso', value: 10 },
+    ],
+    listStatus: [
+      { label: 'Concluido', value: 1 },
+      { label: 'Cursando', value: 2 },
+      { label: 'Incompleto', value: 3 },
+      { label: 'Desconhecido', value: 4 },
+    ],
+    modalIs: 'created',
+    itemNivel: 0,
+    itemStatus: 1,
+    yearsExp: '',
+    dateStart: '',
+    spinner: true,
+    dateFinish: '',
+    prof: '',
+    currentSalary: 0,
+    listOfNewAreas: [],
+    listOfEducations: [],
+    lastSalary: 0,
+    dataSalary: '',
+    modalVisible: false,
+    subarea: null,
+  };
 
   async componentDidMount() {
     const [isValid, educations] = await getUserEducations();
@@ -96,23 +92,24 @@ export default class FormacaoScreen extends Component {
   }
 
   retransformDate(dateIn) {
+    console.log(dateIn);
     const date = dateIn.split('-');
     let realDate = '';
     if (date[0] && date[1] && date[2]) {
-      realDate = date[2] + '/' + date[1] + '/' + date[0];
+      realDate = date[1] + '/' + date[0];
     }
     return realDate;
   }
 
   clickAddOrEdit = async () => {
-    this.setState({ spinner: true });
+    this.setState({ spinner: true });    
     if (
-      this.state.nameEscola == '' ||
-      this.state.nameCurso == '' ||
-      this.state.itemNivel == '' ||
-      this.state.itemStatus == '' ||
-      this.state.dateStart == '' ||
-      this.state.dateFinish == ''
+      this.state.nameEscola === '' ||
+      this.state.nameCurso === '' ||
+      this.state.itemNivel === '' ||
+      this.state.itemStatus === '' ||
+      this.state.dateStart === '' ||
+      this.state.dateFinish === ''
     ) {
       alert('requer a adição de todos os dados para continuar');
       this.setState({ spinner: false });
@@ -231,9 +228,7 @@ export default class FormacaoScreen extends Component {
                         modalVisible: true,
                         modalIs: 'created',
                         nameEscola: '',
-                        itemNivel: '',
                         nameCurso: '',
-                        itemStatus: '',
                         dateStart: '',
                         dateFinish: '',
                         currentID: 0,

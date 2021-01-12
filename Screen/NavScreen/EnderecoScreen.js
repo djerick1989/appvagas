@@ -190,7 +190,7 @@ export default class EnderecoScreen extends Component {
     })
       .then(response => response.json())
       .then(result => {
-        console.log(result);
+        this.setState({ cidade: result[0].cidade, bairro: result[0].bairro, endereco: result[0].endereco, estado: result[0].estado });
       })
   }
 

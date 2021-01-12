@@ -48,62 +48,28 @@ export default class ExperienciaScreen extends Component {
     });
   }
 
-  componentDidUpdate(prevState, prevProps) {
-    if (this.props.route && this.props.route.params) {
-      if (
-        prevProps.searchId !== this.props.route.params.searchId &&
-        this.state.searching == false
-      ) {
-        this.setState(
-          { searchId: this.props.route.params.searchId, searching: true },
-          () => {
-            const jobToSearch = this.state.listOfJobs.findIndex(
-              (element) => element.uid == this.props.route.params.searchId,
-            );
-            this.go(jobToSearch);
-
-            this.setState({ searching: false, spinner: false });
-          },
-        );
-      }
-    }
-  }
-
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     const [isValid2, JobsUser] = await getUserJobs();
-    if (isUndefined(this.props.route.params) === false) {
-      let foundJob = Jobs.results.filter(x => x.uid === this.props.route.params.searchId);
-      this.setState({
-        listOfSearchJobs: foundJob,
-        listOfJobs: foundJob,
-        listOfUserJobs: foundJob,
-        firstOpen: true,
-        spinner: false,
-        comeOutside: true
-      });
-    } else {
-      this.setState({
-        listOfSearchJobs: Jobs.results,
-        listOfJobs: Jobs.results,
-        listOfUserJobs: JobsUser,
-        firstOpen: true,
-        spinner: false
-      });
-    }
+    this.setState({
+      listOfSearchJobs: Jobs.results,
+      listOfJobs: Jobs.results,
+      listOfUserJobs: JobsUser,
+      firstOpen: true,
+      spinner: false,
+      comeOutside: false
+    });
   }
 
   onSearchClick = async () => {
-    if (this.state.search === '') {      
+    if (this.state.search === '') {
       const [isValid, Jobs] = await getAllJobs();
       const [isValid2, JobsUser] = await getUserJobs();
       this.setState({
         listOfSearchJobs: Jobs.results,
         listOfJobs: Jobs.results,
         listOfUserJobs: JobsUser,
-        firstOpen: true,
-        spinner: false,
-        comeOutside: false
+        firstOpen: true
       });
     } else {
       const search = this.state.search;
@@ -366,103 +332,70 @@ export default class ExperienciaScreen extends Component {
                           />
                         ) : null}
                       </View>
-                      {this.state.comeOutside
-                        ?
-                        <View style={{ flex: 0.1, justifyContent: 'center', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-                          <TouchableOpacity
-                            onPress={() =>
-                              Share.open({
-                                title: element.title,
-                                message: element.description,
-                              })
-                                .then((res) => {
+                      <View style={{ flex: 0.1, justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
+                        <TouchableOpacity
+                          onPress={() => this.clickNo()}
+                          style={{
+                            borderWidth: 1,
+                            borderColor: 'transparent',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 40,
+                            height: 40,
+                            backgroundColor: '#ff0000',
+                            borderRadius: 50,
+                          }}>
+                          <MaterialCommunityIcons
+                            name="close"
+                            size={20}
+                            color="#FFFFFF"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            Share.open({
+                              title: element.title,
+                              message: element.description,
+                            })
+                              .then((res) => {
 
-                                })
-                                .catch((err) => {
-                                })
-                            }
-                            style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: '#fff',
-                              alignSelf: 'center'
-                            }}>
-                            <MaterialCommunityIcons
-                              style={{
-                                marginTop: 5,
-                              }}
-                              name="export-variant"
-                              size={30}
-                              color="#6948F4"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                        :
-                        <View style={{ flex: 0.1, justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-                          <TouchableOpacity
-                            onPress={() => this.clickNo()}
-                            style={{
-                              borderWidth: 1,
-                              borderColor: 'transparent',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: 40,
-                              height: 40,
-                              backgroundColor: '#ff0000',
-                              borderRadius: 50,
-                            }}>
-                            <MaterialCommunityIcons
-                              name="close"
-                              size={20}
-                              color="#FFFFFF"
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() =>
-                              Share.open({
-                                title: element.title,
-                                message: element.description,
                               })
-                                .then((res) => {
-
-                                })
-                                .catch((err) => {
-                                })
-                            }
+                              .catch((err) => {
+                              })
+                          }
+                          style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: '#fff',
+                          }}>
+                          <MaterialCommunityIcons
                             style={{
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: '#fff',
-                            }}>
-                            <MaterialCommunityIcons
-                              style={{
-                                marginTop: 5,
-                              }}
-                              name="export-variant"
-                              size={30}
-                              color="#6948F4"
-                            />
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => this.clickOk(element.uid)}
-                            style={{
-                              borderWidth: 1,
-                              borderColor: 'transparent',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: 40,
-                              height: 40,
-                              backgroundColor: '#26bd26',
-                              borderRadius: 50,
-                            }}>
-                            <MaterialCommunityIcons
-                              name="check"
-                              size={20}
-                              color="#FFFFFF"
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      }
+                              marginTop: 5,
+                            }}
+                            name="export-variant"
+                            size={30}
+                            color="#6948F4"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => this.clickOk(element.uid)}
+                          style={{
+                            borderWidth: 1,
+                            borderColor: 'transparent',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 40,
+                            height: 40,
+                            backgroundColor: '#26bd26',
+                            borderRadius: 50,
+                          }}>
+                          <MaterialCommunityIcons
+                            name="check"
+                            size={20}
+                            color="#FFFFFF"
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   )
                 }
