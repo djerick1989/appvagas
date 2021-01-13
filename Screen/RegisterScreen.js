@@ -547,7 +547,7 @@ export default class RegiterScreen extends Component {
           });
         break;
       case 'dateInicio':
-        if (this.state.date.length == 8) {
+        if (this.state.date.length == 7) {
           let tmp = `01/${this.state.date}`;
           let date1 = moment(tmp);
           if (!date1.isValid()) {
@@ -560,7 +560,7 @@ export default class RegiterScreen extends Component {
         }
         break;
       case 'dateConcluido':
-        if (this.state.dateConcluido.length == 8) {
+        if (this.state.dateConcluido.length == 7) {
           let tmp = `01/${this.state.dateConcluido}`;
           let date2 = moment(tmp);
           if (!date2.isValid()) {
@@ -956,7 +956,7 @@ export default class RegiterScreen extends Component {
               ? this.buttonInChat(
                 4200,
                 () => {
-                  this.props.navigation.navigate('Endereco');
+                  this.props.navigation.navigate('Enderecos');
                   this.setState({ isValidCountry: true })
                 },
                 'CADASTRAR ENDEREÇO',
@@ -1163,8 +1163,7 @@ export default class RegiterScreen extends Component {
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
                   <TextMask
                     style={styles.inputStyle}
-                    mask={"[00]/[0000]"}
-                    keyboardType='numeric'
+                    mask={"[00]/[0000]"}                   
                     placeholder="10/1990"
                     value={this.state.date}
                     onChangeText={(text) => {
@@ -1187,8 +1186,7 @@ export default class RegiterScreen extends Component {
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
                   <TextMask
                     style={styles.inputStyle}
-                    mask={"[00]/[0000]"}
-                    keyboardType='numeric'
+                    mask={"[00]/[0000]"}                   
                     placeholder="10/1990"
                     value={this.state.dateConcluido}
                     onChangeText={(text) => {
@@ -1213,7 +1211,7 @@ export default class RegiterScreen extends Component {
                 1200,
                 (text) => this.setState({ FirstSaldo: text }),
                 () => this.handleSubmitText('FirstSaldo'),
-                'Salário anterior',
+                'R$ 99.999,99',
                 this.state.isValidFirstSaldo,
                 'R$ 99.999,99',
                 'sentences',
@@ -1227,7 +1225,7 @@ export default class RegiterScreen extends Component {
                 1200,
                 (text) => this.setState({ LastSaldo: text }),
                 () => this.handleSubmitText('LastSaldo'),
-                'pretensão salarial',
+                'R$ 99.999,99',
                 this.state.isValidLastSaldo,
                 'R$ 99.999,99',
                 'sentences',

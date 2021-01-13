@@ -459,6 +459,11 @@ const AuthStackScreen = () => (
       component={ConfigsDrawerScreen}
       options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
     />
+    <AuthStack.Screen
+      name="Enderecos"
+      component={EnderecoScreen}
+      options={{ headerShown: true, headerTitle: null, headerLeft: null, headerStyle: { backgroundColor: '#6948F4' } }}
+    />
   </AuthStack.Navigator>
 );
 
