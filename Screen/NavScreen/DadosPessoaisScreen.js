@@ -39,7 +39,7 @@ export default class DadosPessoaisScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dt: '',
+      dt: '01/01/2001',
       sex: 0,
       itemStatusCivil: 3,
       itemPCD: 0,
@@ -87,11 +87,11 @@ export default class DadosPessoaisScreen extends Component {
     this.setState({ spinner: true });
     const [isValid, user] = await getUserProfile();
     if (!isValid) {
-     
+
     }
     const [isValid1, disability] = await getUserDisability();
     if (!isValid1) {
-     
+
     }
     const date = user.birthday ? user.birthday.split('-') : null;
     let realDate = null;
@@ -123,6 +123,7 @@ export default class DadosPessoaisScreen extends Component {
       ...state,
     });
   }
+  
   changeVisibility(state) {
     this.setState({
       ...state,
@@ -143,14 +144,17 @@ export default class DadosPessoaisScreen extends Component {
         return;
       }
     }
-    await patchUserProfile({
-      birthday: realDate,
-      social_status: this.state.itemStatusCivil,
-      born_sex: this.state.sex == 0 ? '' : this.state.sex,
-    });
-    await patchUserDisability({
-      disability: this.state.itemPCD,
-    });
+    console.log(realDate);
+    console.log(this.state.itemStatusCivil);
+    console.log(this.state.sex);
+    // await patchUserProfile({
+    //   birthday: realDate,
+    //   social_status: this.state.itemStatusCivil,
+    //   born_sex: this.state.sex == 0 ? '' : this.state.sex,
+    // });
+    // await patchUserDisability({
+    //   disability: this.state.itemPCD,
+    // });
     this.setState({ spinner: false, showAlert: true });
   }
 

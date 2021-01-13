@@ -955,62 +955,11 @@ export default class RegiterScreen extends Component {
             {this.state.hasEmail == false || this.state.isValidEmail
               ? this.buttonInChat(
                 4200,
-                () => { this.props.navigation.navigate('Endereco'); this.setState({ hasClickAdress: true }) },
+                () => {
+                  this.props.navigation.navigate('Endereco');
+                  this.setState({ isValidCountry: true })
+                },
                 'CADASTRAR ENDEREÇO',
-              )
-              : null}
-            {this.state.hasClickAdress
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ Cep: val }),
-                () => this.handleSubmitText('Cep'),
-                'CEP',
-                this.state.isValidCep,
-              )
-              : null}
-            {this.state.isValidCep
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ Address: val }),
-                () => this.handleSubmitText('Address'),
-                'Endereço',
-                this.state.isValidAddress,
-              )
-              : null}
-            {this.state.isValidAddress
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ Neiboughood: val }),
-                () => this.handleSubmitText('Neiboughood'),
-                'Bairro',
-                this.state.isValidNeiboughood,
-              )
-              : null}
-            {this.state.isValidNeiboughood
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ City: val }),
-                () => this.handleSubmitText('City'),
-                'Cidade',
-                this.state.isValidCity,
-              )
-              : null}
-            {this.state.isValidCity
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ State: val }),
-                () => this.handleSubmitText('State'),
-                'Estado',
-                this.state.isValidState,
-              )
-              : null}
-            {this.state.isValidState
-              ? this.inputWithKeyBoard(
-                1000,
-                (val) => this.setState({ Country: val }),
-                () => this.handleSubmitText('Country'),
-                'País',
-                this.state.isValidCountry,
               )
               : null}
             {this.state.isValidCountry

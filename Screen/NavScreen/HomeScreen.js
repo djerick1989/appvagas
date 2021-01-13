@@ -203,10 +203,21 @@ export default class ExperienciaScreen extends Component {
   };
 
   clickOk = async (uidIn) => {
+    this.setState({ spinner: true });
+
     this.go('next');
     const [a, b] = await postUserApplyJob({
       uid: uidIn,
       status: '1',
+    });
+
+    const [isValid, Jobs] = await getAllJobs();
+    const [isValid2, JobsUser] = await getUserJobs();
+    this.setState({
+      listOfSearchJobs: Jobs.results,
+      listOfJobs: Jobs.results,
+      listOfUserJobs: JobsUser,    
+      spinner: false,     
     });
   };
 
