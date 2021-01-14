@@ -123,7 +123,7 @@ export default class DadosPessoaisScreen extends Component {
       ...state,
     });
   }
-  
+
   changeVisibility(state) {
     this.setState({
       ...state,
@@ -136,25 +136,23 @@ export default class DadosPessoaisScreen extends Component {
     let realDate = '';
     if (this.state.dt) {
       date = this.state.dt.split('/');
-      let realDate = '';
-      if (date[0] && date[1] && date[2]) {
-        realDate = date[2] + '-' + date[1] + '-' + date[0];
-      } else {
+      realDate = '';
+      if (parseInt(date[0]) < 1 || parseInt(date[0]) > 31 || parseInt(date[1]) < 1 || parseInt(date[1]) > 12) {
         this.setState({ showErrorAlert: true, showAler: false });
         return;
+      } else {
+        console.log('aqui');
+        realDate = `${date[2]}-${date[1]}-${date[0]}`;
       }
-    }
-    console.log(realDate);
-    console.log(this.state.itemStatusCivil);
-    console.log(this.state.sex);
-    // await patchUserProfile({
-    //   birthday: realDate,
-    //   social_status: this.state.itemStatusCivil,
-    //   born_sex: this.state.sex == 0 ? '' : this.state.sex,
-    // });
-    // await patchUserDisability({
-    //   disability: this.state.itemPCD,
-    // });
+    }   
+    await patchUserProfile({
+      birthday: realDate,
+      social_status: this.state.itemStatusCivil,
+      born_sex: this.state.sex
+    });
+    await patchUserDisability({
+      disability: this.state.itemPCD,
+    });
     this.setState({ spinner: false, showAlert: true });
   }
 

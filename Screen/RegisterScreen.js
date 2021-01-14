@@ -548,6 +548,12 @@ export default class RegiterScreen extends Component {
         break;
       case 'dateInicio':
         if (this.state.date.length == 7) {
+          let array = this.state.date.split('/');
+          let intParse = parseInt(array[0]);
+          if (intParse > 12 || intParse < 1) {
+            alert('data inválida');
+            return;
+          }
           let tmp = `01/${this.state.date}`;
           let date1 = moment(tmp);
           if (!date1.isValid()) {
@@ -561,6 +567,12 @@ export default class RegiterScreen extends Component {
         break;
       case 'dateConcluido':
         if (this.state.dateConcluido.length == 7) {
+          let array = this.state.dateConcluido.split('/');
+          let intParse = parseInt(array[0]);
+          if (intParse > 12 || intParse < 1) {
+            alert('data inválida');
+            return;
+          }
           let tmp = `01/${this.state.dateConcluido}`;
           let date2 = moment(tmp);
           if (!date2.isValid()) {
@@ -1163,7 +1175,7 @@ export default class RegiterScreen extends Component {
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
                   <TextMask
                     style={styles.inputStyle}
-                    mask={"[00]/[0000]"}                   
+                    mask={"[00]/[0000]"}
                     placeholder="10/1990"
                     value={this.state.date}
                     onChangeText={(text) => {
@@ -1186,7 +1198,7 @@ export default class RegiterScreen extends Component {
                 <FadeInView duration={1200} style={styles.InputBoxStyle}>
                   <TextMask
                     style={styles.inputStyle}
-                    mask={"[00]/[0000]"}                   
+                    mask={"[00]/[0000]"}
                     placeholder="10/1990"
                     value={this.state.dateConcluido}
                     onChangeText={(text) => {

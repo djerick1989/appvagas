@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share from 'react-native-share';
@@ -16,60 +15,71 @@ import { getAllJobs, postUserApplyJob, getUserJobs } from '../../helpers/api';
 import ViewPager from '@react-native-community/viewpager';
 import { WebView } from 'react-native-webview';
 import { isUndefined } from 'lodash';
-
 export default class ExperienciaScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      empresa: '',
-      cargo: '',
-      searching: false,
-      searchId: 0,
-      search: '',
-      descripcion: '',
-      currentPage: 0,
-      currentID: 0,
-      modalIs: 'created',
-      dateStart: '',
-      dateFinish: '',
-      listOfJobs: [],
-      listOfSearchJobs: [],
-      listOfUserJobs: [],
-      modalVisible: false,
-      showNoMore: false,
-      spinner: true,
-      comeOutside: false,
-      firstOpen: true,
-      subarea: null,
-    };
-    this.viewPager = React.createRef();
-    props.navigation.addListener('beforeRemove', (e) => {
-      e.preventDefault();
-    });
-  }
+  state = {
+    empresa: '',
+    cargo: '',
+    searching: false,
+    searchId: 0,
+    search: '',
+    descripcion: '',
+    currentPage: 0,
+    currentID: 0,
+    modalIs: 'created',
+    dateStart: '',
+    dateFinish: '',
+    listOfJobs: [],
+    listOfSearchJobs: [],
+    modalVisible: false,
+    showNoMore: false,
+    spinner: true,
+    comeOutside: false,
+    firstOpen: true,
+    subarea: null,
+  };
+
+  viewPager = React.createRef();
 
   async componentDidMount() {
     const [isValid, Jobs] = await getAllJobs();
     const [isValid2, JobsUser] = await getUserJobs();
+
+    let array = [];
+    Jobs.results.forEach(element => {
+      if (isUndefined(this.findInArray(element.uid, JobsUser))) {
+        array.push(element);
+      }
+    });
+
     this.setState({
-      listOfSearchJobs: Jobs.results,
-      listOfJobs: Jobs.results,
-      listOfUserJobs: JobsUser,
+      listOfSearchJobs: array,
+      listOfJobs: array,
       firstOpen: true,
       spinner: false,
       comeOutside: false
     });
   }
 
+  findInArray = (uid, array) => {
+    const result = array.find(x => x.job === uid);
+    return result;
+  }
+
   onSearchClick = async () => {
     if (this.state.search === '') {
       const [isValid, Jobs] = await getAllJobs();
       const [isValid2, JobsUser] = await getUserJobs();
+      let array = [];
+      Jobs.results.forEach(element => {
+        if (isUndefined(this.findInArray(element.uid, JobsUser))) {
+          array.push(element);
+        }
+      });
       this.setState({
-        listOfSearchJobs: Jobs.results,
-        listOfJobs: Jobs.results,
-        listOfUserJobs: JobsUser,
-        firstOpen: true
+        listOfSearchJobs: array,
+        listOfJobs: array,
+        firstOpen: true,
+        spinner: false,
       });
     } else {
       const search = this.state.search;
@@ -211,14 +221,20 @@ export default class ExperienciaScreen extends Component {
       status: '1',
     });
 
-    const [isValid, Jobs] = await getAllJobs();
-    const [isValid2, JobsUser] = await getUserJobs();
-    this.setState({
-      listOfSearchJobs: Jobs.results,
-      listOfJobs: Jobs.results,
-      listOfUserJobs: JobsUser,    
-      spinner: false,     
-    });
+    const result = this.state.listOfJobs.filter(x => x.uid !== uidIn);
+    if (result === null) {
+      this.setState({
+        listOfSearchJobs: [],
+        listOfJobs: [],
+        spinner: false,
+      });
+    } else {
+      this.setState({
+        listOfSearchJobs: result,
+        listOfJobs: result,
+        spinner: false,
+      });
+    }
   };
 
   move = (delta) => {
@@ -227,7 +243,6 @@ export default class ExperienciaScreen extends Component {
   };
 
   go = (page) => {
-
     if (page == 'next') {
       const goToPage = this.state.currentPage + 1;
       this.viewPager.current.setPage(goToPage);
@@ -246,11 +261,6 @@ export default class ExperienciaScreen extends Component {
   clickNo = () => {
     this.go('next');
   };
-
-  foundItem = (uid) => {
-    const found = this.state.listOfUserJobs.find(x => x.job === uid);
-    return found;
-  }
 
   render() {
     return (
@@ -273,143 +283,141 @@ export default class ExperienciaScreen extends Component {
             transitionStyle="curl">
             {this.state.listOfJobs.length > this.state.currentPage ?
               this.state.listOfJobs.map((element, index) => {
-                if (!this.foundItem(element.uid)) {
-                  return (
-                    <View key={element.id} collapsable={false} style={{ display: 'flex', flex: 1, paddingRight: 25, paddingLeft: 25 }}>
-                      <View style={{ flex: 0.4 }}>
-                        <WebView
-                          javaScriptEnabled={true}
+                return (
+                  <View key={element.id} collapsable={false} style={{ display: 'flex', flex: 1, paddingRight: 25, paddingLeft: 25 }}>
+                    <View style={{ flex: 0.4 }}>
+                      <WebView
+                        javaScriptEnabled={true}
+                        source={{
+                          html: this.getMapbox(
+                            element.latitude,
+                            element.longitude,
+                          ),
+                        }}
+                      />
+                    </View>
+                    <View style={{ flex: 0.5, backgroundColor: 'white' }}>
+                      <ScrollView>
+                        <Text style={{ fontWeight: 'bold', fontSize: 22, marginTop: 50, marginLeft: 30 }}>
+                          {element.title}
+                        </Text>
+                        <Text style={{ fontSize: 16, marginLeft: 30 }}>
+                          {`[${element.company_name}]`}
+                        </Text>
+                        <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                            Local
+                        </Text>
+                          <Text style={{ fontSize: 16, marginLeft: 55 }}>
+                            {element.state} - {element.country}
+                          </Text>
+                        </View>
+                        <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                            Detalhes
+                        </Text>
+                          <Text style={{ fontSize: 16, marginLeft: 30, marginRight: 20 }}>
+                            {element.description}
+                          </Text>
+                        </View>
+                        <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
+                          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                            Requisitos
+                        </Text>
+                          <Text style={{ fontSize: 16, marginLeft: 15, marginRight: 20 }}>
+                            {element.requirements}
+                          </Text>
+                        </View>
+                      </ScrollView>
+                      {element.logo !== null && element.logo !== '' ? (
+                        <Image
                           source={{
-                            html: this.getMapbox(
-                              element.latitude,
-                              element.longitude,
-                            ),
+                            uri: element.logo
+                              .replace('//', '/')
+                              .replace('//', '/'),
+                          }}
+                          style={{
+                            position: 'absolute',
+                            resizeMode: 'contain',
+                            alignSelf: 'center',
+                            borderColor: '#686868',
+                            borderWidth: 1,
+                            height: 70,
+                            width: 70,
+                            backgroundColor: '#FFFFFF',
+                            top: -50,
+                            padding: 5,
+                            borderRadius: 5,
                           }}
                         />
-                      </View>
-                      <View style={{ flex: 0.5, backgroundColor: 'white' }}>
-                        <ScrollView>
-                          <Text style={{ fontWeight: 'bold', fontSize: 22, marginTop: 50, marginLeft: 30 }}>
-                            {element.title}
-                          </Text>
-                          <Text style={{ fontSize: 16, marginLeft: 30 }}>
-                            {`[${element.company_name}]`}
-                          </Text>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Local
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 55 }}>
-                              {element.state} - {element.country}
-                            </Text>
-                          </View>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Detalhes
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 30, marginRight: 20 }}>
-                              {element.description}
-                            </Text>
-                          </View>
-                          <View style={{ marginLeft: 30, marginTop: 20, paddingRight: 40, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', alignContent: 'flex-start' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              Requisitos
-                        </Text>
-                            <Text style={{ fontSize: 16, marginLeft: 15, marginRight: 20 }}>
-                              {element.requirements}
-                            </Text>
-                          </View>
-                        </ScrollView>
-                        {element.logo !== null && element.logo !== '' ? (
-                          <Image
-                            source={{
-                              uri: element.logo
-                                .replace('//', '/')
-                                .replace('//', '/'),
-                            }}
-                            style={{
-                              position: 'absolute',
-                              resizeMode: 'contain',
-                              alignSelf: 'center',
-                              borderColor: '#686868',
-                              borderWidth: 1,
-                              height: 70,
-                              width: 70,
-                              backgroundColor: '#FFFFFF',
-                              top: -50,
-                              padding: 5,
-                              borderRadius: 5,
-                            }}
-                          />
-                        ) : null}
-                      </View>
-                      <View style={{ flex: 0.1, justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
-                        <TouchableOpacity
-                          onPress={() => this.clickNo()}
-                          style={{
-                            borderWidth: 1,
-                            borderColor: 'transparent',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 40,
-                            height: 40,
-                            backgroundColor: '#ff0000',
-                            borderRadius: 50,
-                          }}>
-                          <MaterialCommunityIcons
-                            name="close"
-                            size={20}
-                            color="#FFFFFF"
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() =>
-                            Share.open({
-                              title: element.title,
-                              message: element.description,
-                            })
-                              .then((res) => {
-
-                              })
-                              .catch((err) => {
-                              })
-                          }
-                          style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: '#fff',
-                          }}>
-                          <MaterialCommunityIcons
-                            style={{
-                              marginTop: 5,
-                            }}
-                            name="export-variant"
-                            size={30}
-                            color="#6948F4"
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() => this.clickOk(element.uid)}
-                          style={{
-                            borderWidth: 1,
-                            borderColor: 'transparent',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 40,
-                            height: 40,
-                            backgroundColor: '#26bd26',
-                            borderRadius: 50,
-                          }}>
-                          <MaterialCommunityIcons
-                            name="check"
-                            size={20}
-                            color="#FFFFFF"
-                          />
-                        </TouchableOpacity>
-                      </View>
+                      ) : null}
                     </View>
-                  )
-                }
+                    <View style={{ flex: 0.1, justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 40, alignContent: 'center', alignItems: 'center', borderBottomLeftRadius: 25, borderBottomRightRadius: 25, backgroundColor: 'white', marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84, elevation: 5 }}>
+                      <TouchableOpacity
+                        onPress={() => this.clickNo()}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 40,
+                          height: 40,
+                          backgroundColor: '#ff0000',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="close"
+                          size={20}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() =>
+                          Share.open({
+                            title: element.title,
+                            message: element.description,
+                          })
+                            .then((res) => {
+
+                            })
+                            .catch((err) => {
+                            })
+                        }
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#fff',
+                        }}>
+                        <MaterialCommunityIcons
+                          style={{
+                            marginTop: 5,
+                          }}
+                          name="export-variant"
+                          size={30}
+                          color="#6948F4"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => this.clickOk(element.uid)}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: 'transparent',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 40,
+                          height: 40,
+                          backgroundColor: '#26bd26',
+                          borderRadius: 50,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="check"
+                          size={20}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )
               })
               :
               <View key="99" style={{ paddingLeft: 25, paddingRight: 25 }}>
